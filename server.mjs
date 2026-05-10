@@ -156,8 +156,10 @@ const hostedMagicLinkScript = `
             });
             const data = await response.json();
             if (!response.ok) throw new Error(data.error || "Could not create login link.");
-            title.textContent = "Magic link ready for " + email;
-            warning.textContent = "This link expires in 30 minutes. Email/SMS delivery can use this same secure link next.";
+            title.textContent = data.delivered ? "Magic link sent to " + email : "Magic link ready for " + email;
+            warning.textContent = data.delivered
+              ? "Check that inbox. This secure link expires in 30 minutes."
+              : (data.deliveryError || "HighLevel could not send the email yet. Use the button below while testing.");
             button.textContent = "Open secure login link";
             button.disabled = false;
             button.addEventListener("click", () => {
@@ -406,6 +408,24 @@ async function ghlJson(path, method, payload) {
   return response.json();
 }
 
+async function ghlJsonWithVersion(path, method, payload, version = "2021-07-28") {
+  if (!token) throw new Error("Missing GHL_PRIVATE_INTEGRATION_TOKEN");
+  const response = await fetch(`https://services.leadconnectorhq.com${path}`, {
+    method,
+    headers: {
+      authorization: `Bearer ${token}`,
+      version,
+      accept: "application/json",
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  if (!response.ok) {
+    throw new Error(`HighLevel ${response.status}: ${await response.text()}`);
+  }
+  return response.json();
+}
+
 async function addInternalContactNote(contactId, status) {
   const body = internalStatusNotes[status];
   if (!body) return null;
@@ -453,6 +473,62 @@ async function createDesignContact(payload) {
       utilityBill: payload.utilityBill || "",
       projectNotes: payload.projectNotes || "",
     },
+  };
+}
+
+async function findRepAccessContact(email) {
+  const normalizedEmail = String(email || "").trim().toLowerCase();
+  if (!normalizedEmail) return null;
+  const duplicate = await ghlFetch(`/contacts/search/duplicate?locationId=${encodeURIComponent(locationId)}&email=${encodeURIComponent(normalizedEmail)}`);
+  return duplicate.contact || null;
+}
+
+async function getOrCreateRepAccessContact(user) {
+  const existingContact = await findRepAccessContact(user.email);
+  if (existingContact?.id) return existingContact;
+
+  const { firstName, lastName } = splitName(user.name || user.email);
+  const result = await ghlJson("/contacts/", "POST", {
+    locationId,
+    firstName,
+    lastName,
+    name: user.name || user.email,
+    email: user.email,
+    phone: user.phone || undefined,
+    assignedTo: user.role === "Admin" ? undefined : user.id,
+    source: "Flourish Rep Portal Access",
+    tags: ["rep-portal-access", "internal-rep-login"],
+  });
+  return result.contact || result;
+}
+
+async function sendMagicLoginEmail(user, magicUrl, expiresAt) {
+  const contact = await getOrCreateRepAccessContact(user);
+  const expirationTime = new Date(expiresAt).toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    timeZoneName: "short",
+  });
+  const subject = "Your Flourish Solar portal login link";
+  const message = `Your Flourish Solar portal login link is ready: ${magicUrl}\n\nThis secure link expires ${expirationTime}.`;
+  const html = `
+    <p>Your Flourish Solar portal login link is ready.</p>
+    <p><a href="${magicUrl}">Open the portal</a></p>
+    <p>This secure link expires ${expirationTime}.</p>
+  `;
+  const delivery = await ghlJsonWithVersion("/conversations/messages", "POST", {
+    type: "Email",
+    contactId: contact.id,
+    subject,
+    message,
+    html,
+  }, "2021-04-15");
+  return {
+    contactId: contact.id,
+    messageId: delivery.messageId || delivery.emailMessageId || "",
+    conversationId: delivery.conversationId || "",
   };
 }
 
@@ -575,8 +651,9 @@ async function getLivePortalData() {
 }
 
 function requestOrigin(request) {
-  const protocol = request.headers["x-forwarded-proto"] || "https";
   const hostName = request.headers["x-forwarded-host"] || request.headers.host;
+  const localHost = String(hostName || "").startsWith("127.0.0.1") || String(hostName || "").startsWith("localhost");
+  const protocol = request.headers["x-forwarded-proto"] || (localHost ? "http" : "https");
   return `${protocol}://${hostName}`;
 }
 
@@ -605,10 +682,23 @@ async function createMagicLogin(request, email) {
     expiresAt,
   };
   await saveMagicLinks(magicLinks);
+  const magicUrl = `${requestOrigin(request)}/?magic=${magicToken}`;
+  let delivery = null;
+  let deliveryError = "";
+  try {
+    delivery = await sendMagicLoginEmail(user, magicUrl, expiresAt);
+  } catch (error) {
+    deliveryError = error.message;
+    console.warn(`Could not send magic link to ${user.email}: ${error.message}`);
+  }
   return {
     email: user.email,
     expiresAt,
-    magicUrl: `${requestOrigin(request)}/?magic=${magicToken}`,
+    magicUrl,
+    delivered: Boolean(delivery),
+    deliveryChannel: delivery ? "email" : "",
+    delivery,
+    deliveryError,
   };
 }
 
