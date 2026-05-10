@@ -8,7 +8,17 @@
       :root {
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         color: #16202d;
-        background: #f4f6f8;
+        background: #f3f6f4;
+        --ink: #121a24;
+        --muted: #667385;
+        --line: #d9e2ec;
+        --paper: #ffffff;
+        --surface: #f7faf8;
+        --green: #12382e;
+        --green-2: #1a8f67;
+        --mint: #e7f5ee;
+        --gold: #d9aa3f;
+        --blue: #e7f2ff;
       }
 
       * {
@@ -19,7 +29,9 @@
         margin: 0;
         min-width: 320px;
         min-height: 100vh;
-        background: #f4f6f8;
+        background:
+          linear-gradient(180deg, rgba(231, 245, 238, 0.8), rgba(247, 250, 248, 0) 280px),
+          #f3f6f4;
       }
 
       button,
@@ -52,8 +64,8 @@
         justify-content: center;
         gap: 34px;
         padding: clamp(28px, 6vw, 72px);
-        background: #fff;
-        border-right: 1px solid #dbe1e8;
+        background: var(--paper);
+        border-right: 1px solid var(--line);
       }
 
       .brand-row {
@@ -68,7 +80,7 @@
         width: 42px;
         height: 42px;
         border-radius: 8px;
-        background: #12382e;
+        background: var(--green);
         color: #fcf8df;
         font-weight: 900;
       }
@@ -80,11 +92,11 @@
 
       .brand-row span,
       .muted {
-        color: #667385;
+        color: var(--muted);
       }
 
       .eyebrow {
-        color: #2d765f;
+        color: var(--green-2);
         font-size: 12px;
         font-weight: 800;
         letter-spacing: 0.08em;
@@ -98,7 +110,7 @@
 
       .login-copy h1,
       .portal-header h1 {
-        color: #101721;
+        color: var(--ink);
         font-size: clamp(34px, 5vw, 56px);
         line-height: 1;
         letter-spacing: 0;
@@ -155,15 +167,16 @@
         min-height: 50px;
         border: 0;
         border-radius: 8px;
-        background: #12382e;
+        background: var(--green);
         color: #fff;
         font-weight: 800;
       }
 
       .ghost-action {
-        border: 1px solid #cfd8e3;
+        border: 1px solid var(--line);
         background: #fff;
-        color: #12382e;
+        color: var(--green);
+        text-decoration: none;
       }
 
       .login-actions {
@@ -209,7 +222,9 @@
         justify-content: end;
         gap: 24px;
         padding: clamp(28px, 6vw, 72px);
-        background: linear-gradient(180deg, #194d3f, #102f27);
+        background:
+          linear-gradient(rgba(18, 56, 46, 0.9), rgba(16, 47, 39, 0.94)),
+          url("https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1600&q=80") center / cover;
         color: #fff;
       }
 
@@ -444,7 +459,7 @@
 
       .portal-workspace {
         min-width: 0;
-        padding: 28px;
+        padding: clamp(18px, 3vw, 32px);
       }
 
       .portal-header {
@@ -464,9 +479,10 @@
       .metric,
       .records-section,
       .right-rail section {
-        border: 1px solid #dbe1e8;
+        border: 1px solid var(--line);
         border-radius: 8px;
         background: #fff;
+        box-shadow: 0 12px 34px rgba(18, 32, 45, 0.06);
       }
 
       .user-chip {
@@ -502,6 +518,7 @@
       .metric {
         min-height: 82px;
         padding: 16px;
+        border-top: 3px solid var(--green-2);
       }
 
       .metric span {
@@ -512,7 +529,7 @@
       .metric strong {
         display: block;
         margin-top: 5px;
-        color: #101721;
+        color: var(--ink);
         font-size: 24px;
       }
 
@@ -524,6 +541,10 @@
 
       .records-section {
         overflow: hidden;
+      }
+
+      .record-list {
+        display: grid;
       }
 
       .section-title {
@@ -589,11 +610,15 @@
 
       .record-row {
         display: grid;
-        grid-template-columns: 86px minmax(170px, 1.2fr) minmax(150px, 0.9fr) minmax(150px, 0.9fr) 72px auto;
-        gap: 16px;
+        grid-template-columns: 82px minmax(220px, 1.35fr) minmax(160px, 0.8fr) minmax(170px, 0.85fr) minmax(82px, 0.35fr) auto;
+        gap: 18px;
         align-items: center;
-        padding: 15px 18px;
+        padding: 17px 18px;
         border-bottom: 1px solid #edf1f5;
+      }
+
+      .record-row:hover {
+        background: #fbfdfb;
       }
 
       .record-row:last-child {
@@ -603,8 +628,27 @@
       .record-row p,
       .record-row span,
       dt {
-        color: #667385;
+        color: var(--muted);
         font-size: 13px;
+      }
+
+      .record-main,
+      .record-progress {
+        display: grid;
+        gap: 4px;
+        min-width: 0;
+      }
+
+      .record-main h3,
+      .record-progress strong {
+        color: var(--ink);
+        overflow-wrap: anywhere;
+      }
+
+      .record-main p,
+      .record-progress span {
+        overflow-wrap: anywhere;
+        line-height: 1.35;
       }
 
       .record-row > strong {
@@ -647,8 +691,8 @@
         align-items: center;
         border: 1px solid #d7e0eb;
         border-radius: 8px;
-        background: #f6f9fc;
-        color: #4f5f73;
+        background: var(--mint);
+        color: #17634d;
         font-size: 13px;
         font-weight: 800;
         padding: 0 10px;
@@ -662,7 +706,7 @@
       }
 
       .record-type.lead {
-        background: #e7f2ff;
+        background: var(--blue);
         color: #155d9b;
       }
 
@@ -780,7 +824,7 @@
         align-self: start;
         padding: 5px 8px;
         border-radius: 6px;
-        background: #e5f2ec;
+        background: var(--mint);
         color: #17634d;
         font-size: 12px;
         font-weight: 900;
@@ -804,7 +848,7 @@
 
       .field-key {
         align-self: start;
-        max-width: 150px;
+        max-width: 170px;
         padding: 5px 8px;
         border-radius: 6px;
         background: #eef6ff;
@@ -867,6 +911,7 @@
 
         .record-row {
           grid-template-columns: 1fr;
+          gap: 10px;
         }
 
         .record-row > strong {
@@ -887,8 +932,8 @@
         </div>
         <div class="login-copy">
           <span class="eyebrow">Secure access</span>
-          <h1>Sign in with a magic link</h1>
-          <p>Reps enter their email, receive a one-time link, and land on a dashboard filtered to their assigned records.</p>
+          <h1>Approved rep portal login</h1>
+          <p>Approved reps and admins enter their email, receive a one-time link, and land on the right dashboard.</p>
         </div>
         <form class="login-form" id="login-form">
           <label>
@@ -900,7 +945,7 @@
           </label>
           <div class="login-actions">
             <button class="primary-action" type="submit">Send magic link</button>
-            <button class="ghost-action" id="show-join" type="button">Join Flourish Solar</button>
+            <a class="ghost-action" href="/join">Need access? Start onboarding</a>
           </div>
         </form>
         <div class="link-box" id="link-box">
@@ -916,94 +961,15 @@
       <aside class="security-panel">
         <div>
           <span class="eyebrow">Access model</span>
-          <h2>Simple for reps, controlled for admin.</h2>
-          <p>Each login is tied to a rep profile, then every lead, customer, job, and notification is filtered by owner.</p>
+          <h2>Private workspace for reps and admin.</h2>
+          <p>Each login is tied to an approved profile, then every lead, customer, job, and notification is filtered by owner.</p>
         </div>
         <div class="security-steps">
-          <span>1. Email entered</span>
+          <span>1. Approved email</span>
           <span>2. One-time link sent</span>
-          <span>3. Rep-only dashboard</span>
+          <span>3. Role-based dashboard</span>
         </div>
       </aside>
-    </main>
-
-    <main class="join-panel" id="join-panel">
-      <section class="setup-intro">
-        <div class="brand-row">
-          <span class="brand-mark">FS</span>
-          <div>
-            <strong>Flourish Solar</strong>
-            <span>Join Onboarding</span>
-          </div>
-        </div>
-        <div>
-          <span class="eyebrow">Join Flourish Solar</span>
-          <h1>Start as a rep, then unlock the portal.</h1>
-          <p>New reps complete onboarding first. Admin reviews the profile, approves access, and then the rep can use magic-link login.</p>
-          <div class="training-list">
-            <article><span>1</span><div><strong>Profile</strong><p>Contact info, market, service area, and notification preference.</p></div></article>
-            <article><span>2</span><div><strong>Training</strong><p>Sales process, design form rules, handoff steps, and portal expectations.</p></div></article>
-            <article><span>3</span><div><strong>Portal Access</strong><p>Admin activates the rep so only their assigned customers and jobs are visible.</p></div></article>
-          </div>
-        </div>
-        <p class="setup-note">This creates a separate internal onboarding contact in HighLevel, not a customer lead.</p>
-      </section>
-      <section class="setup-form-panel">
-        <form class="join-form" id="join-form">
-          <header>
-            <span class="eyebrow">Rep application</span>
-            <h2>Join Flourish Solar</h2>
-            <p>Submit the basics so admin can review and activate portal access.</p>
-          </header>
-          <div class="form-grid">
-            <label>
-              <span>Full name</span>
-              <input id="join-name" type="text" placeholder="New Rep" required />
-            </label>
-            <label>
-              <span>Email address</span>
-              <input id="join-email" type="email" placeholder="rep@email.com" required />
-            </label>
-            <label>
-              <span>Mobile phone</span>
-              <input id="join-phone" type="tel" placeholder="407-555-0188" required />
-            </label>
-            <label>
-              <span>Preferred notifications</span>
-              <select id="join-notifications" required>
-                <option value="">Choose one</option>
-                <option>Email and SMS</option>
-                <option>Email only</option>
-                <option>SMS only</option>
-              </select>
-            </label>
-            <label>
-              <span>Primary territory</span>
-              <input id="join-territory" type="text" placeholder="Orlando, FL" required />
-            </label>
-            <label>
-              <span>Experience level</span>
-              <select id="join-experience" required>
-                <option value="">Choose one</option>
-                <option>New rep</option>
-                <option>Experienced rep</option>
-                <option>Team lead</option>
-              </select>
-            </label>
-            <label class="full-field">
-              <span>Service areas</span>
-              <input id="join-service-area" type="text" placeholder="Orange County, Seminole County, Lake Nona" required />
-            </label>
-            <label class="full-field">
-              <span>Notes for admin</span>
-              <textarea id="join-notes" placeholder="Availability, market notes, or anything admin should review."></textarea>
-            </label>
-          </div>
-          <button class="primary-action" id="join-submit" type="submit">Submit onboarding request</button>
-          <button class="ghost-action" id="back-to-login" type="button">Back to login</button>
-          <p class="form-message" id="join-message"></p>
-        </form>
-      </section>
     </main>
 
     <main class="profile-setup" id="profile-setup">
@@ -1212,7 +1178,7 @@
               <p id="records-copy">Rep view only shows records assigned to this login.</p>
             </div>
             <div class="stage-tabs" id="stage-tabs"></div>
-            <div id="record-list"></div>
+            <div class="record-list" id="record-list"></div>
           </section>
           <aside class="right-rail">
             <section>
@@ -1278,9 +1244,10 @@
       const launchItems = [
         { title: "Magic-link login", body: "Owner and rep test logins route to the correct dashboards.", status: "Ready" },
         { title: "Rep record privacy", body: "Daniel only sees records assigned to his rep ID.", status: "Ready" },
-        { title: "CRM data sync", body: "Connect this portal to live HighLevel contacts, opportunities, and jobs.", status: "Next", tone: "next" },
+        { title: "Join domain", body: "Point join.flourishsolar.com to the onboarding page and link the GHL training step from there.", status: "Next", tone: "next" },
+        { title: "Portal domain", body: "Point portal.flourishsolar.com to the approved rep/admin portal after login checks pass.", status: "Next", tone: "next" },
         { title: "Rep notifications", body: "Turn on email or SMS alerts after the live data sync is connected.", status: "Next", tone: "next" },
-        { title: "Publish", body: "Hold until live login, role filtering, and test notifications pass.", status: "Hold", tone: "hold" },
+        { title: "Publish", body: "Publish after join, approval, and portal login pass on the hosted URL.", status: "Hold", tone: "hold" },
       ];
       const fieldMap = [
         { label: "Rep identity", key: "User ID / Assigned User", body: "Matches each login to the correct HighLevel rep." },
@@ -1396,70 +1363,10 @@
         if (rep) renderPortal(rep);
       });
 
-      document.getElementById("show-join").addEventListener("click", () => {
-        history.replaceState(null, "", "#/join");
-        document.getElementById("login").style.display = "none";
-        document.getElementById("profile-setup").style.display = "none";
-        document.getElementById("portal").style.display = "none";
-        document.getElementById("join-panel").style.display = "grid";
-      });
-
-      document.getElementById("back-to-login").addEventListener("click", () => {
-        history.replaceState(null, "", "#/login");
-        document.getElementById("join-panel").style.display = "none";
-        document.getElementById("login").style.display = "grid";
-      });
-
-      document.getElementById("join-form").addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const button = document.getElementById("join-submit");
-        const message = document.getElementById("join-message");
-        button.disabled = true;
-        button.textContent = "Submitting...";
-        message.className = "form-message";
-        message.textContent = "";
-
-        const payload = {
-          name: document.getElementById("join-name").value.trim(),
-          email: document.getElementById("join-email").value.trim().toLowerCase(),
-          phone: document.getElementById("join-phone").value.trim(),
-          notificationPreference: document.getElementById("join-notifications").value,
-          territory: document.getElementById("join-territory").value.trim(),
-          experience: document.getElementById("join-experience").value,
-          serviceArea: document.getElementById("join-service-area").value.trim(),
-          notes: document.getElementById("join-notes").value.trim(),
-        };
-
-        try {
-          if (location.protocol === "file:") {
-            repApplications = [{ ...payload, id: `local-${Date.now()}`, status: "Pending admin approval", createdAt: new Date().toISOString() }, ...repApplications];
-          } else {
-            const response = await fetch("/api/portal/rep-application", {
-              method: "POST",
-              headers: { "content-type": "application/json" },
-              body: JSON.stringify(payload),
-            });
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.error || "Could not submit the onboarding request.");
-            repApplications = [result.application, ...repApplications.filter((item) => item.email !== result.application.email)];
-          }
-          document.getElementById("join-form").reset();
-          message.textContent = "Onboarding request submitted. Admin can review it in Rep Access, then activate portal login.";
-          message.classList.add("visible");
-        } catch (error) {
-          message.textContent = error.message;
-          message.classList.add("visible", "error");
-        } finally {
-          button.disabled = false;
-          button.textContent = "Submit onboarding request";
-        }
-      });
-
       document.getElementById("logout").addEventListener("click", () => {
         sessionStorage.removeItem("flourishPortalSession");
         history.replaceState(null, "", "#/login");
         currentSession = null;
-        document.getElementById("join-panel").style.display = "none";
         document.getElementById("profile-setup").style.display = "none";
         document.getElementById("portal").style.display = "none";
         document.getElementById("login").style.display = "grid";
@@ -1630,6 +1537,53 @@
       });
 
       document.getElementById("rep-list").addEventListener("click", async (event) => {
+        const applicationButton = event.target.closest("[data-application-action]");
+        if (applicationButton) {
+          const applicationId = applicationButton.dataset.applicationId;
+          const action = applicationButton.dataset.applicationAction;
+          const nextStatus = action === "training-complete" ? "Training complete" : action === "approve" ? "Approved" : "Declined";
+          applicationButton.disabled = true;
+          applicationButton.textContent = action === "training-complete" ? "Saving..." : action === "approve" ? "Approving..." : "Declining...";
+          try {
+            if (location.protocol === "file:") {
+              repApplications = repApplications.map((application) => (
+                application.id === applicationId || application.contactId === applicationId
+                  ? {
+                    ...application,
+                    status: nextStatus,
+                    trainingCompletedAt: nextStatus === "Training complete" ? new Date().toISOString() : application.trainingCompletedAt,
+                    reviewedAt: nextStatus === "Approved" || nextStatus === "Declined" ? new Date().toISOString() : application.reviewedAt,
+                  }
+                  : application
+              ));
+            } else {
+              const response = await fetch("/api/portal/rep-application-status", {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({
+                  applicationId,
+                  status: nextStatus,
+                  sendInvite: action === "approve",
+                }),
+              });
+              const result = await response.json();
+              if (!response.ok) throw new Error(result.error || "Could not update request.");
+              repApplications = repApplications.map((application) => (
+                application.id === result.application.id || application.contactId === result.application.contactId
+                  ? result.application
+                  : application
+              ));
+              if (result.invite?.email) await loadPortalData();
+            }
+            renderDashboard(currentSession);
+          } catch (error) {
+            applicationButton.disabled = false;
+            applicationButton.textContent = action === "training-complete" ? "Mark training complete" : action === "approve" ? "Approve + invite" : "Decline";
+            alert(error.message);
+          }
+          return;
+        }
+
         const button = event.target.closest("[data-profile-action]");
         if (!button) return;
         const repId = button.dataset.repId;
@@ -1675,7 +1629,6 @@
       function renderProfileSetup(session) {
         history.replaceState(null, "", "#/complete-profile");
         document.getElementById("login").style.display = "none";
-        document.getElementById("join-panel").style.display = "none";
         document.getElementById("portal").style.display = "none";
         document.getElementById("profile-setup").style.display = "grid";
         document.getElementById("setup-name").textContent = session.name;
@@ -1702,7 +1655,6 @@
         sessionStorage.setItem("flourishPortalSession", JSON.stringify(session));
         history.replaceState(null, "", isAdmin ? "#/admin/access" : "#/profile");
         document.getElementById("login").style.display = "none";
-        document.getElementById("join-panel").style.display = "none";
         document.getElementById("profile-setup").style.display = "none";
         document.getElementById("portal").style.display = "grid";
         document.getElementById("access-label").textContent = isAdmin ? "Admin access" : "Rep access";
@@ -1740,8 +1692,8 @@
         document.getElementById("record-list").innerHTML = visibleRecords.map((record) => `
           <article class="record-row">
             <span class="record-type ${record.type.toLowerCase()}">${record.type}</span>
-            <div><h3>${record.name}</h3><p>${record.email || record.phone || "No contact info yet"}</p></div>
-            <div><strong>${record.stage}</strong><span>${record.nextStep}</span></div>
+            <div class="record-main"><h3>${record.name}</h3><p>${record.email || record.phone || "No contact info yet"}</p></div>
+            <div class="record-progress"><strong>${statusLabel(record.portalStatus || "new-project")}</strong><span>${record.nextStep}</span></div>
             ${record.sourceKind === "opportunity"
               ? "<span></span>"
               : isAdmin
@@ -1788,8 +1740,16 @@
                 <p>${application.territory || "Territory not set"} · ${application.experience || "Experience not set"}</p>
               </div>
               <div class="rep-actions">
-                <span class="status-pill pending">Join request</span>
-                <span class="field-key">${application.status || "Pending admin approval"}</span>
+                <span class="status-pill ${application.status === "Approved" ? "" : "pending"}">Join request</span>
+                <span class="field-key">${application.status === "Pending admin approval" ? "Training pending" : application.status || "Training pending"}</span>
+                ${!["Training complete", "Approved", "Declined"].includes(application.status) ? `
+                  <button type="button" data-application-action="training-complete" data-application-id="${application.id}">Mark training complete</button>
+                  <button type="button" data-application-action="decline" data-application-id="${application.id}">Decline</button>
+                ` : ""}
+                ${application.status === "Training complete" ? `
+                  <button type="button" data-application-action="approve" data-application-id="${application.id}">Approve + invite</button>
+                  <button type="button" data-application-action="decline" data-application-id="${application.id}">Decline</button>
+                ` : ""}
               </div>
             </article>
           `).join("");

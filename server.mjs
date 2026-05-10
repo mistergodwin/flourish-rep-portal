@@ -180,6 +180,81 @@ const hostedMagicLinkScript = `
   </script>
 `;
 
+const hostedRepApprovalScript = `
+  <script>
+    (() => {
+      if (location.protocol === "file:") return;
+
+      async function loadApplications() {
+        const response = await fetch("/api/portal/bootstrap", { cache: "no-store" });
+        const data = await response.json();
+        return Array.isArray(data.repApplications) ? data.repApplications : [];
+      }
+
+      async function decorateRepApplications() {
+        const list = document.getElementById("rep-list");
+        if (!list) return;
+        const applications = await loadApplications();
+        for (const article of list.querySelectorAll("article")) {
+          if (article.querySelector("[data-application-action]")) continue;
+          const email = article.querySelector("p")?.textContent?.trim().toLowerCase();
+          const application = applications.find((item) => item.email?.toLowerCase() === email);
+          if (!application) continue;
+          const status = application.status || "Training pending";
+          if (["Approved", "Declined"].includes(status)) continue;
+          const actions = article.querySelector(".rep-actions");
+          if (!actions) continue;
+          const trainingButton = status === "Training complete"
+            ? '<button type="button" data-application-action="approve" data-application-id="' + application.id + '">Approve + invite</button>'
+            : '<button type="button" data-application-action="training-complete" data-application-id="' + application.id + '">Mark training complete</button>';
+          actions.insertAdjacentHTML("beforeend", trainingButton +
+            '<button type="button" data-application-action="decline" data-application-id="' + application.id + '">Decline</button>');
+        }
+      }
+
+      document.addEventListener("click", async (event) => {
+        const button = event.target.closest("[data-application-action]");
+        if (!button) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        const action = button.dataset.applicationAction;
+        const nextStatus = action === "training-complete" ? "Training complete" : action === "approve" ? "Approved" : "Declined";
+        button.disabled = true;
+        button.textContent = action === "training-complete" ? "Saving..." : action === "approve" ? "Approving..." : "Declining...";
+        try {
+          const response = await fetch("/api/portal/rep-application-status", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              applicationId: button.dataset.applicationId,
+              status: nextStatus,
+              sendInvite: action === "approve",
+            }),
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || "Could not update request.");
+          if (window.loadPortalData) await window.loadPortalData();
+          if (window.renderDashboard && typeof currentSession !== "undefined") window.renderDashboard(currentSession);
+        } catch (error) {
+          button.disabled = false;
+          button.textContent = action === "training-complete" ? "Mark training complete" : action === "approve" ? "Approve + invite" : "Decline";
+          alert(error.message);
+        }
+      }, true);
+
+      const originalRenderDashboard = window.renderDashboard;
+      if (typeof originalRenderDashboard === "function") {
+        window.renderDashboard = function (...args) {
+          const result = originalRenderDashboard.apply(this, args);
+          setTimeout(decorateRepApplications, 0);
+          return result;
+        };
+      }
+      document.addEventListener("DOMContentLoaded", () => setTimeout(decorateRepApplications, 500));
+    })();
+  </script>
+`;
+
 function sendHeaders(response, status, headers = {}) {
   response.writeHead(status, { ...securityHeaders, ...headers });
 }
@@ -389,6 +464,11 @@ function normalizeOpportunity(opportunity) {
   };
 }
 
+function isInternalPortalRecord(record) {
+  const tags = Array.isArray(record.tags) ? record.tags.map((tag) => String(tag).toLowerCase()) : [];
+  return tags.includes("rep-onboarding") || (tags.includes("rep-portal-access") && tags.includes("internal-rep-login"));
+}
+
 async function ghlFetch(path) {
   if (!token) throw new Error("Missing GHL_PRIVATE_INTEGRATION_TOKEN");
   const response = await fetch(`https://services.leadconnectorhq.com${path}`, {
@@ -521,13 +601,93 @@ async function createRepApplication(payload) {
     experience: payload.experience || "",
     notificationPreference: payload.notificationPreference || "",
     notes: payload.notes || "",
-    status: "Pending admin approval",
+    status: "Training pending",
     createdAt: new Date().toISOString(),
   };
   const applications = await getRepApplications();
   const next = [application, ...applications.filter((item) => item.email?.toLowerCase() !== application.email.toLowerCase())].slice(0, 100);
   await saveRepApplications(next);
   return { contact, application };
+}
+
+function repFromApplication(application) {
+  return {
+    id: `rep-${application.contactId || application.id}`,
+    name: application.name,
+    email: application.email,
+    role: "Rep",
+    territory: application.territory || application.serviceArea || "Assigned territory",
+    status: "Active",
+    source: "Join Flourish Solar",
+  };
+}
+
+async function updateRepApplicationStatus(payload, request) {
+  const applicationId = payload.applicationId || payload.id;
+  if (!applicationId) throw new Error("applicationId is required");
+  const allowedStatuses = new Set(["Training pending", "Training complete", "Approved", "Declined"]);
+  const status = allowedStatuses.has(payload.status) ? payload.status : "Approved";
+  const applications = await getRepApplications();
+  const application = applications.find((item) => item.id === applicationId || item.contactId === applicationId);
+  if (!application) throw new Error("Onboarding request was not found");
+  if (status === "Approved" && application.status !== "Training complete" && !application.trainingCompletedAt) {
+    throw new Error("Training must be marked complete before approval");
+  }
+
+  const updatedApplication = {
+    ...application,
+    status,
+    trainingCompletedAt: status === "Training complete" ? new Date().toISOString() : application.trainingCompletedAt,
+    reviewedAt: status === "Approved" || status === "Declined" ? new Date().toISOString() : application.reviewedAt,
+  };
+  const next = applications.map((item) => (
+    item.id === application.id || item.contactId === application.contactId ? updatedApplication : item
+  ));
+  await saveRepApplications(next);
+
+  if (application.contactId) {
+    try {
+      const current = await ghlFetch(`/contacts/${encodeURIComponent(application.contactId)}`);
+      const contact = current.contact || current;
+      const existingTags = Array.isArray(contact.tags) ? contact.tags : [];
+      const nextTags = [
+        ...existingTags.filter((tag) => !["rep-approved", "rep-declined", "rep-training-complete"].includes(String(tag).toLowerCase())),
+        ...(updatedApplication.trainingCompletedAt ? ["rep-training-complete"] : []),
+        ...(status === "Approved" ? ["rep-approved"] : []),
+        ...(status === "Declined" ? ["rep-declined"] : []),
+      ];
+      await ghlJson(`/contacts/${encodeURIComponent(application.contactId)}`, "PUT", {
+        tags: [...new Set(nextTags)],
+        source: status === "Approved"
+          ? "Flourish Rep Portal Approved"
+          : status === "Declined"
+            ? "Flourish Rep Portal Declined"
+            : "Flourish Rep Portal Training",
+      });
+    } catch (error) {
+      console.warn(`Could not update rep application contact ${application.contactId}: ${error.message}`);
+    }
+  }
+
+  if (status === "Approved") {
+    const profileCompletions = await getProfileCompletions();
+    const repId = repFromApplication(updatedApplication).id;
+    profileCompletions[repId] = {
+      phone: updatedApplication.phone || "",
+      notificationPreference: updatedApplication.notificationPreference || "",
+      territory: updatedApplication.territory || "",
+      experience: updatedApplication.experience || "",
+      serviceArea: updatedApplication.serviceArea || "",
+      adminNotes: updatedApplication.notes || "",
+      completedAt: new Date().toISOString(),
+      completedByAdmin: true,
+    };
+    await saveProfileCompletions(profileCompletions);
+    const invite = payload.sendInvite === false ? null : await createMagicLogin(request, updatedApplication.email);
+    return { application: updatedApplication, invite };
+  }
+
+  return { application: updatedApplication, invite: null };
 }
 
 async function findRepAccessContact(email) {
@@ -685,10 +845,18 @@ async function getLivePortalData() {
     }
   }
 
+  const repApplications = await getRepApplications();
+  for (const application of repApplications) {
+    if (application.status === "Approved" && application.email && !reps.some((rep) => rep.email.toLowerCase() === application.email.toLowerCase())) {
+      reps.push(repFromApplication(application));
+    }
+  }
+
   const portalCreatedContacts = await getPortalCreatedContacts();
   const contactStatuses = await getContactStatuses();
   const records = [...portalCreatedContacts, ...contacts.map(normalizeContact), ...opportunities.map(normalizeOpportunity)]
     .filter((record) => record.id)
+    .filter((record) => !isInternalPortalRecord(record))
     .filter((record, index, list) => list.findIndex((item) => item.id === record.id) === index)
     .map((record) => applyStoredStatus(record, contactStatuses))
     .slice(0, 100);
@@ -700,7 +868,7 @@ async function getLivePortalData() {
     records: records.length ? records : sampleRecords,
     notes: [...await getInternalActivity(), ...sampleNotes],
     profileCompletions: await getProfileCompletions(),
-    repApplications: await getRepApplications(),
+    repApplications,
     leadStatuses,
   };
 }
@@ -825,6 +993,16 @@ async function handleApi(request, response) {
     }
   }
 
+  if (url.pathname === "/api/portal/rep-application-status" && request.method === "POST") {
+    const payload = await readJsonBody(request);
+    try {
+      const result = await updateRepApplicationStatus(payload, request);
+      return sendJson(response, 200, { ok: true, ...result });
+    } catch (error) {
+      return sendJson(response, 400, { error: error.message });
+    }
+  }
+
   if (url.pathname === "/api/portal/profile-completion" && request.method === "POST") {
     const payload = await readJsonBody(request);
     if (!payload.repId) return sendJson(response, 400, { error: "repId is required" });
@@ -882,9 +1060,14 @@ async function handleApi(request, response) {
 
 async function handleStatic(request, response) {
   const url = new URL(request.url, `http://${request.headers.host}`);
-  const requestedPath = url.pathname === "/" || url.pathname === "/flourish-rep-portal.html"
-    ? "/flourish-rep-portal-live.html"
-    : url.pathname;
+  const hostname = (request.headers["x-forwarded-host"] || request.headers.host || "").toString().split(":")[0].toLowerCase();
+  const isJoinHost = hostname === "join.flourishsolar.com" || hostname.startsWith("join.");
+  const joinPaths = new Set(["/join", "/join/", "/join.html", "/join-flourish-solar.html"]);
+  const requestedPath = isJoinHost || joinPaths.has(url.pathname)
+    ? "/join-flourish-solar.html"
+    : url.pathname === "/" || url.pathname === "/flourish-rep-portal.html"
+      ? "/flourish-rep-portal-live.html"
+      : url.pathname;
   const filePath = normalize(join(rootDir, decodeURIComponent(requestedPath)));
 
   if (!filePath.startsWith(rootDir) || !existsSync(filePath)) {
@@ -900,9 +1083,13 @@ async function handleStatic(request, response) {
   });
   if (extension === ".html") {
     const html = await readFile(filePath, "utf8");
+    if (requestedPath === "/join-flourish-solar.html") {
+      response.end(html);
+      return;
+    }
     response.end(html
       .replace("</head>", `${repReadOnlyStageStyle}</head>`)
-      .replace("</body>", `${hostedMagicLinkScript}</body>`));
+      .replace("</body>", `${hostedMagicLinkScript}${hostedRepApprovalScript}</body>`));
     return;
   }
   createReadStream(filePath).pipe(response);

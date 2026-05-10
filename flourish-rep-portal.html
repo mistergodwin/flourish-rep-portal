@@ -8,7 +8,17 @@
       :root {
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         color: #16202d;
-        background: #f4f6f8;
+        background: #f3f6f4;
+        --ink: #121a24;
+        --muted: #667385;
+        --line: #d9e2ec;
+        --paper: #ffffff;
+        --surface: #f7faf8;
+        --green: #12382e;
+        --green-2: #1a8f67;
+        --mint: #e7f5ee;
+        --gold: #d9aa3f;
+        --blue: #e7f2ff;
       }
 
       * {
@@ -19,7 +29,9 @@
         margin: 0;
         min-width: 320px;
         min-height: 100vh;
-        background: #f4f6f8;
+        background:
+          linear-gradient(180deg, rgba(231, 245, 238, 0.8), rgba(247, 250, 248, 0) 280px),
+          #f3f6f4;
       }
 
       button,
@@ -52,8 +64,8 @@
         justify-content: center;
         gap: 34px;
         padding: clamp(28px, 6vw, 72px);
-        background: #fff;
-        border-right: 1px solid #dbe1e8;
+        background: var(--paper);
+        border-right: 1px solid var(--line);
       }
 
       .brand-row {
@@ -68,7 +80,7 @@
         width: 42px;
         height: 42px;
         border-radius: 8px;
-        background: #12382e;
+        background: var(--green);
         color: #fcf8df;
         font-weight: 900;
       }
@@ -80,11 +92,11 @@
 
       .brand-row span,
       .muted {
-        color: #667385;
+        color: var(--muted);
       }
 
       .eyebrow {
-        color: #2d765f;
+        color: var(--green-2);
         font-size: 12px;
         font-weight: 800;
         letter-spacing: 0.08em;
@@ -98,7 +110,7 @@
 
       .login-copy h1,
       .portal-header h1 {
-        color: #101721;
+        color: var(--ink);
         font-size: clamp(34px, 5vw, 56px);
         line-height: 1;
         letter-spacing: 0;
@@ -146,6 +158,7 @@
       }
 
       .primary-action,
+      .ghost-action,
       .link-box button {
         display: inline-flex;
         align-items: center;
@@ -154,9 +167,21 @@
         min-height: 50px;
         border: 0;
         border-radius: 8px;
-        background: #12382e;
+        background: var(--green);
         color: #fff;
         font-weight: 800;
+      }
+
+      .ghost-action {
+        border: 1px solid var(--line);
+        background: #fff;
+        color: var(--green);
+        text-decoration: none;
+      }
+
+      .login-actions {
+        display: grid;
+        gap: 10px;
       }
 
       .link-box {
@@ -197,7 +222,9 @@
         justify-content: end;
         gap: 24px;
         padding: clamp(28px, 6vw, 72px);
-        background: linear-gradient(180deg, #194d3f, #102f27);
+        background:
+          linear-gradient(rgba(18, 56, 46, 0.9), rgba(16, 47, 39, 0.94)),
+          url("https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1600&q=80") center / cover;
         color: #fff;
       }
 
@@ -239,6 +266,35 @@
         background: #f4f6f8;
       }
 
+      .join-panel {
+        display: none;
+        grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+        min-height: 100vh;
+        background: #f4f6f8;
+      }
+
+      .training-list {
+        display: grid;
+        gap: 12px;
+        margin-top: 26px;
+      }
+
+      .training-list article {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+        align-items: start;
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .training-list strong {
+        display: block;
+        margin-bottom: 3px;
+      }
+
       .setup-intro {
         display: flex;
         flex-direction: column;
@@ -271,6 +327,7 @@
       }
 
       .profile-form,
+      .join-form,
       .design-form {
         display: grid;
         width: 100%;
@@ -285,12 +342,17 @@
         max-width: 680px;
       }
 
+      .join-form {
+        max-width: 720px;
+      }
+
       .design-form {
         margin-bottom: 16px;
         padding: 18px;
       }
 
       .profile-form header,
+      .join-form header,
       .design-form header {
         display: grid;
         gap: 8px;
@@ -298,6 +360,7 @@
       }
 
       .profile-form header p,
+      .join-form header p,
       .design-form header p,
       .setup-note {
         color: #667385;
@@ -311,6 +374,7 @@
       }
 
       .profile-form label,
+      .join-form label,
       .design-form label {
         display: grid;
         gap: 7px;
@@ -321,6 +385,9 @@
       .profile-form input,
       .profile-form select,
       .profile-form textarea,
+      .join-form input,
+      .join-form select,
+      .join-form textarea,
       .design-form input,
       .design-form select,
       .design-form textarea {
@@ -335,6 +402,7 @@
       }
 
       .profile-form textarea,
+      .join-form textarea,
       .design-form textarea {
         min-height: 88px;
         resize: vertical;
@@ -343,6 +411,9 @@
       .profile-form input:focus,
       .profile-form select:focus,
       .profile-form textarea:focus,
+      .join-form input:focus,
+      .join-form select:focus,
+      .join-form textarea:focus,
       .design-form input:focus,
       .design-form select:focus,
       .design-form textarea:focus {
@@ -388,7 +459,7 @@
 
       .portal-workspace {
         min-width: 0;
-        padding: 28px;
+        padding: clamp(18px, 3vw, 32px);
       }
 
       .portal-header {
@@ -408,9 +479,10 @@
       .metric,
       .records-section,
       .right-rail section {
-        border: 1px solid #dbe1e8;
+        border: 1px solid var(--line);
         border-radius: 8px;
         background: #fff;
+        box-shadow: 0 12px 34px rgba(18, 32, 45, 0.06);
       }
 
       .user-chip {
@@ -446,6 +518,7 @@
       .metric {
         min-height: 82px;
         padding: 16px;
+        border-top: 3px solid var(--green-2);
       }
 
       .metric span {
@@ -456,7 +529,7 @@
       .metric strong {
         display: block;
         margin-top: 5px;
-        color: #101721;
+        color: var(--ink);
         font-size: 24px;
       }
 
@@ -468,6 +541,10 @@
 
       .records-section {
         overflow: hidden;
+      }
+
+      .record-list {
+        display: grid;
       }
 
       .section-title {
@@ -533,11 +610,15 @@
 
       .record-row {
         display: grid;
-        grid-template-columns: 86px minmax(170px, 1.2fr) minmax(150px, 0.9fr) minmax(150px, 0.9fr) 72px auto;
-        gap: 16px;
+        grid-template-columns: 82px minmax(220px, 1.35fr) minmax(160px, 0.8fr) minmax(170px, 0.85fr) minmax(82px, 0.35fr) auto;
+        gap: 18px;
         align-items: center;
-        padding: 15px 18px;
+        padding: 17px 18px;
         border-bottom: 1px solid #edf1f5;
+      }
+
+      .record-row:hover {
+        background: #fbfdfb;
       }
 
       .record-row:last-child {
@@ -547,8 +628,27 @@
       .record-row p,
       .record-row span,
       dt {
-        color: #667385;
+        color: var(--muted);
         font-size: 13px;
+      }
+
+      .record-main,
+      .record-progress {
+        display: grid;
+        gap: 4px;
+        min-width: 0;
+      }
+
+      .record-main h3,
+      .record-progress strong {
+        color: var(--ink);
+        overflow-wrap: anywhere;
+      }
+
+      .record-main p,
+      .record-progress span {
+        overflow-wrap: anywhere;
+        line-height: 1.35;
       }
 
       .record-row > strong {
@@ -583,6 +683,21 @@
         padding: 0 8px;
       }
 
+      .status-badge {
+        min-height: 36px;
+        width: fit-content;
+        max-width: 100%;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid #d7e0eb;
+        border-radius: 8px;
+        background: var(--mint);
+        color: #17634d;
+        font-size: 13px;
+        font-weight: 800;
+        padding: 0 10px;
+      }
+
       .record-type {
         width: fit-content;
         padding: 5px 8px;
@@ -591,7 +706,7 @@
       }
 
       .record-type.lead {
-        background: #e7f2ff;
+        background: var(--blue);
         color: #155d9b;
       }
 
@@ -709,7 +824,7 @@
         align-self: start;
         padding: 5px 8px;
         border-radius: 6px;
-        background: #e5f2ec;
+        background: var(--mint);
         color: #17634d;
         font-size: 12px;
         font-weight: 900;
@@ -733,7 +848,7 @@
 
       .field-key {
         align-self: start;
-        max-width: 150px;
+        max-width: 170px;
         padding: 5px 8px;
         border-radius: 6px;
         background: #eef6ff;
@@ -746,6 +861,7 @@
       @media (max-width: 980px) {
         .login-page,
         .profile-setup,
+        .join-panel,
         .content-grid {
           grid-template-columns: 1fr;
         }
@@ -795,6 +911,7 @@
 
         .record-row {
           grid-template-columns: 1fr;
+          gap: 10px;
         }
 
         .record-row > strong {
@@ -815,8 +932,8 @@
         </div>
         <div class="login-copy">
           <span class="eyebrow">Secure access</span>
-          <h1>Sign in with a magic link</h1>
-          <p>Reps enter their email, receive a one-time link, and land on a dashboard filtered to their assigned records.</p>
+          <h1>Approved rep portal login</h1>
+          <p>Approved reps and admins enter their email, receive a one-time link, and land on the right dashboard.</p>
         </div>
         <form class="login-form" id="login-form">
           <label>
@@ -826,7 +943,10 @@
               <input id="email" type="email" value="dan@flourishsolar.com" required />
             </div>
           </label>
-          <button class="primary-action" type="submit">Send magic link</button>
+          <div class="login-actions">
+            <button class="primary-action" type="submit">Send magic link</button>
+            <a class="ghost-action" href="/join">Need access? Start onboarding</a>
+          </div>
         </form>
         <div class="link-box" id="link-box">
           <span>✓</span>
@@ -841,13 +961,13 @@
       <aside class="security-panel">
         <div>
           <span class="eyebrow">Access model</span>
-          <h2>Simple for reps, controlled for admin.</h2>
-          <p>Each login is tied to a rep profile, then every lead, customer, job, and notification is filtered by owner.</p>
+          <h2>Private workspace for reps and admin.</h2>
+          <p>Each login is tied to an approved profile, then every lead, customer, job, and notification is filtered by owner.</p>
         </div>
         <div class="security-steps">
-          <span>1. Email entered</span>
+          <span>1. Approved email</span>
           <span>2. One-time link sent</span>
-          <span>3. Rep-only dashboard</span>
+          <span>3. Role-based dashboard</span>
         </div>
       </aside>
     </main>
@@ -1058,7 +1178,7 @@
               <p id="records-copy">Rep view only shows records assigned to this login.</p>
             </div>
             <div class="stage-tabs" id="stage-tabs"></div>
-            <div id="record-list"></div>
+            <div class="record-list" id="record-list"></div>
           </section>
           <aside class="right-rail">
             <section>
@@ -1110,6 +1230,7 @@
         { id: "note-1", ownerId: "F7kz2DXoX9xMvyIP3Duj", title: "New lead assigned", body: "Test Rep Lead is ready for review.", time: "Today" },
         { id: "note-2", ownerId: "admin", title: "Portal test ready", body: "Rep visibility passed with one assigned contact.", time: "Today" },
       ];
+      let repApplications = [];
       let dataMode = "sample";
       let dataWarning = "";
       let leadStatuses = [
@@ -1123,9 +1244,10 @@
       const launchItems = [
         { title: "Magic-link login", body: "Owner and rep test logins route to the correct dashboards.", status: "Ready" },
         { title: "Rep record privacy", body: "Daniel only sees records assigned to his rep ID.", status: "Ready" },
-        { title: "CRM data sync", body: "Connect this portal to live HighLevel contacts, opportunities, and jobs.", status: "Next", tone: "next" },
+        { title: "Join domain", body: "Point join.flourishsolar.com to the onboarding page and link the GHL training step from there.", status: "Next", tone: "next" },
+        { title: "Portal domain", body: "Point portal.flourishsolar.com to the approved rep/admin portal after login checks pass.", status: "Next", tone: "next" },
         { title: "Rep notifications", body: "Turn on email or SMS alerts after the live data sync is connected.", status: "Next", tone: "next" },
-        { title: "Publish", body: "Hold until live login, role filtering, and test notifications pass.", status: "Hold", tone: "hold" },
+        { title: "Publish", body: "Publish after join, approval, and portal login pass on the hosted URL.", status: "Hold", tone: "hold" },
       ];
       const fieldMap = [
         { label: "Rep identity", key: "User ID / Assigned User", body: "Matches each login to the correct HighLevel rep." },
@@ -1173,6 +1295,7 @@
           if (Array.isArray(data.reps) && data.reps.length) reps = data.reps;
           if (Array.isArray(data.records) && data.records.length) records = data.records;
           if (Array.isArray(data.notes) && data.notes.length) notes = data.notes;
+          if (Array.isArray(data.repApplications)) repApplications = data.repApplications;
           if (Array.isArray(data.leadStatuses) && data.leadStatuses.length) leadStatuses = data.leadStatuses;
           if (data.profileCompletions && typeof data.profileCompletions === "object") {
             completedProfiles = data.profileCompletions;
@@ -1219,6 +1342,10 @@
         return leadStatuses
           .map((status) => `<option value="${status.value}" ${status.value === selectedStatus ? "selected" : ""}>${status.label}</option>`)
           .join("");
+      }
+
+      function statusLabel(selectedStatus) {
+        return leadStatuses.find((status) => status.value === selectedStatus)?.label || "New Project";
       }
 
       document.getElementById("login-form").addEventListener("submit", (event) => {
@@ -1410,6 +1537,53 @@
       });
 
       document.getElementById("rep-list").addEventListener("click", async (event) => {
+        const applicationButton = event.target.closest("[data-application-action]");
+        if (applicationButton) {
+          const applicationId = applicationButton.dataset.applicationId;
+          const action = applicationButton.dataset.applicationAction;
+          const nextStatus = action === "training-complete" ? "Training complete" : action === "approve" ? "Approved" : "Declined";
+          applicationButton.disabled = true;
+          applicationButton.textContent = action === "training-complete" ? "Saving..." : action === "approve" ? "Approving..." : "Declining...";
+          try {
+            if (location.protocol === "file:") {
+              repApplications = repApplications.map((application) => (
+                application.id === applicationId || application.contactId === applicationId
+                  ? {
+                    ...application,
+                    status: nextStatus,
+                    trainingCompletedAt: nextStatus === "Training complete" ? new Date().toISOString() : application.trainingCompletedAt,
+                    reviewedAt: nextStatus === "Approved" || nextStatus === "Declined" ? new Date().toISOString() : application.reviewedAt,
+                  }
+                  : application
+              ));
+            } else {
+              const response = await fetch("/api/portal/rep-application-status", {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({
+                  applicationId,
+                  status: nextStatus,
+                  sendInvite: action === "approve",
+                }),
+              });
+              const result = await response.json();
+              if (!response.ok) throw new Error(result.error || "Could not update request.");
+              repApplications = repApplications.map((application) => (
+                application.id === result.application.id || application.contactId === result.application.contactId
+                  ? result.application
+                  : application
+              ));
+              if (result.invite?.email) await loadPortalData();
+            }
+            renderDashboard(currentSession);
+          } catch (error) {
+            applicationButton.disabled = false;
+            applicationButton.textContent = action === "training-complete" ? "Mark training complete" : action === "approve" ? "Approve + invite" : "Decline";
+            alert(error.message);
+          }
+          return;
+        }
+
         const button = event.target.closest("[data-profile-action]");
         if (!button) return;
         const repId = button.dataset.repId;
@@ -1518,9 +1692,13 @@
         document.getElementById("record-list").innerHTML = visibleRecords.map((record) => `
           <article class="record-row">
             <span class="record-type ${record.type.toLowerCase()}">${record.type}</span>
-            <div><h3>${record.name}</h3><p>${record.email || record.phone || "No contact info yet"}</p></div>
-            <div><strong>${record.stage}</strong><span>${record.nextStep}</span></div>
-            ${record.sourceKind === "opportunity" ? "<span></span>" : `<select class="status-select" data-status-contact="${record.id}" ${isAdmin ? "" : "disabled"}>${statusOptions(record.portalStatus || "new-project")}</select>`}
+            <div class="record-main"><h3>${record.name}</h3><p>${record.email || record.phone || "No contact info yet"}</p></div>
+            <div class="record-progress"><strong>${statusLabel(record.portalStatus || "new-project")}</strong><span>${record.nextStep}</span></div>
+            ${record.sourceKind === "opportunity"
+              ? "<span></span>"
+              : isAdmin
+                ? `<select class="status-select" data-status-contact="${record.id}">${statusOptions(record.portalStatus || "new-project")}</select>`
+                : `<span class="status-badge">${statusLabel(record.portalStatus || "new-project")}</span>`}
             <strong>${record.value}</strong>
             ${record.sourceKind === "opportunity" ? "<span></span>" : `<button class="secondary-action" type="button" data-edit-contact="${record.id}">Edit</button>`}
           </article>
@@ -1554,7 +1732,27 @@
                 </button>
               </div>
             </article>
-          `}).join("");
+          `}).join("") + repApplications.map((application) => `
+            <article>
+              <div>
+                <strong>${application.name}</strong>
+                <p>${application.email}</p>
+                <p>${application.territory || "Territory not set"} · ${application.experience || "Experience not set"}</p>
+              </div>
+              <div class="rep-actions">
+                <span class="status-pill ${application.status === "Approved" ? "" : "pending"}">Join request</span>
+                <span class="field-key">${application.status === "Pending admin approval" ? "Training pending" : application.status || "Training pending"}</span>
+                ${!["Training complete", "Approved", "Declined"].includes(application.status) ? `
+                  <button type="button" data-application-action="training-complete" data-application-id="${application.id}">Mark training complete</button>
+                  <button type="button" data-application-action="decline" data-application-id="${application.id}">Decline</button>
+                ` : ""}
+                ${application.status === "Training complete" ? `
+                  <button type="button" data-application-action="approve" data-application-id="${application.id}">Approve + invite</button>
+                  <button type="button" data-application-action="decline" data-application-id="${application.id}">Decline</button>
+                ` : ""}
+              </div>
+            </article>
+          `).join("");
         document.getElementById("launch-list").innerHTML = launchItems.map((item) => `
           <article>
             <div><strong>${item.title}</strong><p>${item.body}</p></div>

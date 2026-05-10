@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Join Flourish Solar</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --ink: #142033;
+        --muted: #657386;
+        --line: #d9e2ec;
+        --green: #134c3d;
+        --mint: #e8f6ee;
+        --gold: #e4bc62;
+        --paper: #f7f9fb;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+      }
+
+      .join-shell {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: minmax(360px, 0.86fr) minmax(460px, 1.14fr);
+      }
+
+      .story {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 40px;
+        padding: clamp(28px, 5vw, 64px);
+        color: white;
+        background:
+          linear-gradient(rgba(12, 55, 44, 0.9), rgba(12, 55, 44, 0.94)),
+          url("https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1400&q=80") center / cover;
+      }
+
+      .brand-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 850;
+      }
+
+      .brand-mark {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 8px;
+        background: #0d342b;
+        color: var(--gold);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+      }
+
+      .brand-row span:last-child {
+        display: block;
+        margin-top: 2px;
+        color: rgba(255, 255, 255, 0.72);
+        font-weight: 650;
+      }
+
+      .eyebrow {
+        color: #64c99b;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0;
+        text-transform: uppercase;
+      }
+
+      h1, h2, p { margin: 0; }
+
+      h1 {
+        max-width: 680px;
+        margin-top: 14px;
+        font-size: clamp(44px, 6vw, 76px);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      .story-copy p {
+        max-width: 610px;
+        margin-top: 20px;
+        color: rgba(255, 255, 255, 0.82);
+        font-size: 18px;
+        line-height: 1.55;
+      }
+
+      .training-path {
+        display: grid;
+        gap: 12px;
+      }
+
+      .training-path article {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .step-number {
+        width: 28px;
+        height: 28px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        background: var(--gold);
+        color: #17352e;
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .training-path strong {
+        display: block;
+        margin-bottom: 4px;
+      }
+
+      .training-path p {
+        color: rgba(255, 255, 255, 0.72);
+        line-height: 1.45;
+      }
+
+      .form-panel {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: clamp(24px, 5vw, 72px);
+      }
+
+      .join-form {
+        width: min(760px, 100%);
+        display: grid;
+        gap: 22px;
+      }
+
+      .join-form header {
+        display: grid;
+        gap: 8px;
+      }
+
+      h2 {
+        font-size: clamp(30px, 4vw, 48px);
+        line-height: 1.02;
+      }
+
+      .join-form header p,
+      .small-note {
+        color: var(--muted);
+        line-height: 1.5;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      label {
+        display: grid;
+        gap: 7px;
+        color: #253247;
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      input,
+      select,
+      textarea {
+        min-height: 50px;
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: white;
+        color: var(--ink);
+        font: inherit;
+        font-weight: 700;
+        padding: 0 14px;
+        outline: none;
+      }
+
+      textarea {
+        min-height: 100px;
+        padding-top: 12px;
+        resize: vertical;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: #65a58e;
+        box-shadow: 0 0 0 4px rgba(30, 112, 85, 0.12);
+      }
+
+      .full-field { grid-column: 1 / -1; }
+
+      .training-box {
+        display: grid;
+        gap: 10px;
+        padding: 16px;
+        border: 1px solid #cfe2d7;
+        border-radius: 8px;
+        background: var(--mint);
+      }
+
+      .training-box strong {
+        color: var(--green);
+      }
+
+      .training-checklist {
+        display: grid;
+        gap: 8px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .training-checklist li {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 8px;
+        align-items: start;
+        color: #334154;
+        line-height: 1.4;
+      }
+
+      .training-checklist li::before {
+        content: "";
+        width: 9px;
+        height: 9px;
+        margin-top: 6px;
+        border-radius: 999px;
+        background: var(--gold);
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      button,
+      .portal-link {
+        min-height: 52px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        border: 1px solid var(--green);
+        padding: 0 18px;
+        font: inherit;
+        font-weight: 900;
+        cursor: pointer;
+        text-decoration: none;
+      }
+
+      button {
+        background: var(--green);
+        color: white;
+      }
+
+      button:disabled {
+        cursor: wait;
+        opacity: 0.72;
+      }
+
+      .portal-link {
+        background: white;
+        color: var(--green);
+        border-color: var(--line);
+      }
+
+      .form-message {
+        display: none;
+        padding: 13px 14px;
+        border-radius: 8px;
+        border: 1px solid #cfe2d7;
+        background: var(--mint);
+        color: var(--green);
+        font-weight: 800;
+      }
+
+      .form-message.visible { display: block; }
+
+      .form-message.error {
+        border-color: #f0c7c7;
+        background: #fff1f1;
+        color: #9b1f1f;
+      }
+
+      @media (max-width: 960px) {
+        .join-shell { grid-template-columns: 1fr; }
+        .story,
+        .form-panel { min-height: auto; }
+      }
+
+      @media (max-width: 640px) {
+        .form-grid { grid-template-columns: 1fr; }
+        .story,
+        .form-panel { padding: 24px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="join-shell">
+      <section class="story">
+        <div class="brand-row">
+          <span class="brand-mark">FS</span>
+          <div>
+            <strong>Flourish Solar</strong>
+            <span>Join Onboarding</span>
+          </div>
+        </div>
+        <div class="story-copy">
+          <span class="eyebrow">Join Flourish Solar</span>
+          <h1>Start here. Earn portal access after approval.</h1>
+          <p>New reps complete a short onboarding path first. Once admin approves the request, the rep receives access to the private Flourish Solar portal.</p>
+        </div>
+        <div class="training-path">
+          <article><span class="step-number">1</span><div><strong>Profile</strong><p>Submit your contact info, territory, experience, and preferred notifications.</p></div></article>
+          <article><span class="step-number">2</span><div><strong>Training</strong><p>Complete the short GHL training module for process, design requests, and handoffs.</p></div></article>
+          <article><span class="step-number">3</span><div><strong>Approval</strong><p>Admin reviews the request, activates portal access, and sends the login link.</p></div></article>
+        </div>
+      </section>
+
+      <section class="form-panel">
+        <form class="join-form" id="join-form">
+          <header>
+            <span class="eyebrow">Rep application</span>
+            <h2>Join Flourish Solar</h2>
+            <p>This is the first step before portal access. The private portal is only for approved reps and admin.</p>
+          </header>
+
+          <div class="training-box">
+            <strong>Training checkpoint</strong>
+            <p class="small-note">After this application is submitted, complete the short GHL training path. Admin will mark training complete before approving portal access.</p>
+            <ul class="training-checklist">
+              <li>Welcome to Flourish Solar</li>
+              <li>Design request and customer handoff rules</li>
+              <li>Portal expectations and communication standards</li>
+            </ul>
+          </div>
+
+          <div class="form-grid">
+            <label>
+              <span>Full name</span>
+              <input id="join-name" type="text" placeholder="New Rep" required />
+            </label>
+            <label>
+              <span>Email address</span>
+              <input id="join-email" type="email" placeholder="rep@email.com" required />
+            </label>
+            <label>
+              <span>Mobile phone</span>
+              <input id="join-phone" type="tel" placeholder="407-555-0188" required />
+            </label>
+            <label>
+              <span>Preferred notifications</span>
+              <select id="join-notifications" required>
+                <option value="">Choose one</option>
+                <option>Email and SMS</option>
+                <option>Email only</option>
+                <option>SMS only</option>
+              </select>
+            </label>
+            <label>
+              <span>Primary territory</span>
+              <input id="join-territory" type="text" placeholder="Orlando, FL" required />
+            </label>
+            <label>
+              <span>Experience level</span>
+              <select id="join-experience" required>
+                <option value="">Choose one</option>
+                <option>New rep</option>
+                <option>Experienced rep</option>
+                <option>Team lead</option>
+              </select>
+            </label>
+            <label class="full-field">
+              <span>Service areas</span>
+              <input id="join-service-area" type="text" placeholder="Orange County, Seminole County, Lake Nona" required />
+            </label>
+            <label class="full-field">
+              <span>Notes for admin</span>
+              <textarea id="join-notes" placeholder="Availability, market notes, or anything admin should review."></textarea>
+            </label>
+          </div>
+
+          <div class="actions">
+            <button id="join-submit" type="submit">Submit onboarding request</button>
+            <a class="portal-link" href="/">Approved rep login</a>
+          </div>
+          <p class="form-message" id="join-message"></p>
+        </form>
+      </section>
+    </main>
+
+    <script>
+      document.getElementById("join-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const button = document.getElementById("join-submit");
+        const message = document.getElementById("join-message");
+        const payload = {
+          name: document.getElementById("join-name").value.trim(),
+          email: document.getElementById("join-email").value.trim().toLowerCase(),
+          phone: document.getElementById("join-phone").value.trim(),
+          notificationPreference: document.getElementById("join-notifications").value,
+          territory: document.getElementById("join-territory").value.trim(),
+          experience: document.getElementById("join-experience").value,
+          serviceArea: document.getElementById("join-service-area").value.trim(),
+          notes: document.getElementById("join-notes").value.trim(),
+        };
+
+        button.disabled = true;
+        button.textContent = "Submitting...";
+        message.className = "form-message";
+        message.textContent = "";
+
+        try {
+          if (location.protocol === "file:") {
+            message.textContent = "Local preview saved this request for review. Admin approval happens in the hosted portal.";
+          } else {
+            const response = await fetch("/api/portal/rep-application", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || "Could not submit the onboarding request.");
+            message.textContent = "Request submitted. Next step: complete the GHL training path. Admin will mark training complete before approval.";
+          }
+          document.getElementById("join-form").reset();
+          message.classList.add("visible");
+        } catch (error) {
+          message.textContent = error.message;
+          message.classList.add("visible", "error");
+        } finally {
+          button.disabled = false;
+          button.textContent = "Submit onboarding request";
+        }
+      });
+    </script>
+  </body>
+</html>
