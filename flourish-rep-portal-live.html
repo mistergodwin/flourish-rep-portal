@@ -1,0 +1,1825 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flourish Solar Rep Portal</title>
+    <style>
+      :root {
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #16202d;
+        background: #f4f6f8;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        min-height: 100vh;
+        background: #f4f6f8;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      .login-page {
+        display: grid;
+        grid-template-columns: minmax(0, 520px) minmax(320px, 1fr);
+        min-height: 100vh;
+      }
+
+      .login-panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 34px;
+        padding: clamp(28px, 6vw, 72px);
+        background: #fff;
+        border-right: 1px solid #dbe1e8;
+      }
+
+      .brand-row {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 8px;
+        background: #12382e;
+        color: #fcf8df;
+        font-weight: 900;
+      }
+
+      .brand-row div {
+        display: grid;
+        gap: 2px;
+      }
+
+      .brand-row span,
+      .muted {
+        color: #667385;
+      }
+
+      .eyebrow {
+        color: #2d765f;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .login-copy {
+        display: grid;
+        gap: 14px;
+      }
+
+      .login-copy h1,
+      .portal-header h1 {
+        color: #101721;
+        font-size: clamp(34px, 5vw, 56px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+
+      .login-copy p {
+        max-width: 440px;
+        color: #667385;
+        font-size: 17px;
+        line-height: 1.55;
+      }
+
+      .login-form {
+        display: grid;
+        gap: 16px;
+      }
+
+      .login-form label {
+        display: grid;
+        gap: 8px;
+        color: #334154;
+        font-weight: 750;
+      }
+
+      .input-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 50px;
+        padding: 0 14px;
+        border: 1px solid #cfd8e3;
+        border-radius: 8px;
+        background: #fff;
+      }
+
+      .input-wrap:focus-within {
+        border-color: #1a8f67;
+        box-shadow: 0 0 0 3px rgba(26, 143, 103, 0.14);
+      }
+
+      .input-wrap input {
+        width: 100%;
+        border: 0;
+        outline: 0;
+      }
+
+      .primary-action,
+      .ghost-action,
+      .link-box button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        min-height: 50px;
+        border: 0;
+        border-radius: 8px;
+        background: #12382e;
+        color: #fff;
+        font-weight: 800;
+      }
+
+      .ghost-action {
+        border: 1px solid #cfd8e3;
+        background: #fff;
+        color: #12382e;
+      }
+
+      .login-actions {
+        display: grid;
+        gap: 10px;
+      }
+
+      .link-box {
+        display: none;
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+        padding: 16px;
+        border: 1px solid #b9dccf;
+        border-radius: 8px;
+        background: #effaf5;
+        color: #164535;
+      }
+
+      .link-box.visible {
+        display: grid;
+      }
+
+      .link-box div {
+        display: grid;
+        gap: 9px;
+      }
+
+      .link-box p,
+      .link-box small {
+        color: #537368;
+        line-height: 1.4;
+      }
+
+      .link-box button {
+        width: fit-content;
+        min-height: 40px;
+        padding: 0 14px;
+      }
+
+      .security-panel {
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+        gap: 24px;
+        padding: clamp(28px, 6vw, 72px);
+        background: linear-gradient(180deg, #194d3f, #102f27);
+        color: #fff;
+      }
+
+      .security-panel h2 {
+        margin: 10px 0;
+        font-size: clamp(28px, 4vw, 46px);
+      }
+
+      .security-panel p {
+        max-width: 620px;
+        color: #dceee8;
+        font-size: 18px;
+        line-height: 1.55;
+      }
+
+      .security-steps {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .security-steps span {
+        padding: 9px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.22);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .portal-shell {
+        display: none;
+        grid-template-columns: 76px minmax(0, 1fr);
+        min-height: 100vh;
+      }
+
+      .profile-setup {
+        display: none;
+        min-height: 100vh;
+        grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+        background: #f4f6f8;
+      }
+
+      .join-panel {
+        display: none;
+        grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+        min-height: 100vh;
+        background: #f4f6f8;
+      }
+
+      .training-list {
+        display: grid;
+        gap: 12px;
+        margin-top: 26px;
+      }
+
+      .training-list article {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+        align-items: start;
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .training-list strong {
+        display: block;
+        margin-bottom: 3px;
+      }
+
+      .setup-intro {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 34px;
+        padding: clamp(28px, 5vw, 64px);
+        background: #12382e;
+        color: #fff;
+      }
+
+      .setup-intro h1 {
+        margin-top: 12px;
+        max-width: 560px;
+        font-size: clamp(34px, 5vw, 54px);
+        line-height: 1;
+      }
+
+      .setup-intro p {
+        max-width: 560px;
+        margin-top: 16px;
+        color: #dceee8;
+        font-size: 18px;
+        line-height: 1.55;
+      }
+
+      .setup-form-panel {
+        display: flex;
+        align-items: center;
+        padding: clamp(22px, 5vw, 64px);
+      }
+
+      .profile-form,
+      .join-form,
+      .design-form {
+        display: grid;
+        width: 100%;
+        gap: 18px;
+        padding: clamp(20px, 4vw, 34px);
+        border: 1px solid #dbe1e8;
+        border-radius: 8px;
+        background: #fff;
+      }
+
+      .profile-form {
+        max-width: 680px;
+      }
+
+      .join-form {
+        max-width: 720px;
+      }
+
+      .design-form {
+        margin-bottom: 16px;
+        padding: 18px;
+      }
+
+      .profile-form header,
+      .join-form header,
+      .design-form header {
+        display: grid;
+        gap: 8px;
+        margin-bottom: 4px;
+      }
+
+      .profile-form header p,
+      .join-form header p,
+      .design-form header p,
+      .setup-note {
+        color: #667385;
+        line-height: 1.45;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .profile-form label,
+      .join-form label,
+      .design-form label {
+        display: grid;
+        gap: 7px;
+        color: #334154;
+        font-weight: 750;
+      }
+
+      .profile-form input,
+      .profile-form select,
+      .profile-form textarea,
+      .join-form input,
+      .join-form select,
+      .join-form textarea,
+      .design-form input,
+      .design-form select,
+      .design-form textarea {
+        width: 100%;
+        min-height: 48px;
+        border: 1px solid #cfd8e3;
+        border-radius: 8px;
+        padding: 11px 12px;
+        background: #fff;
+        color: #16202d;
+        outline: 0;
+      }
+
+      .profile-form textarea,
+      .join-form textarea,
+      .design-form textarea {
+        min-height: 88px;
+        resize: vertical;
+      }
+
+      .profile-form input:focus,
+      .profile-form select:focus,
+      .profile-form textarea:focus,
+      .join-form input:focus,
+      .join-form select:focus,
+      .join-form textarea:focus,
+      .design-form input:focus,
+      .design-form select:focus,
+      .design-form textarea:focus {
+        border-color: #1a8f67;
+        box-shadow: 0 0 0 3px rgba(26, 143, 103, 0.14);
+      }
+
+      .full-field {
+        grid-column: 1 / -1;
+      }
+
+      .portal-sidebar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        padding: 14px 10px;
+        background: #102c25;
+        color: #fff;
+      }
+
+      .portal-sidebar button {
+        display: grid;
+        place-items: center;
+        width: 46px;
+        height: 46px;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        background: transparent;
+        color: #bdd8cf;
+      }
+
+      .portal-sidebar button.active,
+      .portal-sidebar button:hover {
+        border-color: rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.12);
+        color: #fff;
+      }
+
+      .logout {
+        margin-top: auto;
+      }
+
+      .portal-workspace {
+        min-width: 0;
+        padding: 28px;
+      }
+
+      .portal-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 22px;
+      }
+
+      .portal-header h1 {
+        margin-top: 8px;
+        font-size: clamp(30px, 4vw, 46px);
+      }
+
+      .user-chip,
+      .metric,
+      .records-section,
+      .right-rail section {
+        border: 1px solid #dbe1e8;
+        border-radius: 8px;
+        background: #fff;
+      }
+
+      .user-chip {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        min-width: 260px;
+        padding: 10px 12px;
+      }
+
+      .avatar {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: #e5f2ec;
+        color: #17634d;
+        font-weight: 900;
+      }
+
+      .user-chip small {
+        color: #687586;
+      }
+
+      .metric-strip {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(140px, 1fr));
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+
+      .metric {
+        min-height: 82px;
+        padding: 16px;
+      }
+
+      .metric span {
+        color: #667385;
+        font-size: 13px;
+      }
+
+      .metric strong {
+        display: block;
+        margin-top: 5px;
+        color: #101721;
+        font-size: 24px;
+      }
+
+      .content-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 340px;
+        gap: 16px;
+      }
+
+      .records-section {
+        overflow: hidden;
+      }
+
+      .section-title {
+        padding: 18px;
+        border-bottom: 1px solid #e4e9ef;
+      }
+
+      .section-title p {
+        margin-top: 5px;
+        color: #667385;
+      }
+
+      .stage-tabs {
+        display: none;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 14px 18px;
+        border-bottom: 1px solid #e4e9ef;
+        background: #fbfcfd;
+      }
+
+      .stage-tabs.visible {
+        display: flex;
+      }
+
+      .stage-tabs button {
+        min-height: 34px;
+        border: 1px solid #cfd8e3;
+        border-radius: 8px;
+        background: #fff;
+        color: #334154;
+        font-size: 13px;
+        font-weight: 850;
+        padding: 0 10px;
+      }
+
+      .stage-tabs button.active,
+      .stage-tabs button:hover {
+        border-color: #1a8f67;
+        background: #e5f2ec;
+        color: #17634d;
+      }
+
+      .form-message {
+        display: none;
+        padding: 12px;
+        border: 1px solid #b9dccf;
+        border-radius: 8px;
+        background: #effaf5;
+        color: #164535;
+        font-weight: 750;
+      }
+
+      .form-message.visible {
+        display: block;
+      }
+
+      .form-message.error {
+        border-color: #f0c2c2;
+        background: #fce8e8;
+        color: #9a2b2b;
+      }
+
+      .record-row {
+        display: grid;
+        grid-template-columns: 86px minmax(170px, 1.2fr) minmax(150px, 0.9fr) minmax(150px, 0.9fr) 72px auto;
+        gap: 16px;
+        align-items: center;
+        padding: 15px 18px;
+        border-bottom: 1px solid #edf1f5;
+      }
+
+      .record-row:last-child {
+        border-bottom: 0;
+      }
+
+      .record-row p,
+      .record-row span,
+      dt {
+        color: #667385;
+        font-size: 13px;
+      }
+
+      .record-row > strong {
+        text-align: right;
+      }
+
+      .secondary-action {
+        min-height: 34px;
+        border: 1px solid #cfd8e3;
+        border-radius: 8px;
+        background: #fff;
+        color: #263445;
+        font-size: 12px;
+        font-weight: 850;
+        padding: 0 10px;
+      }
+
+      .secondary-action:hover {
+        border-color: #1a8f67;
+        color: #17634d;
+      }
+
+      .status-select {
+        min-height: 36px;
+        width: 100%;
+        border: 1px solid #cfd8e3;
+        border-radius: 8px;
+        background: #fff;
+        color: #263445;
+        font-size: 13px;
+        font-weight: 750;
+        padding: 0 8px;
+      }
+
+      .status-badge {
+        min-height: 36px;
+        width: fit-content;
+        max-width: 100%;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid #d7e0eb;
+        border-radius: 8px;
+        background: #f6f9fc;
+        color: #4f5f73;
+        font-size: 13px;
+        font-weight: 800;
+        padding: 0 10px;
+      }
+
+      .record-type {
+        width: fit-content;
+        padding: 5px 8px;
+        border-radius: 6px;
+        font-weight: 800;
+      }
+
+      .record-type.lead {
+        background: #e7f2ff;
+        color: #155d9b;
+      }
+
+      .record-type.customer {
+        background: #eff8ed;
+        color: #2b6d35;
+      }
+
+      .record-type.job {
+        background: #fff4dc;
+        color: #88590f;
+      }
+
+      .right-rail {
+        display: grid;
+        align-content: start;
+        gap: 16px;
+      }
+
+      .right-rail section {
+        padding: 18px;
+      }
+
+      dl,
+      .note-list,
+      .rep-list,
+      .workflow-list,
+      .field-map-list {
+        display: grid;
+        gap: 12px;
+        margin: 14px 0 0;
+      }
+
+      dl div {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      dd {
+        margin: 0;
+        font-weight: 800;
+        text-align: right;
+      }
+
+      .note-list article,
+      .rep-list article,
+      .launch-list article,
+      .workflow-list article,
+      .field-map-list article {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        padding: 12px;
+        border-radius: 8px;
+        background: #f6f8fa;
+      }
+
+      .note-list p,
+      .rep-list p,
+      .launch-list p,
+      .workflow-list p,
+      .field-map-list p,
+      .note-list small {
+        margin-top: 3px;
+        color: #667385;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      .rep-list span {
+        display: grid;
+        place-items: center;
+        min-width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #e5f2ec;
+        color: #17634d;
+        font-weight: 900;
+      }
+
+      .rep-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .rep-actions button {
+        min-height: 32px;
+        border: 1px solid #cfd8e3;
+        border-radius: 8px;
+        background: #fff;
+        color: #263445;
+        font-size: 12px;
+        font-weight: 850;
+        padding: 0 10px;
+      }
+
+      .rep-actions button:hover {
+        border-color: #1a8f67;
+        color: #17634d;
+      }
+
+      .launch-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .launch-list strong {
+        display: block;
+      }
+
+      .status-pill {
+        align-self: start;
+        padding: 5px 8px;
+        border-radius: 6px;
+        background: #e5f2ec;
+        color: #17634d;
+        font-size: 12px;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+
+      .status-pill.next {
+        background: #fff4dc;
+        color: #88590f;
+      }
+
+      .status-pill.hold {
+        background: #fce8e8;
+        color: #9a2b2b;
+      }
+
+      .status-pill.pending {
+        background: #eef2f7;
+        color: #526173;
+      }
+
+      .field-key {
+        align-self: start;
+        max-width: 150px;
+        padding: 5px 8px;
+        border-radius: 6px;
+        background: #eef6ff;
+        color: #155d9b;
+        font-size: 12px;
+        font-weight: 850;
+        overflow-wrap: anywhere;
+      }
+
+      @media (max-width: 980px) {
+        .login-page,
+        .profile-setup,
+        .join-panel,
+        .content-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .security-panel {
+          min-height: 380px;
+        }
+
+        .portal-shell {
+          grid-template-columns: 1fr;
+        }
+
+        .portal-sidebar {
+          position: sticky;
+          top: 0;
+          z-index: 5;
+          flex-direction: row;
+          justify-content: space-between;
+        }
+
+        .logout {
+          margin-top: 0;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .portal-workspace {
+          padding: 16px;
+        }
+
+        .portal-header {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .user-chip {
+          min-width: 0;
+        }
+
+        .metric-strip {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .record-row {
+          grid-template-columns: 1fr;
+        }
+
+        .record-row > strong {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="login-page" id="login">
+      <section class="login-panel">
+        <div class="brand-row">
+          <span class="brand-mark">FS</span>
+          <div>
+            <strong>Flourish Solar</strong>
+            <span>Rep Portal</span>
+          </div>
+        </div>
+        <div class="login-copy">
+          <span class="eyebrow">Secure access</span>
+          <h1>Sign in with a magic link</h1>
+          <p>Reps enter their email, receive a one-time link, and land on a dashboard filtered to their assigned records.</p>
+        </div>
+        <form class="login-form" id="login-form">
+          <label>
+            <span>Email address</span>
+            <div class="input-wrap">
+              <span>@</span>
+              <input id="email" type="email" value="dan@flourishsolar.com" required />
+            </div>
+          </label>
+          <div class="login-actions">
+            <button class="primary-action" type="submit">Send magic link</button>
+            <button class="ghost-action" id="show-join" type="button">Join Flourish Solar</button>
+          </div>
+        </form>
+        <div class="link-box" id="link-box">
+          <span>✓</span>
+          <div>
+            <strong id="link-title">Magic link created</strong>
+            <p>For this test build, use the button below. In production this same link gets emailed.</p>
+            <button type="button" id="open-link">Open magic link</button>
+            <small id="link-warning"></small>
+          </div>
+        </div>
+      </section>
+      <aside class="security-panel">
+        <div>
+          <span class="eyebrow">Access model</span>
+          <h2>Simple for reps, controlled for admin.</h2>
+          <p>Each login is tied to a rep profile, then every lead, customer, job, and notification is filtered by owner.</p>
+        </div>
+        <div class="security-steps">
+          <span>1. Email entered</span>
+          <span>2. One-time link sent</span>
+          <span>3. Rep-only dashboard</span>
+        </div>
+      </aside>
+    </main>
+
+    <main class="join-panel" id="join-panel">
+      <section class="setup-intro">
+        <div class="brand-row">
+          <span class="brand-mark">FS</span>
+          <div>
+            <strong>Flourish Solar</strong>
+            <span>Join Onboarding</span>
+          </div>
+        </div>
+        <div>
+          <span class="eyebrow">Join Flourish Solar</span>
+          <h1>Start as a rep, then unlock the portal.</h1>
+          <p>New reps complete onboarding first. Admin reviews the profile, approves access, and then the rep can use magic-link login.</p>
+          <div class="training-list">
+            <article><span>1</span><div><strong>Profile</strong><p>Contact info, market, service area, and notification preference.</p></div></article>
+            <article><span>2</span><div><strong>Training</strong><p>Sales process, design form rules, handoff steps, and portal expectations.</p></div></article>
+            <article><span>3</span><div><strong>Portal Access</strong><p>Admin activates the rep so only their assigned customers and jobs are visible.</p></div></article>
+          </div>
+        </div>
+        <p class="setup-note">This creates a separate internal onboarding contact in HighLevel, not a customer lead.</p>
+      </section>
+      <section class="setup-form-panel">
+        <form class="join-form" id="join-form">
+          <header>
+            <span class="eyebrow">Rep application</span>
+            <h2>Join Flourish Solar</h2>
+            <p>Submit the basics so admin can review and activate portal access.</p>
+          </header>
+          <div class="form-grid">
+            <label>
+              <span>Full name</span>
+              <input id="join-name" type="text" placeholder="New Rep" required />
+            </label>
+            <label>
+              <span>Email address</span>
+              <input id="join-email" type="email" placeholder="rep@email.com" required />
+            </label>
+            <label>
+              <span>Mobile phone</span>
+              <input id="join-phone" type="tel" placeholder="407-555-0188" required />
+            </label>
+            <label>
+              <span>Preferred notifications</span>
+              <select id="join-notifications" required>
+                <option value="">Choose one</option>
+                <option>Email and SMS</option>
+                <option>Email only</option>
+                <option>SMS only</option>
+              </select>
+            </label>
+            <label>
+              <span>Primary territory</span>
+              <input id="join-territory" type="text" placeholder="Orlando, FL" required />
+            </label>
+            <label>
+              <span>Experience level</span>
+              <select id="join-experience" required>
+                <option value="">Choose one</option>
+                <option>New rep</option>
+                <option>Experienced rep</option>
+                <option>Team lead</option>
+              </select>
+            </label>
+            <label class="full-field">
+              <span>Service areas</span>
+              <input id="join-service-area" type="text" placeholder="Orange County, Seminole County, Lake Nona" required />
+            </label>
+            <label class="full-field">
+              <span>Notes for admin</span>
+              <textarea id="join-notes" placeholder="Availability, market notes, or anything admin should review."></textarea>
+            </label>
+          </div>
+          <button class="primary-action" id="join-submit" type="submit">Submit onboarding request</button>
+          <button class="ghost-action" id="back-to-login" type="button">Back to login</button>
+          <p class="form-message" id="join-message"></p>
+        </form>
+      </section>
+    </main>
+
+    <main class="profile-setup" id="profile-setup">
+      <section class="setup-intro">
+        <div class="brand-row">
+          <span class="brand-mark">FS</span>
+          <div>
+            <strong>Flourish Solar</strong>
+            <span>Rep Onboarding</span>
+          </div>
+        </div>
+        <div>
+          <span class="eyebrow">First login</span>
+          <h1>Complete your rep profile.</h1>
+          <p>This keeps assignments, notifications, territories, and customer follow-up clean before reps start working leads.</p>
+        </div>
+        <p class="setup-note">Admins can review completed profiles from the access area before turning on live notifications.</p>
+      </section>
+      <section class="setup-form-panel">
+        <form class="profile-form" id="profile-form">
+          <header>
+            <span class="eyebrow">Required setup</span>
+            <h2 id="setup-name">Daniel Godwin</h2>
+            <p>Confirm the details below to open the rep dashboard.</p>
+          </header>
+          <div class="form-grid">
+            <label>
+              <span>Mobile phone</span>
+              <input id="setup-phone" type="tel" placeholder="407-555-0188" required />
+            </label>
+            <label>
+              <span>Preferred notifications</span>
+              <select id="setup-notifications" required>
+                <option value="">Choose one</option>
+                <option>Email and SMS</option>
+                <option>Email only</option>
+                <option>SMS only</option>
+              </select>
+            </label>
+            <label>
+              <span>Primary territory</span>
+              <input id="setup-territory" type="text" placeholder="Orlando, FL" required />
+            </label>
+            <label>
+              <span>Experience level</span>
+              <select id="setup-experience" required>
+                <option value="">Choose one</option>
+                <option>New rep</option>
+                <option>Experienced rep</option>
+                <option>Team lead</option>
+              </select>
+            </label>
+            <label class="full-field">
+              <span>Service areas</span>
+              <input id="setup-service-area" type="text" placeholder="Orange County, Seminole County, Lake Nona" required />
+            </label>
+            <label class="full-field">
+              <span>Notes for admin</span>
+              <textarea id="setup-notes" placeholder="Anything we should know before assigning more leads?"></textarea>
+            </label>
+          </div>
+          <button class="primary-action" type="submit">Complete profile</button>
+        </form>
+      </section>
+    </main>
+
+    <main class="portal-shell" id="portal">
+      <aside class="portal-sidebar">
+        <span class="brand-mark">FS</span>
+        <button class="active" aria-label="Dashboard">⌂</button>
+        <button aria-label="Profile">◉</button>
+        <button aria-label="Customers">☷</button>
+        <button aria-label="Jobs">□</button>
+        <button aria-label="Notifications">!</button>
+        <button class="logout" id="logout" aria-label="Log out">↩</button>
+      </aside>
+      <section class="portal-workspace">
+        <header class="portal-header">
+          <div>
+            <span class="eyebrow" id="access-label">Rep access</span>
+            <h1 id="headline">My assigned work</h1>
+          </div>
+          <div class="user-chip">
+            <span class="avatar" id="avatar">DG</span>
+            <div>
+              <strong id="user-name">Daniel Godwin</strong>
+              <small id="user-email">dan@flourishsolar.com</small>
+            </div>
+          </div>
+        </header>
+        <section class="metric-strip">
+          <article class="metric"><span>Visible records</span><strong id="record-count">1</strong></article>
+          <article class="metric"><span>Reps</span><strong id="rep-count">1</strong></article>
+          <article class="metric"><span>Notifications</span><strong id="note-count">1</strong></article>
+          <article class="metric"><span>Access mode</span><strong id="access-mode">Assigned</strong></article>
+        </section>
+        <form class="design-form" id="design-form">
+          <header>
+            <span class="eyebrow">Design form</span>
+            <h2>Add a new customer lead</h2>
+            <p>This creates the contact in HighLevel first, then refreshes this portal from HighLevel.</p>
+          </header>
+          <div class="form-grid">
+            <label>
+              <span>Customer name</span>
+              <input id="design-name" type="text" placeholder="Jane Homeowner" required />
+            </label>
+            <label>
+              <span>Mobile phone</span>
+              <input id="design-phone" type="tel" placeholder="407-555-0100" required />
+            </label>
+            <label>
+              <span>Email</span>
+              <input id="design-email" type="email" placeholder="customer@email.com" />
+            </label>
+            <label>
+              <span>Assigned rep</span>
+              <select id="design-rep"></select>
+            </label>
+            <label class="full-field">
+              <span>Street address</span>
+              <input id="design-address" type="text" placeholder="123 Solar Way" />
+            </label>
+            <label>
+              <span>City</span>
+              <input id="design-city" type="text" placeholder="Orlando" />
+            </label>
+            <label>
+              <span>State</span>
+              <input id="design-state" type="text" value="FL" />
+            </label>
+            <label>
+              <span>ZIP</span>
+              <input id="design-postal" type="text" placeholder="32801" />
+            </label>
+            <label>
+              <span>Roof type</span>
+              <select id="design-roof">
+                <option>Not sure</option>
+                <option>Shingle</option>
+                <option>Tile</option>
+                <option>Metal</option>
+                <option>Flat</option>
+              </select>
+            </label>
+            <label>
+              <span>Monthly utility bill</span>
+              <input id="design-utility" type="text" placeholder="$180" />
+            </label>
+            <label class="full-field">
+              <span>Project notes</span>
+              <textarea id="design-notes" placeholder="Gate code, timing, roof notes, or anything the design team needs."></textarea>
+            </label>
+          </div>
+          <button class="primary-action" id="design-submit" type="submit">Create in HighLevel</button>
+          <p class="form-message" id="design-message"></p>
+        </form>
+        <form class="design-form" id="edit-contact-form" hidden>
+          <header>
+            <span class="eyebrow">Contact update</span>
+            <h2>Update contact info</h2>
+            <p>Changes save to HighLevel first, then this portal refreshes from live CRM data.</p>
+          </header>
+          <div class="form-grid">
+            <label>
+              <span>Customer name</span>
+              <input id="edit-name" type="text" required />
+            </label>
+            <label>
+              <span>Mobile phone</span>
+              <input id="edit-phone" type="tel" />
+            </label>
+            <label>
+              <span>Email</span>
+              <input id="edit-email" type="email" />
+            </label>
+            <label>
+              <span>Assigned rep</span>
+              <select id="edit-rep"></select>
+            </label>
+            <label class="full-field">
+              <span>Street address</span>
+              <input id="edit-address" type="text" />
+            </label>
+            <label>
+              <span>City</span>
+              <input id="edit-city" type="text" />
+            </label>
+            <label>
+              <span>State</span>
+              <input id="edit-state" type="text" />
+            </label>
+            <label>
+              <span>ZIP</span>
+              <input id="edit-postal" type="text" />
+            </label>
+          </div>
+          <button class="primary-action" id="edit-submit" type="submit">Update in HighLevel</button>
+          <button class="secondary-action" id="edit-cancel" type="button">Cancel</button>
+          <p class="form-message" id="edit-message"></p>
+        </form>
+        <div class="content-grid">
+          <section class="records-section">
+            <div class="section-title">
+              <h2 id="records-title">My leads, customers, and jobs</h2>
+              <p id="records-copy">Rep view only shows records assigned to this login.</p>
+            </div>
+            <div class="stage-tabs" id="stage-tabs"></div>
+            <div id="record-list"></div>
+          </section>
+          <aside class="right-rail">
+            <section>
+              <h2>Profile</h2>
+              <dl>
+                <div><dt>Role</dt><dd id="profile-role">Rep</dd></div>
+                <div><dt>Territory</dt><dd id="profile-territory">Orlando, FL</dd></div>
+                <div><dt>Status</dt><dd id="profile-status">Active</dd></div>
+              </dl>
+            </section>
+            <section>
+              <h2 id="notes-title">Notifications</h2>
+              <div class="note-list" id="note-list"></div>
+            </section>
+            <section id="admin-panel" hidden>
+              <h2>Rep Access</h2>
+              <div class="rep-list" id="rep-list"></div>
+            </section>
+            <section id="launch-panel" hidden>
+              <h2>Launch Checklist</h2>
+              <div class="launch-list" id="launch-list"></div>
+            </section>
+            <section id="workflow-panel" hidden>
+              <h2>Workflow Setup</h2>
+              <p class="muted">Create these in HighLevel as draft workflows first.</p>
+              <div class="workflow-list" id="workflow-list"></div>
+            </section>
+            <section id="field-map-panel" hidden>
+              <h2>Live Data Setup</h2>
+              <p class="muted">These HighLevel fields control login, rep privacy, profile setup, and notifications.</p>
+              <div class="field-map-list" id="field-map-list"></div>
+            </section>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      let reps = [
+        { id: "F7kz2DXoX9xMvyIP3Duj", name: "Daniel Godwin", email: "dan@flourishsolar.com", role: "Rep", territory: "Orlando, FL", status: "Active" },
+        { id: "admin", name: "Daniel Godwin", email: "godwin.inc@gmail.com", role: "Admin", territory: "All markets", status: "Owner" },
+      ];
+      let records = [
+        { id: "jw2NkX7pU5Svc1jaXAOc", type: "Lead", name: "Test Rep Lead", email: "test.rep.lead.20260510@example.com", ownerId: "F7kz2DXoX9xMvyIP3Duj", stage: "New lead", nextStep: "Confirm portal visibility", value: "$0" },
+        { id: "homeowner-001", type: "Customer", name: "Sample Homeowner", email: "sample.homeowner@example.com", ownerId: "admin", stage: "Proposal sent", nextStep: "Awaiting admin assignment", value: "$18,400" },
+        { id: "install-001", type: "Job", name: "Mock Solar Install", email: "operations@example.com", ownerId: "admin", stage: "Permitting", nextStep: "Upload permit packet", value: "$24,900" },
+      ];
+      let notes = [
+        { id: "note-1", ownerId: "F7kz2DXoX9xMvyIP3Duj", title: "New lead assigned", body: "Test Rep Lead is ready for review.", time: "Today" },
+        { id: "note-2", ownerId: "admin", title: "Portal test ready", body: "Rep visibility passed with one assigned contact.", time: "Today" },
+      ];
+      let repApplications = [];
+      let dataMode = "sample";
+      let dataWarning = "";
+      let leadStatuses = [
+        { value: "new-project", label: "New Project" },
+        { value: "design", label: "Design" },
+        { value: "proposal", label: "Proposal" },
+        { value: "pre-qualification", label: "Pre-Qualification" },
+        { value: "sold", label: "Sold" },
+        { value: "ntp", label: "NTP" },
+      ];
+      const launchItems = [
+        { title: "Magic-link login", body: "Owner and rep test logins route to the correct dashboards.", status: "Ready" },
+        { title: "Rep record privacy", body: "Daniel only sees records assigned to his rep ID.", status: "Ready" },
+        { title: "CRM data sync", body: "Connect this portal to live HighLevel contacts, opportunities, and jobs.", status: "Next", tone: "next" },
+        { title: "Rep notifications", body: "Turn on email or SMS alerts after the live data sync is connected.", status: "Next", tone: "next" },
+        { title: "Publish", body: "Hold until live login, role filtering, and test notifications pass.", status: "Hold", tone: "hold" },
+      ];
+      const fieldMap = [
+        { label: "Rep identity", key: "User ID / Assigned User", body: "Matches each login to the correct HighLevel rep." },
+        { label: "Portal email", key: "User email", body: "The email address used for magic-link access." },
+        { label: "Assigned records", key: "Contact owner", body: "Filters leads, customers, jobs, and notes so reps only see their own records." },
+        { label: "Lead pipeline", key: "Opportunity stage", body: "Shows whether a record is a new lead, proposal, customer, or job." },
+        { label: "Rep phone", key: "Profile field", body: "Saved during first-login profile completion." },
+        { label: "Notifications", key: "Profile field", body: "Controls whether the rep wants email, SMS, or both." },
+        { label: "Onboarding status", key: "Profile complete", body: "Lets admin mark reps complete when they already finished setup." },
+      ];
+      const workflowItems = [
+        { title: "Design workflow", tag: "portal-status-design", body: "Notify admin/design team and create a design review task.", status: "Draft" },
+        { title: "Proposal workflow", tag: "portal-status-proposal", body: "Create an internal proposal follow-up task. No customer message.", status: "Draft" },
+        { title: "Sold workflow", tag: "portal-status-sold", body: "Notify admin/operations and start handoff checklist.", status: "Draft" },
+        { title: "NTP workflow", tag: "portal-status-ntp", body: "Notify operations and create NTP checklist task.", status: "Draft" },
+      ];
+
+      let pendingRep = null;
+      let pendingEmail = "";
+      let currentSession = null;
+      let currentEditingContactId = "";
+      let activeStageFilter = "all";
+      let completedProfiles = JSON.parse(localStorage.getItem("flourishCompletedProfiles") || "{}");
+
+      initializePortal();
+
+      async function initializePortal() {
+        await loadPortalData();
+        const savedSession = sessionStorage.getItem("flourishPortalSession");
+        if (savedSession) {
+          try {
+            renderPortal(JSON.parse(savedSession));
+          } catch {
+            sessionStorage.removeItem("flourishPortalSession");
+          }
+        }
+      }
+
+      async function loadPortalData() {
+        if (location.protocol === "file:") return;
+        try {
+          const response = await fetch("/api/portal/bootstrap", { cache: "no-store" });
+          if (!response.ok) return;
+          const data = await response.json();
+          if (Array.isArray(data.reps) && data.reps.length) reps = data.reps;
+          if (Array.isArray(data.records) && data.records.length) records = data.records;
+          if (Array.isArray(data.notes) && data.notes.length) notes = data.notes;
+          if (Array.isArray(data.repApplications)) repApplications = data.repApplications;
+          if (Array.isArray(data.leadStatuses) && data.leadStatuses.length) leadStatuses = data.leadStatuses;
+          if (data.profileCompletions && typeof data.profileCompletions === "object") {
+            completedProfiles = data.profileCompletions;
+            localStorage.setItem("flourishCompletedProfiles", JSON.stringify(completedProfiles));
+          }
+          dataMode = data.mode || "sample";
+          dataWarning = data.warning || "";
+        } catch {
+          dataMode = "sample";
+        }
+      }
+
+      async function saveProfileCompletion(repId, profile) {
+        if (profile) completedProfiles[repId] = profile;
+        else delete completedProfiles[repId];
+        localStorage.setItem("flourishCompletedProfiles", JSON.stringify(completedProfiles));
+
+        if (location.protocol === "file:") return;
+        try {
+          const response = await fetch("/api/portal/profile-completion", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ repId, profile }),
+          });
+          if (!response.ok) return;
+          const data = await response.json();
+          if (data.profileCompletions) {
+            completedProfiles = data.profileCompletions;
+            localStorage.setItem("flourishCompletedProfiles", JSON.stringify(completedProfiles));
+          }
+        } catch {
+          dataWarning = "Profile completion saved in this browser only until the server is reachable.";
+        }
+      }
+
+      function repOptions(selectedId) {
+        return reps
+          .filter((rep) => rep.role === "Rep")
+          .map((rep) => `<option value="${rep.id}" ${rep.id === selectedId ? "selected" : ""}>${rep.name}</option>`)
+          .join("");
+      }
+
+      function statusOptions(selectedStatus) {
+        return leadStatuses
+          .map((status) => `<option value="${status.value}" ${status.value === selectedStatus ? "selected" : ""}>${status.label}</option>`)
+          .join("");
+      }
+
+      function statusLabel(selectedStatus) {
+        return leadStatuses.find((status) => status.value === selectedStatus)?.label || "New Project";
+      }
+
+      document.getElementById("login-form").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const email = document.getElementById("email").value.trim().toLowerCase();
+        pendingEmail = email;
+        pendingRep = reps.find((rep) => rep.email.toLowerCase() === email);
+        document.getElementById("link-box").classList.add("visible");
+        document.getElementById("link-title").textContent = `Magic link created for ${email}`;
+        document.getElementById("link-warning").textContent = pendingRep ? "" : "No matching rep is registered for that email yet.";
+      });
+
+      document.getElementById("open-link").addEventListener("click", () => {
+        const rep = pendingRep || reps.find((item) => item.email.toLowerCase() === pendingEmail);
+        if (rep) renderPortal(rep);
+      });
+
+      document.getElementById("show-join").addEventListener("click", () => {
+        history.replaceState(null, "", "#/join");
+        document.getElementById("login").style.display = "none";
+        document.getElementById("profile-setup").style.display = "none";
+        document.getElementById("portal").style.display = "none";
+        document.getElementById("join-panel").style.display = "grid";
+      });
+
+      document.getElementById("back-to-login").addEventListener("click", () => {
+        history.replaceState(null, "", "#/login");
+        document.getElementById("join-panel").style.display = "none";
+        document.getElementById("login").style.display = "grid";
+      });
+
+      document.getElementById("join-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const button = document.getElementById("join-submit");
+        const message = document.getElementById("join-message");
+        button.disabled = true;
+        button.textContent = "Submitting...";
+        message.className = "form-message";
+        message.textContent = "";
+
+        const payload = {
+          name: document.getElementById("join-name").value.trim(),
+          email: document.getElementById("join-email").value.trim().toLowerCase(),
+          phone: document.getElementById("join-phone").value.trim(),
+          notificationPreference: document.getElementById("join-notifications").value,
+          territory: document.getElementById("join-territory").value.trim(),
+          experience: document.getElementById("join-experience").value,
+          serviceArea: document.getElementById("join-service-area").value.trim(),
+          notes: document.getElementById("join-notes").value.trim(),
+        };
+
+        try {
+          if (location.protocol === "file:") {
+            repApplications = [{ ...payload, id: `local-${Date.now()}`, status: "Pending admin approval", createdAt: new Date().toISOString() }, ...repApplications];
+          } else {
+            const response = await fetch("/api/portal/rep-application", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || "Could not submit the onboarding request.");
+            repApplications = [result.application, ...repApplications.filter((item) => item.email !== result.application.email)];
+          }
+          document.getElementById("join-form").reset();
+          message.textContent = "Onboarding request submitted. Admin can review it in Rep Access, then activate portal login.";
+          message.classList.add("visible");
+        } catch (error) {
+          message.textContent = error.message;
+          message.classList.add("visible", "error");
+        } finally {
+          button.disabled = false;
+          button.textContent = "Submit onboarding request";
+        }
+      });
+
+      document.getElementById("logout").addEventListener("click", () => {
+        sessionStorage.removeItem("flourishPortalSession");
+        history.replaceState(null, "", "#/login");
+        currentSession = null;
+        document.getElementById("join-panel").style.display = "none";
+        document.getElementById("profile-setup").style.display = "none";
+        document.getElementById("portal").style.display = "none";
+        document.getElementById("login").style.display = "grid";
+      });
+
+      document.getElementById("profile-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!currentSession) return;
+        currentSession.phone = document.getElementById("setup-phone").value.trim();
+        currentSession.notificationPreference = document.getElementById("setup-notifications").value;
+        currentSession.territory = document.getElementById("setup-territory").value.trim();
+        currentSession.experience = document.getElementById("setup-experience").value;
+        currentSession.serviceArea = document.getElementById("setup-service-area").value.trim();
+        currentSession.adminNotes = document.getElementById("setup-notes").value.trim();
+        currentSession.profileComplete = true;
+        const profile = {
+          phone: currentSession.phone,
+          notificationPreference: currentSession.notificationPreference,
+          territory: currentSession.territory,
+          experience: currentSession.experience,
+          serviceArea: currentSession.serviceArea,
+          adminNotes: currentSession.adminNotes,
+          completedAt: new Date().toISOString(),
+        };
+        await saveProfileCompletion(currentSession.id, profile);
+        renderDashboard(currentSession);
+      });
+
+      document.getElementById("design-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!currentSession) return;
+        const button = document.getElementById("design-submit");
+        const message = document.getElementById("design-message");
+        button.disabled = true;
+        button.textContent = "Creating in HighLevel...";
+        message.className = "form-message";
+        message.textContent = "";
+
+        const payload = {
+          customerName: document.getElementById("design-name").value.trim(),
+          phone: document.getElementById("design-phone").value.trim(),
+          email: document.getElementById("design-email").value.trim(),
+          assignedRepId: document.getElementById("design-rep").value || currentSession.id,
+          address: document.getElementById("design-address").value.trim(),
+          city: document.getElementById("design-city").value.trim(),
+          state: document.getElementById("design-state").value.trim(),
+          postalCode: document.getElementById("design-postal").value.trim(),
+          roofType: document.getElementById("design-roof").value,
+          utilityBill: document.getElementById("design-utility").value.trim(),
+          projectNotes: document.getElementById("design-notes").value.trim(),
+        };
+
+        try {
+          const response = await fetch("/api/portal/design-contact", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || "Could not create the contact.");
+          await loadPortalData();
+          document.getElementById("design-form").reset();
+          document.getElementById("design-state").value = "FL";
+          message.textContent = "Created in HighLevel. The portal refreshed from live CRM data.";
+          message.classList.add("visible");
+          renderDashboard(currentSession);
+        } catch (error) {
+          message.textContent = error.message;
+          message.classList.add("visible", "error");
+        } finally {
+          button.disabled = false;
+          button.textContent = "Create in HighLevel";
+        }
+      });
+
+      document.getElementById("record-list").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-edit-contact]");
+        if (!button) return;
+        const record = records.find((item) => item.id === button.dataset.editContact);
+        if (!record) return;
+        currentEditingContactId = record.id;
+        document.getElementById("edit-contact-form").hidden = false;
+        document.getElementById("edit-name").value = record.name || "";
+        document.getElementById("edit-phone").value = record.phone || "";
+        document.getElementById("edit-email").value = record.email || "";
+        document.getElementById("edit-address").value = record.address || "";
+        document.getElementById("edit-city").value = record.city || "";
+        document.getElementById("edit-state").value = record.state || "";
+        document.getElementById("edit-postal").value = record.postalCode || "";
+        document.getElementById("edit-rep").innerHTML = repOptions(record.ownerId);
+        document.getElementById("edit-rep").disabled = currentSession?.role !== "Admin";
+        document.getElementById("edit-message").className = "form-message";
+        document.getElementById("edit-message").textContent = "";
+        document.getElementById("edit-contact-form").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      document.getElementById("record-list").addEventListener("change", async (event) => {
+        const select = event.target.closest("[data-status-contact]");
+        if (!select) return;
+        const contactId = select.dataset.statusContact;
+        const status = select.value;
+        const originalValue = records.find((record) => record.id === contactId)?.portalStatus || "";
+        select.disabled = true;
+        try {
+          const response = await fetch("/api/portal/contact-status", {
+            method: "PUT",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({ contactId, status }),
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || "Could not update the status.");
+          await loadPortalData();
+          renderDashboard(currentSession);
+        } catch (error) {
+          select.value = originalValue;
+          dataWarning = error.message;
+          select.disabled = false;
+          alert(error.message);
+        }
+      });
+
+      document.getElementById("edit-cancel").addEventListener("click", () => {
+        currentEditingContactId = "";
+        document.getElementById("edit-contact-form").hidden = true;
+      });
+
+      document.getElementById("edit-contact-form").addEventListener("submit", async (event) => {
+        event.preventDefault();
+        if (!currentEditingContactId || !currentSession) return;
+        const button = document.getElementById("edit-submit");
+        const message = document.getElementById("edit-message");
+        button.disabled = true;
+        button.textContent = "Updating HighLevel...";
+        message.className = "form-message";
+        message.textContent = "";
+
+        const payload = {
+          contactId: currentEditingContactId,
+          customerName: document.getElementById("edit-name").value.trim(),
+          phone: document.getElementById("edit-phone").value.trim(),
+          email: document.getElementById("edit-email").value.trim(),
+          assignedRepId: document.getElementById("edit-rep").value || currentSession.id,
+          address: document.getElementById("edit-address").value.trim(),
+          city: document.getElementById("edit-city").value.trim(),
+          state: document.getElementById("edit-state").value.trim(),
+          postalCode: document.getElementById("edit-postal").value.trim(),
+        };
+
+        try {
+          const response = await fetch("/api/portal/contact", {
+            method: "PUT",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const result = await response.json();
+          if (!response.ok) throw new Error(result.error || "Could not update the contact.");
+          await loadPortalData();
+          message.textContent = "Updated in HighLevel. The portal refreshed from live CRM data.";
+          message.classList.add("visible");
+          renderDashboard(currentSession);
+        } catch (error) {
+          message.textContent = error.message;
+          message.classList.add("visible", "error");
+        } finally {
+          button.disabled = false;
+          button.textContent = "Update in HighLevel";
+        }
+      });
+
+      document.getElementById("rep-list").addEventListener("click", async (event) => {
+        const button = event.target.closest("[data-profile-action]");
+        if (!button) return;
+        const repId = button.dataset.repId;
+        const action = button.dataset.profileAction;
+        button.disabled = true;
+        if (action === "complete") {
+          const rep = reps.find((item) => item.id === repId);
+          await saveProfileCompletion(repId, {
+            phone: "",
+            notificationPreference: "Already completed",
+            territory: rep?.territory || "",
+            experience: "Already onboarded",
+            serviceArea: rep?.territory || "",
+            adminNotes: "Marked complete by admin.",
+            completedAt: new Date().toISOString(),
+            completedByAdmin: true,
+          });
+        }
+        if (action === "reset") await saveProfileCompletion(repId, null);
+        renderDashboard(currentSession);
+      });
+
+      document.getElementById("stage-tabs").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-stage-filter]");
+        if (!button) return;
+        activeStageFilter = button.dataset.stageFilter;
+        renderDashboard(currentSession);
+      });
+
+      function renderPortal(session) {
+        currentSession = session;
+        const savedProfile = completedProfiles[session.id];
+        if (savedProfile) Object.assign(session, savedProfile, { profileComplete: true });
+        const needsProfile = session.role !== "Admin" && !session.profileComplete;
+        sessionStorage.setItem("flourishPortalSession", JSON.stringify(session));
+        if (needsProfile) {
+          renderProfileSetup(session);
+          return;
+        }
+        renderDashboard(session);
+      }
+
+      function renderProfileSetup(session) {
+        history.replaceState(null, "", "#/complete-profile");
+        document.getElementById("login").style.display = "none";
+        document.getElementById("join-panel").style.display = "none";
+        document.getElementById("portal").style.display = "none";
+        document.getElementById("profile-setup").style.display = "grid";
+        document.getElementById("setup-name").textContent = session.name;
+        document.getElementById("setup-phone").value = session.phone || "";
+        document.getElementById("setup-notifications").value = session.notificationPreference || "";
+        document.getElementById("setup-territory").value = session.territory || "";
+        document.getElementById("setup-experience").value = session.experience || "";
+        document.getElementById("setup-service-area").value = session.serviceArea || "";
+        document.getElementById("setup-notes").value = session.adminNotes || "";
+      }
+
+      function renderDashboard(session) {
+        const isAdmin = session.role === "Admin";
+        const baseVisibleRecords = isAdmin ? records : records.filter((record) => record.ownerId === session.id);
+        const visibleRecords = isAdmin && activeStageFilter !== "all"
+          ? baseVisibleRecords.filter((record) => (record.portalStatus || "new-project") === activeStageFilter)
+          : baseVisibleRecords;
+        const visibleNotes = isAdmin ? notes : notes.filter((note) => note.ownerId === session.id);
+        const stageCounts = leadStatuses.reduce((counts, status) => {
+          counts[status.value] = baseVisibleRecords.filter((record) => (record.portalStatus || "new-project") === status.value).length;
+          return counts;
+        }, {});
+
+        sessionStorage.setItem("flourishPortalSession", JSON.stringify(session));
+        history.replaceState(null, "", isAdmin ? "#/admin/access" : "#/profile");
+        document.getElementById("login").style.display = "none";
+        document.getElementById("join-panel").style.display = "none";
+        document.getElementById("profile-setup").style.display = "none";
+        document.getElementById("portal").style.display = "grid";
+        document.getElementById("access-label").textContent = isAdmin ? "Admin access" : "Rep access";
+        document.getElementById("headline").textContent = isAdmin ? "All records dashboard" : "My assigned work";
+        document.getElementById("avatar").textContent = session.name.slice(0, 2).toUpperCase();
+        document.getElementById("user-name").textContent = session.name;
+        document.getElementById("user-email").textContent = session.email;
+        document.getElementById("record-count").textContent = visibleRecords.length;
+        document.getElementById("rep-count").textContent = isAdmin ? reps.length - 1 : 1;
+        document.getElementById("note-count").textContent = visibleNotes.length;
+        document.getElementById("notes-title").textContent = isAdmin ? "Internal Activity" : "Notifications";
+        document.getElementById("access-mode").textContent = isAdmin ? "All" : "Assigned";
+        document.getElementById("records-title").textContent = isAdmin ? "All leads, customers, and jobs" : "My leads, customers, and jobs";
+        document.getElementById("records-copy").textContent = isAdmin
+          ? activeStageFilter === "all" ? "Admin can inspect every record and assignment." : `Filtered to ${leadStatuses.find((status) => status.value === activeStageFilter)?.label || "selected"} records.`
+          : "Rep view only shows records assigned to this login.";
+        document.getElementById("profile-role").textContent = session.role;
+        document.getElementById("profile-territory").textContent = session.territory;
+        document.getElementById("profile-status").textContent = session.status;
+        document.getElementById("design-rep").innerHTML = reps
+          .filter((rep) => rep.role === "Rep")
+          .map((rep) => `<option value="${rep.id}" ${rep.id === session.id ? "selected" : ""}>${rep.name}</option>`)
+          .join("");
+        document.getElementById("design-rep").disabled = !isAdmin;
+        document.getElementById("stage-tabs").classList.toggle("visible", isAdmin);
+        document.getElementById("stage-tabs").innerHTML = isAdmin ? [
+          `<button type="button" class="${activeStageFilter === "all" ? "active" : ""}" data-stage-filter="all">All (${baseVisibleRecords.length})</button>`,
+          ...leadStatuses.map((status) => `
+            <button type="button" class="${activeStageFilter === status.value ? "active" : ""}" data-stage-filter="${status.value}">
+              ${status.label} (${stageCounts[status.value] || 0})
+            </button>
+          `),
+        ].join("") : "";
+
+        document.getElementById("record-list").innerHTML = visibleRecords.map((record) => `
+          <article class="record-row">
+            <span class="record-type ${record.type.toLowerCase()}">${record.type}</span>
+            <div><h3>${record.name}</h3><p>${record.email || record.phone || "No contact info yet"}</p></div>
+            <div><strong>${record.stage}</strong><span>${record.nextStep}</span></div>
+            ${record.sourceKind === "opportunity"
+              ? "<span></span>"
+              : isAdmin
+                ? `<select class="status-select" data-status-contact="${record.id}">${statusOptions(record.portalStatus || "new-project")}</select>`
+                : `<span class="status-badge">${statusLabel(record.portalStatus || "new-project")}</span>`}
+            <strong>${record.value}</strong>
+            ${record.sourceKind === "opportunity" ? "<span></span>" : `<button class="secondary-action" type="button" data-edit-contact="${record.id}">Edit</button>`}
+          </article>
+        `).join("");
+
+        document.getElementById("note-list").innerHTML = visibleNotes.map((note) => `
+          <article>
+            <div><strong>${note.title}</strong><p>${note.body}</p><small>${note.time}</small></div>
+          </article>
+        `).join("");
+
+        document.getElementById("admin-panel").hidden = !isAdmin;
+        document.getElementById("launch-panel").hidden = !isAdmin;
+        document.getElementById("workflow-panel").hidden = !isAdmin;
+        document.getElementById("field-map-panel").hidden = !isAdmin;
+        document.getElementById("rep-list").innerHTML = reps
+          .filter((rep) => rep.role === "Rep")
+          .map((rep) => {
+            const isComplete = Boolean(completedProfiles[rep.id]);
+            return `
+            <article>
+              <div>
+                <strong>${rep.name}</strong>
+                <p>${rep.email}</p>
+                <p>${records.filter((record) => record.ownerId === rep.id).length} assigned record</p>
+              </div>
+              <div class="rep-actions">
+                <span class="status-pill ${isComplete ? "" : "pending"}">${isComplete ? "Complete" : "Pending"}</span>
+                <button type="button" data-profile-action="${isComplete ? "reset" : "complete"}" data-rep-id="${rep.id}">
+                  ${isComplete ? "Reset" : "Mark complete"}
+                </button>
+              </div>
+            </article>
+          `}).join("") + repApplications.map((application) => `
+            <article>
+              <div>
+                <strong>${application.name}</strong>
+                <p>${application.email}</p>
+                <p>${application.territory || "Territory not set"} · ${application.experience || "Experience not set"}</p>
+              </div>
+              <div class="rep-actions">
+                <span class="status-pill pending">Join request</span>
+                <span class="field-key">${application.status || "Pending admin approval"}</span>
+              </div>
+            </article>
+          `).join("");
+        document.getElementById("launch-list").innerHTML = launchItems.map((item) => `
+          <article>
+            <div><strong>${item.title}</strong><p>${item.body}</p></div>
+            <span class="status-pill ${item.tone || ""}">${item.status}</span>
+          </article>
+        `).join("") + `
+          <article>
+            <div>
+              <strong>Data connection</strong>
+              <p>${dataMode === "live" ? "Portal is reading from HighLevel." : dataWarning || "Portal is using sample data until HighLevel access is connected."}</p>
+            </div>
+            <span class="status-pill ${dataMode === "live" ? "" : "pending"}">${dataMode === "live" ? "Live" : "Sample"}</span>
+          </article>
+        `;
+        document.getElementById("workflow-list").innerHTML = workflowItems.map((item) => `
+          <article>
+            <div><strong>${item.title}</strong><p>${item.body}</p><p>${item.tag}</p></div>
+            <span class="status-pill next">${item.status}</span>
+          </article>
+        `).join("");
+        document.getElementById("field-map-list").innerHTML = fieldMap.map((item) => `
+          <article>
+            <div><strong>${item.label}</strong><p>${item.body}</p></div>
+            <span class="field-key">${item.key}</span>
+          </article>
+        `).join("");
+      }
+    </script>
+  </body>
+</html>
