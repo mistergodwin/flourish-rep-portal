@@ -882,7 +882,9 @@ async function handleApi(request, response) {
 
 async function handleStatic(request, response) {
   const url = new URL(request.url, `http://${request.headers.host}`);
-  const requestedPath = url.pathname === "/" ? "/flourish-rep-portal.html" : url.pathname;
+  const requestedPath = url.pathname === "/" || url.pathname === "/flourish-rep-portal.html"
+    ? "/flourish-rep-portal-live.html"
+    : url.pathname;
   const filePath = normalize(join(rootDir, decodeURIComponent(requestedPath)));
 
   if (!filePath.startsWith(rootDir) || !existsSync(filePath)) {
