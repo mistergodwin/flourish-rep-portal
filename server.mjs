@@ -25,6 +25,7 @@ const createdContactsPath = join(dataDir, "portal-created-contacts.json");
 const contactStatusesPath = join(dataDir, "contact-statuses.json");
 const internalActivityPath = join(dataDir, "internal-activity.json");
 const magicLinksPath = join(dataDir, "magic-links.json");
+const repApplicationsPath = join(dataDir, "rep-applications.json");
 const adminEmails = new Set(
   (process.env.ADMIN_EMAILS || "godwin.inc@gmail.com")
     .split(",")
@@ -232,6 +233,19 @@ async function getMagicLinks() {
   } catch {
     return {};
   }
+}
+
+async function getRepApplications() {
+  try {
+    return JSON.parse(await readFile(repApplicationsPath, "utf8"));
+  } catch {
+    return [];
+  }
+}
+
+async function saveRepApplications(repApplications) {
+  await mkdir(dataDir, { recursive: true });
+  await writeFile(repApplicationsPath, `${JSON.stringify(repApplications, null, 2)}\n`);
 }
 
 async function saveMagicLinks(magicLinks) {
@@ -476,6 +490,46 @@ async function createDesignContact(payload) {
   };
 }
 
+async function createRepApplication(payload) {
+  if (!payload.name || !payload.email || !payload.phone) {
+    throw new Error("Name, email, and phone are required");
+  }
+  const { firstName, lastName } = splitName(payload.name);
+  const body = {
+    firstName,
+    lastName,
+    name: payload.name,
+    email: payload.email,
+    phone: payload.phone,
+    source: "Join Flourish Solar Onboarding",
+    tags: ["rep-onboarding", "rep-portal-access", "internal-rep-login"],
+  };
+
+  const existingContact = await findRepAccessContact(payload.email);
+  const result = existingContact?.id
+    ? await ghlJson(`/contacts/${encodeURIComponent(existingContact.id)}`, "PUT", body)
+    : await ghlJson("/contacts/", "POST", { locationId, ...body });
+  const contact = result.contact || result;
+  const application = {
+    id: contact.id || `rep-application-${Date.now()}`,
+    contactId: contact.id || "",
+    name: payload.name,
+    email: payload.email,
+    phone: payload.phone,
+    territory: payload.territory || "",
+    serviceArea: payload.serviceArea || "",
+    experience: payload.experience || "",
+    notificationPreference: payload.notificationPreference || "",
+    notes: payload.notes || "",
+    status: "Pending admin approval",
+    createdAt: new Date().toISOString(),
+  };
+  const applications = await getRepApplications();
+  const next = [application, ...applications.filter((item) => item.email?.toLowerCase() !== application.email.toLowerCase())].slice(0, 100);
+  await saveRepApplications(next);
+  return { contact, application };
+}
+
 async function findRepAccessContact(email) {
   const normalizedEmail = String(email || "").trim().toLowerCase();
   if (!normalizedEmail) return null;
@@ -646,6 +700,7 @@ async function getLivePortalData() {
     records: records.length ? records : sampleRecords,
     notes: [...await getInternalActivity(), ...sampleNotes],
     profileCompletions: await getProfileCompletions(),
+    repApplications: await getRepApplications(),
     leadStatuses,
   };
 }
@@ -735,6 +790,7 @@ async function handleApi(request, response) {
         records: sampleRecords,
         notes: [...await getInternalActivity(), ...sampleNotes],
         profileCompletions: await getProfileCompletions(),
+        repApplications: await getRepApplications(),
         leadStatuses,
         warning: error.message,
       });
@@ -756,6 +812,16 @@ async function handleApi(request, response) {
       return sendJson(response, 200, { ok: true, session });
     } catch (error) {
       return sendJson(response, 401, { error: error.message });
+    }
+  }
+
+  if (url.pathname === "/api/portal/rep-application" && request.method === "POST") {
+    const payload = await readJsonBody(request);
+    try {
+      const result = await createRepApplication(payload);
+      return sendJson(response, 200, { ok: true, ...result });
+    } catch (error) {
+      return sendJson(response, 502, { error: error.message });
     }
   }
 
