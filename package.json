@@ -1,0 +1,32 @@
+{
+  "name": "flourish-rep-portal",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.mjs",
+    "portal": "node server.mjs",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "video": "remotion studio src/remotion/index.jsx",
+    "video:render": "remotion render src/remotion/index.jsx LaunchVideo out/stock-launch.mp4",
+    "video:still": "remotion still src/remotion/index.jsx LaunchVideo --frame=180 out/stock-launch-frame.png",
+    "convex:dev": "convex dev"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^5.0.0",
+    "convex": "^1.28.0",
+    "lucide-react": "^0.468.0",
+    "vite": "^6.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "remotion": "^4.0.354"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}
