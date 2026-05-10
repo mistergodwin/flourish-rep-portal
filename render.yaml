@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: flourish-rep-portal
+    runtime: node
+    plan: starter
+    buildCommand: echo "No build step required"
+    startCommand: node server.mjs
+    healthCheckPath: /api/health
+    disk:
+      name: portal-data
+      mountPath: /opt/render/project/src/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: GHL_LOCATION_ID
+        value: YfwlbtO6dLJ7ho2JKvzI
+      - key: ADMIN_EMAILS
+        value: godwin.inc@gmail.com
+      - key: GHL_PRIVATE_INTEGRATION_TOKEN
+        sync: false
