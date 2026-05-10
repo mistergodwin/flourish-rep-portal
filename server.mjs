@@ -1,5 +1,6 @@
 import { createReadStream, existsSync, readFileSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { randomBytes } from "node:crypto";
 import { createServer } from "node:http";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -23,6 +24,7 @@ const profileStorePath = join(dataDir, "profile-completions.json");
 const createdContactsPath = join(dataDir, "portal-created-contacts.json");
 const contactStatusesPath = join(dataDir, "contact-statuses.json");
 const internalActivityPath = join(dataDir, "internal-activity.json");
+const magicLinksPath = join(dataDir, "magic-links.json");
 const adminEmails = new Set(
   (process.env.ADMIN_EMAILS || "godwin.inc@gmail.com")
     .split(",")
@@ -103,6 +105,78 @@ const repReadOnlyStageStyle = `
   </style>
 `;
 
+const hostedMagicLinkScript = `
+  <script>
+    (() => {
+      const isHosted = location.protocol !== "file:";
+      if (!isHosted) return;
+
+      async function signInWithToken() {
+        const token = new URLSearchParams(location.search).get("magic");
+        if (!token) return;
+        const response = await fetch("/api/portal/session?token=" + encodeURIComponent(token), { cache: "no-store" });
+        const data = await response.json();
+        if (!response.ok) {
+          const box = document.getElementById("link-box");
+          if (box) {
+            box.classList.add("visible");
+            document.getElementById("link-title").textContent = "Magic link expired";
+            document.getElementById("link-warning").textContent = data.error || "Request a new login link.";
+          }
+          history.replaceState(null, "", "/");
+          return;
+        }
+        if (window.loadPortalData) await window.loadPortalData();
+        history.replaceState(null, "", data.session.role === "Admin" ? "/#/admin/access" : "/#/profile");
+        window.renderPortal(data.session);
+      }
+
+      const form = document.getElementById("login-form");
+      if (form) {
+        form.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          event.stopImmediatePropagation();
+          const email = document.getElementById("email").value.trim().toLowerCase();
+          const linkBox = document.getElementById("link-box");
+          const title = document.getElementById("link-title");
+          const warning = document.getElementById("link-warning");
+          const oldButton = document.getElementById("open-link");
+          const button = oldButton.cloneNode(true);
+          oldButton.replaceWith(button);
+          linkBox.classList.add("visible");
+          title.textContent = "Creating secure login link...";
+          warning.textContent = "";
+          button.textContent = "Working...";
+          button.disabled = true;
+          try {
+            const response = await fetch("/api/portal/magic-link", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({ email }),
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || "Could not create login link.");
+            title.textContent = "Magic link ready for " + email;
+            warning.textContent = "This link expires in 30 minutes. Email/SMS delivery can use this same secure link next.";
+            button.textContent = "Open secure login link";
+            button.disabled = false;
+            button.addEventListener("click", () => {
+              location.href = data.magicUrl;
+            });
+          } catch (error) {
+            title.textContent = "Login link not created";
+            warning.textContent = error.message;
+            button.textContent = "Try again";
+            button.disabled = true;
+          }
+        }, true);
+      }
+
+      signInWithToken();
+    })();
+  </script>
+`;
+
 function sendHeaders(response, status, headers = {}) {
   response.writeHead(status, { ...securityHeaders, ...headers });
 }
@@ -148,6 +222,19 @@ async function getInternalActivity() {
   } catch {
     return [];
   }
+}
+
+async function getMagicLinks() {
+  try {
+    return JSON.parse(await readFile(magicLinksPath, "utf8"));
+  } catch {
+    return {};
+  }
+}
+
+async function saveMagicLinks(magicLinks) {
+  await mkdir(dataDir, { recursive: true });
+  await writeFile(magicLinksPath, `${JSON.stringify(magicLinks, null, 2)}\n`);
 }
 
 async function saveContactStatuses(contactStatuses) {
@@ -487,6 +574,56 @@ async function getLivePortalData() {
   };
 }
 
+function requestOrigin(request) {
+  const protocol = request.headers["x-forwarded-proto"] || "https";
+  const hostName = request.headers["x-forwarded-host"] || request.headers.host;
+  return `${protocol}://${hostName}`;
+}
+
+async function findPortalUserByEmail(email) {
+  const normalizedEmail = String(email || "").trim().toLowerCase();
+  if (!normalizedEmail) throw new Error("Email is required");
+  const portalData = await getLivePortalData();
+  const user = portalData.reps.find((rep) => rep.email.toLowerCase() === normalizedEmail);
+  if (!user) throw new Error("No portal user is registered for that email yet.");
+  return user;
+}
+
+async function createMagicLogin(request, email) {
+  const user = await findPortalUserByEmail(email);
+  const magicLinks = await getMagicLinks();
+  const now = Date.now();
+  for (const [storedToken, link] of Object.entries(magicLinks)) {
+    if (!link.expiresAt || new Date(link.expiresAt).getTime() <= now) delete magicLinks[storedToken];
+  }
+  const magicToken = randomBytes(32).toString("hex");
+  const expiresAt = new Date(now + 30 * 60 * 1000).toISOString();
+  magicLinks[magicToken] = {
+    email: user.email,
+    userId: user.id,
+    createdAt: new Date(now).toISOString(),
+    expiresAt,
+  };
+  await saveMagicLinks(magicLinks);
+  return {
+    email: user.email,
+    expiresAt,
+    magicUrl: `${requestOrigin(request)}/?magic=${magicToken}`,
+  };
+}
+
+async function validateMagicLogin(magicToken) {
+  const magicLinks = await getMagicLinks();
+  const login = magicLinks[magicToken];
+  if (!login) throw new Error("That login link is invalid or has already been used.");
+  delete magicLinks[magicToken];
+  await saveMagicLinks(magicLinks);
+  if (new Date(login.expiresAt).getTime() <= Date.now()) {
+    throw new Error("That login link has expired. Request a new one.");
+  }
+  return findPortalUserByEmail(login.email);
+}
+
 async function handleApi(request, response) {
   const url = new URL(request.url, `http://${request.headers.host}`);
   if (url.pathname === "/api/health") {
@@ -511,6 +648,24 @@ async function handleApi(request, response) {
         leadStatuses,
         warning: error.message,
       });
+    }
+  }
+
+  if (url.pathname === "/api/portal/magic-link" && request.method === "POST") {
+    try {
+      const payload = await readJsonBody(request);
+      return sendJson(response, 200, { ok: true, ...await createMagicLogin(request, payload.email) });
+    } catch (error) {
+      return sendJson(response, 400, { error: error.message });
+    }
+  }
+
+  if (url.pathname === "/api/portal/session") {
+    try {
+      const session = await validateMagicLogin(url.searchParams.get("token"));
+      return sendJson(response, 200, { ok: true, session });
+    } catch (error) {
+      return sendJson(response, 401, { error: error.message });
     }
   }
 
@@ -587,7 +742,9 @@ async function handleStatic(request, response) {
   });
   if (extension === ".html") {
     const html = await readFile(filePath, "utf8");
-    response.end(html.replace("</head>", `${repReadOnlyStageStyle}</head>`));
+    response.end(html
+      .replace("</head>", `${repReadOnlyStageStyle}</head>`)
+      .replace("</body>", `${hostedMagicLinkScript}</body>`));
     return;
   }
   createReadStream(filePath).pipe(response);
