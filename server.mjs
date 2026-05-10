@@ -87,6 +87,22 @@ const securityHeaders = {
   "referrer-policy": "strict-origin-when-cross-origin",
 };
 
+const repReadOnlyStageStyle = `
+  <style>
+    .status-select:disabled {
+      width: fit-content;
+      max-width: 100%;
+      appearance: none;
+      border-color: #d7e0eb;
+      background: #f6f9fc;
+      color: #4f5f73;
+      opacity: 1;
+      pointer-events: none;
+      padding: 0 10px;
+    }
+  </style>
+`;
+
 function sendHeaders(response, status, headers = {}) {
   response.writeHead(status, { ...securityHeaders, ...headers });
 }
@@ -564,10 +580,16 @@ async function handleStatic(request, response) {
     return;
   }
 
+  const extension = extname(filePath);
   sendHeaders(response, 200, {
-    "content-type": mimeTypes[extname(filePath)] || "application/octet-stream",
-    "cache-control": extname(filePath) === ".html" ? "no-store" : "public, max-age=3600",
+    "content-type": mimeTypes[extension] || "application/octet-stream",
+    "cache-control": extension === ".html" ? "no-store" : "public, max-age=3600",
   });
+  if (extension === ".html") {
+    const html = await readFile(filePath, "utf8");
+    response.end(html.replace("</head>", `${repReadOnlyStageStyle}</head>`));
+    return;
+  }
   createReadStream(filePath).pipe(response);
 }
 
