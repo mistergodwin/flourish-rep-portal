@@ -283,13 +283,39 @@ const hostedAiAssistantScript = `
 
     .ai-assistant-response {
       display: none;
-      white-space: pre-wrap;
       border: 1px solid #d7e0eb;
       border-radius: 8px;
       background: #f7faf9;
       color: #273446;
-      padding: 12px;
+      padding: 14px;
       line-height: 1.5;
+    }
+
+    .ai-assistant-response h3 {
+      margin: 0 0 9px;
+      color: #13241f;
+      font-size: 16px;
+      letter-spacing: 0;
+    }
+
+    .ai-assistant-response p {
+      margin: 0 0 10px;
+    }
+
+    .ai-assistant-response ol,
+    .ai-assistant-response ul {
+      display: grid;
+      gap: 8px;
+      margin: 10px 0 0;
+      padding-left: 20px;
+    }
+
+    .ai-assistant-response li {
+      padding-left: 2px;
+    }
+
+    .ai-assistant-response strong {
+      color: #13241f;
     }
 
     .ai-assistant-response.visible {
@@ -352,7 +378,7 @@ const hostedAiAssistantScript = `
             });
             const result = await response.json();
             if (!response.ok) throw new Error(result.error || "AI assistant is not ready yet.");
-            output.textContent = result.answer;
+            output.innerHTML = formatAssistantAnswer(result.answer || "");
           } catch (error) {
             output.className = "ai-assistant-response visible error";
             output.textContent = error.message;
@@ -361,6 +387,52 @@ const hostedAiAssistantScript = `
             button.textContent = "Ask AI";
           }
         });
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      function inlineFormat(value) {
+        const codeTick = String.fromCharCode(96);
+        return escapeHtml(value)
+          .replace(/\\*\\*([^*]+)\\*\\*/g, "<strong>$1</strong>")
+          .replace(new RegExp(codeTick + "([^" + codeTick + "]+)" + codeTick, "g"), "<code>$1</code>");
+      }
+
+      function formatAssistantAnswer(answer) {
+        const lines = String(answer).split(/\\n+/).map((line) => line.trim()).filter(Boolean);
+        if (!lines.length) return "<p>No recommendation returned yet.</p>";
+
+        let html = "";
+        let listOpen = false;
+        lines.forEach((line, index) => {
+          const numbered = line.match(/^(\\d+)\\.\\s+(.*)$/);
+          const bullet = line.match(/^[-*]\\s+(.*)$/);
+          if (numbered || bullet) {
+            if (!listOpen) {
+              html += numbered ? "<ol>" : "<ul>";
+              listOpen = numbered ? "ol" : "ul";
+            }
+            html += "<li>" + inlineFormat(numbered ? numbered[2] : bullet[1]) + "</li>";
+            return;
+          }
+          if (listOpen) {
+            html += "</" + listOpen + ">";
+            listOpen = false;
+          }
+          const cleanLine = line.replace(/^#+\\s*/, "");
+          html += index === 0
+            ? "<h3>" + inlineFormat(cleanLine) + "</h3>"
+            : "<p>" + inlineFormat(cleanLine) + "</p>";
+        });
+        if (listOpen) html += "</" + listOpen + ">";
+        return html;
       }
 
       const observer = new MutationObserver(ensureAiPanel);
@@ -1054,7 +1126,11 @@ async function createMagicLogin(request, email) {
     expiresAt,
   };
   await saveMagicLinks(magicLinks);
-  const magicUrl = `${requestOrigin(request)}/?magic=${magicToken}`;
+  const origin = requestOrigin(request);
+  const requestPath = new URL(request.url || "/", origin).pathname;
+  const refererPath = request.headers.referer ? new URL(request.headers.referer, origin).pathname : "";
+  const loginPath = requestPath.startsWith("/portal") || refererPath.startsWith("/portal") ? "/portal" : "/";
+  const magicUrl = `${origin}${loginPath}?magic=${magicToken}`;
   let delivery = null;
   let deliveryError = "";
   try {
