@@ -1,0 +1,1009 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flourish Solar | Orlando Solar Consultations</title>
+    <meta
+      name="description"
+      content="Flourish Solar helps Central Florida homeowners explore cleaner energy, lower utility costs, and a smoother solar experience."
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111827;
+        --charcoal: #18231f;
+        --muted: #607084;
+        --line: #d9e4dc;
+        --paper: #f7faf7;
+        --white: #ffffff;
+        --green: #0c4f3e;
+        --green-2: #0f6a4c;
+        --mint: #e7f6ed;
+        --gold: #f2b84b;
+        --gold-2: #ffe8af;
+        --shadow: 0 24px 70px rgba(17, 24, 39, 0.14);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      .site-shell {
+        overflow: hidden;
+        background:
+          linear-gradient(180deg, rgba(247, 250, 247, 0.84), rgba(247, 250, 247, 1) 760px),
+          url("https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=2400&q=82") top center / 100% auto no-repeat;
+      }
+
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        border-bottom: 1px solid rgba(217, 228, 220, 0.86);
+        background: rgba(255, 255, 255, 0.88);
+        backdrop-filter: blur(18px);
+      }
+
+      .nav-inner {
+        width: min(1180px, calc(100% - 40px));
+        min-height: 76px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 900;
+        color: var(--charcoal);
+      }
+
+      .brand-mark {
+        width: 42px;
+        height: 42px;
+        display: grid;
+        place-items: center;
+        border-radius: 8px;
+        background: var(--green);
+        color: var(--gold);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.16);
+      }
+
+      .brand small {
+        display: block;
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 750;
+      }
+
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 22px;
+        color: #344054;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .button {
+        min-height: 46px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1px solid transparent;
+        border-radius: 8px;
+        padding: 0 18px;
+        cursor: pointer;
+        font-weight: 900;
+        white-space: nowrap;
+      }
+
+      .button.primary {
+        color: #17251f;
+        background: var(--gold);
+        box-shadow: 0 12px 30px rgba(242, 184, 75, 0.28);
+      }
+
+      .button.secondary {
+        color: var(--green);
+        border-color: rgba(12, 79, 62, 0.18);
+        background: rgba(255, 255, 255, 0.78);
+      }
+
+      .hero {
+        width: min(1180px, calc(100% - 40px));
+        min-height: calc(100vh - 76px);
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: minmax(0, 1.02fr) minmax(360px, 0.78fr);
+        align-items: center;
+        gap: clamp(28px, 5vw, 72px);
+        padding: 64px 0 82px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        width: fit-content;
+        align-items: center;
+        gap: 8px;
+        min-height: 34px;
+        border: 1px solid rgba(12, 79, 62, 0.16);
+        border-radius: 999px;
+        padding: 0 13px;
+        color: var(--green);
+        background: rgba(255, 255, 255, 0.82);
+        font-size: 12px;
+        font-weight: 950;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        max-width: 780px;
+        margin-top: 22px;
+        color: var(--charcoal);
+        font-size: clamp(58px, 9vw, 112px);
+        line-height: 0.9;
+        letter-spacing: 0;
+      }
+
+      .hero-copy {
+        max-width: 650px;
+        margin-top: 24px;
+        color: #415064;
+        font-size: clamp(18px, 2vw, 23px);
+        line-height: 1.5;
+        font-weight: 650;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 32px;
+      }
+
+      .hero-proof {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 42px;
+      }
+
+      .proof-card {
+        min-height: 116px;
+        display: grid;
+        align-content: end;
+        gap: 8px;
+        border: 1px solid rgba(217, 228, 220, 0.9);
+        border-radius: 8px;
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.84);
+        box-shadow: 0 12px 36px rgba(17, 24, 39, 0.06);
+      }
+
+      .proof-card strong {
+        color: var(--charcoal);
+        font-size: 16px;
+      }
+
+      .proof-card span {
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.38;
+        font-weight: 650;
+      }
+
+      .hero-panel {
+        border: 1px solid rgba(255, 255, 255, 0.62);
+        border-radius: 8px;
+        padding: 16px;
+        background: rgba(255, 255, 255, 0.72);
+        box-shadow: var(--shadow);
+      }
+
+      .panel-image {
+        min-height: 440px;
+        display: flex;
+        align-items: flex-end;
+        border-radius: 8px;
+        overflow: hidden;
+        background:
+          linear-gradient(180deg, rgba(13, 36, 29, 0.04), rgba(13, 36, 29, 0.84)),
+          url("https://images.unsplash.com/photo-1497440001374-f26997328c1b?auto=format&fit=crop&w=1200&q=82") center / cover;
+      }
+
+      .panel-card {
+        width: calc(100% - 28px);
+        margin: 14px;
+        display: grid;
+        gap: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        padding: 18px;
+        color: white;
+        background: rgba(12, 79, 62, 0.88);
+        backdrop-filter: blur(14px);
+      }
+
+      .panel-card strong {
+        font-size: 20px;
+      }
+
+      .panel-card p {
+        color: rgba(255, 255, 255, 0.78);
+        line-height: 1.5;
+      }
+
+      .section {
+        width: min(1180px, calc(100% - 40px));
+        margin: 0 auto;
+        padding: 86px 0;
+      }
+
+      .section-header {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.7fr);
+        gap: 28px;
+        align-items: end;
+        margin-bottom: 34px;
+      }
+
+      h2 {
+        max-width: 760px;
+        color: var(--charcoal);
+        font-size: clamp(36px, 5vw, 64px);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      .section-header p {
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.58;
+        font-weight: 650;
+      }
+
+      .benefit-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .benefit-card,
+      .step-card,
+      .faq-card,
+      .review-card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--white);
+        box-shadow: 0 18px 52px rgba(17, 24, 39, 0.06);
+      }
+
+      .benefit-card {
+        min-height: 250px;
+        display: grid;
+        align-content: space-between;
+        gap: 24px;
+        padding: 22px;
+      }
+
+      .icon {
+        width: 46px;
+        height: 46px;
+        display: grid;
+        place-items: center;
+        border-radius: 8px;
+        color: var(--green);
+        background: var(--mint);
+      }
+
+      h3 {
+        color: var(--charcoal);
+        font-size: 22px;
+        line-height: 1.08;
+      }
+
+      .benefit-card p,
+      .step-card p,
+      .faq-card p,
+      .review-card p {
+        color: var(--muted);
+        line-height: 1.55;
+        font-weight: 620;
+      }
+
+      .process-band {
+        display: grid;
+        grid-template-columns: 0.82fr 1fr;
+        gap: 18px;
+        align-items: stretch;
+      }
+
+      .process-media {
+        min-height: 560px;
+        border-radius: 8px;
+        background:
+          linear-gradient(180deg, rgba(10, 28, 23, 0.12), rgba(10, 28, 23, 0.68)),
+          url("https://images.unsplash.com/photo-1558449028-b53a39d100fc?auto=format&fit=crop&w=1400&q=82") center / cover;
+        box-shadow: var(--shadow);
+      }
+
+      .steps {
+        display: grid;
+        gap: 14px;
+      }
+
+      .step-card {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 18px;
+        align-items: start;
+        padding: 24px;
+      }
+
+      .step-number {
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        color: #19241e;
+        background: var(--gold);
+        font-weight: 950;
+      }
+
+      .join-band {
+        width: min(1240px, calc(100% - 28px));
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(340px, 0.68fr);
+        gap: 26px;
+        align-items: center;
+        border-radius: 8px;
+        padding: clamp(30px, 6vw, 70px);
+        color: white;
+        background:
+          linear-gradient(135deg, rgba(10, 58, 46, 0.96), rgba(14, 96, 69, 0.92)),
+          url("https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&w=1800&q=78") center / cover;
+        box-shadow: var(--shadow);
+      }
+
+      .join-band h2 {
+        color: white;
+      }
+
+      .join-band p {
+        max-width: 680px;
+        margin-top: 18px;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 18px;
+        line-height: 1.55;
+        font-weight: 650;
+      }
+
+      .join-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 28px;
+      }
+
+      .join-card {
+        display: grid;
+        gap: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 8px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(12px);
+      }
+
+      .join-card div {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 10px;
+        align-items: start;
+      }
+
+      .join-card span {
+        width: 24px;
+        height: 24px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        color: var(--charcoal);
+        background: var(--gold);
+        font-size: 12px;
+        font-weight: 950;
+      }
+
+      .join-card strong {
+        display: block;
+        margin-bottom: 3px;
+      }
+
+      .join-card small {
+        color: rgba(255, 255, 255, 0.72);
+        line-height: 1.45;
+        font-size: 13px;
+        font-weight: 650;
+      }
+
+      .trust-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .review-card {
+        min-height: 230px;
+        display: grid;
+        align-content: space-between;
+        gap: 24px;
+        padding: 22px;
+      }
+
+      .review-card strong {
+        color: var(--green);
+      }
+
+      .faq-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .faq-card {
+        padding: 22px;
+      }
+
+      .faq-card h3 {
+        margin-bottom: 10px;
+        font-size: 20px;
+      }
+
+      .cta-section {
+        padding-bottom: 96px;
+      }
+
+      .consult-card {
+        display: grid;
+        grid-template-columns: minmax(0, 0.85fr) minmax(360px, 0.7fr);
+        gap: 34px;
+        align-items: stretch;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: clamp(24px, 5vw, 44px);
+        background: var(--white);
+        box-shadow: var(--shadow);
+      }
+
+      .consult-copy {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 32px;
+      }
+
+      .consult-copy p {
+        margin-top: 18px;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.58;
+        font-weight: 650;
+      }
+
+      .consult-form {
+        display: grid;
+        gap: 12px;
+      }
+
+      .field-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      label {
+        display: grid;
+        gap: 7px;
+        color: #344054;
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        min-height: 50px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfdfb;
+        color: var(--ink);
+        padding: 0 14px;
+        outline: none;
+        font-weight: 700;
+      }
+
+      textarea {
+        min-height: 104px;
+        padding-top: 13px;
+        resize: vertical;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: #6db894;
+        box-shadow: 0 0 0 4px rgba(15, 106, 76, 0.12);
+      }
+
+      .full {
+        grid-column: 1 / -1;
+      }
+
+      .form-status {
+        min-height: 22px;
+        color: var(--muted);
+        font-size: 13px;
+        font-weight: 750;
+      }
+
+      .footer {
+        border-top: 1px solid var(--line);
+        background: #ffffff;
+      }
+
+      .footer-inner {
+        width: min(1180px, calc(100% - 40px));
+        min-height: 112px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        color: var(--muted);
+        font-weight: 650;
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 16px;
+        color: var(--green);
+        font-weight: 850;
+      }
+
+      @media (max-width: 980px) {
+        .nav-links {
+          display: none;
+        }
+
+        .hero,
+        .section-header,
+        .process-band,
+        .join-band,
+        .consult-card {
+          grid-template-columns: 1fr;
+        }
+
+        .hero {
+          min-height: auto;
+        }
+
+        .benefit-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .trust-grid,
+        .hero-proof {
+          grid-template-columns: 1fr;
+        }
+
+        .process-media {
+          min-height: 360px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .nav-inner,
+        .section,
+        .footer-inner,
+        .hero {
+          width: min(100% - 28px, 1180px);
+        }
+
+        .nav-actions .secondary {
+          display: none;
+        }
+
+        .brand small {
+          display: none;
+        }
+
+        h1 {
+          font-size: clamp(54px, 19vw, 78px);
+        }
+
+        .hero-panel {
+          display: none;
+        }
+
+        .benefit-grid,
+        .faq-grid,
+        .field-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-inner {
+          flex-direction: column;
+          align-items: flex-start;
+          padding: 28px 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="site-shell">
+      <nav class="nav" aria-label="Main navigation">
+        <div class="nav-inner">
+          <a class="brand" href="#top" aria-label="Flourish Solar home">
+            <span class="brand-mark">FS</span>
+            <span>Flourish Solar<small>Orlando / Central Florida</small></span>
+          </a>
+          <div class="nav-links">
+            <a href="#homeowners">Homeowners</a>
+            <a href="#process">How It Works</a>
+            <a href="#join">Join</a>
+            <a href="#reviews">Reviews</a>
+          </div>
+          <div class="nav-actions">
+            <a class="button secondary" href="https://portal.flourishsolar.com">Rep Portal</a>
+            <a class="button primary" href="#consultation">Free Consultation</a>
+          </div>
+        </div>
+      </nav>
+
+      <main id="top">
+        <section class="hero">
+          <div>
+            <span class="eyebrow">Solar made clearer for Central Florida</span>
+            <h1>Flourish Solar</h1>
+            <p class="hero-copy">Helping homeowners explore cleaner energy, lower utility costs, and a smoother solar experience.</p>
+            <div class="hero-actions">
+              <a class="button primary" href="#consultation">Get a Free Solar Consultation</a>
+              <a class="button secondary" href="https://join.flourishsolar.com">Join the Sales Team</a>
+            </div>
+            <div class="hero-proof" aria-label="Flourish Solar highlights">
+              <article class="proof-card">
+                <strong>Clear Guidance</strong>
+                <span>A calmer process from first question to next steps.</span>
+              </article>
+              <article class="proof-card">
+                <strong>Design Support</strong>
+                <span>Solar layouts and project details organized for review.</span>
+              </article>
+              <article class="proof-card">
+                <strong>Rep Portal</strong>
+                <span>Internal tools for onboarding, leads, and project visibility.</span>
+              </article>
+            </div>
+          </div>
+
+          <aside class="hero-panel" aria-label="Solar consultation preview">
+            <div class="panel-image">
+              <div class="panel-card">
+                <strong>A better solar conversation.</strong>
+                <p>Homeowners get a simple explanation, reps get a clean internal flow, and the whole process stays organized inside the Flourish system.</p>
+              </div>
+            </div>
+          </aside>
+        </section>
+
+        <section class="section" id="homeowners">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">For Homeowners</span>
+              <h2>Built around clarity, not pressure.</h2>
+            </div>
+            <p>Flourish Solar gives homeowners a direct path to understand their options, ask better questions, and move forward only when the details make sense.</p>
+          </div>
+
+          <div class="benefit-grid">
+            <article class="benefit-card">
+              <span class="icon">01</span>
+              <div>
+                <h3>Free Consultation</h3>
+                <p>Start with a simple conversation about your home, energy usage, and what you want out of solar.</p>
+              </div>
+            </article>
+            <article class="benefit-card">
+              <span class="icon">02</span>
+              <div>
+                <h3>Design Support</h3>
+                <p>We keep roof details, project notes, and solar design needs organized so the next step is easier to review.</p>
+              </div>
+            </article>
+            <article class="benefit-card">
+              <span class="icon">03</span>
+              <div>
+                <h3>Financing Guidance</h3>
+                <p>Get help understanding available options without turning the conversation into confusing fine print.</p>
+              </div>
+            </article>
+            <article class="benefit-card">
+              <span class="icon">04</span>
+              <div>
+                <h3>Clean Communication</h3>
+                <p>Every lead and project can be tracked internally so homeowners and reps are not guessing what happens next.</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="process">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">How It Works</span>
+              <h2>A simple path from interest to informed decision.</h2>
+            </div>
+            <p>Solar does not need to feel complicated. The Flourish process keeps each step focused and easy to follow.</p>
+          </div>
+
+          <div class="process-band">
+            <div class="process-media" aria-hidden="true"></div>
+            <div class="steps">
+              <article class="step-card">
+                <span class="step-number">1</span>
+                <div>
+                  <h3>Consultation</h3>
+                  <p>We collect the basics, learn what matters most, and decide whether a solar review is worth exploring.</p>
+                </div>
+              </article>
+              <article class="step-card">
+                <span class="step-number">2</span>
+                <div>
+                  <h3>Custom Design</h3>
+                  <p>Your information is organized for a more accurate design conversation, including roof, usage, and project notes.</p>
+                </div>
+              </article>
+              <article class="step-card">
+                <span class="step-number">3</span>
+                <div>
+                  <h3>Clear Next Steps</h3>
+                  <p>If solar looks like a fit, the team can move the project forward internally with cleaner handoffs.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section class="join-band" id="join">
+          <div>
+            <span class="eyebrow">Join Flourish Solar</span>
+            <h2>Onboarding first. Portal access after approval.</h2>
+            <p>New reps start with short onboarding and training at join.flourishsolar.com. Once training is complete and approved, active reps use portal.flourishsolar.com to view their profile, leads, customers, jobs, and next steps.</p>
+            <div class="join-actions">
+              <a class="button primary" href="https://join.flourishsolar.com">Start Onboarding</a>
+              <a class="button secondary" href="https://portal.flourishsolar.com">Active Rep Portal</a>
+            </div>
+          </div>
+          <div class="join-card">
+            <div>
+              <span>1</span>
+              <div><strong>Apply</strong><small>Submit the quick join form and basic rep information.</small></div>
+            </div>
+            <div>
+              <span>2</span>
+              <div><strong>Train</strong><small>Complete the starter training so the team knows you are ready.</small></div>
+            </div>
+            <div>
+              <span>3</span>
+              <div><strong>Access</strong><small>After approval, get portal access for your assigned work only.</small></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="reviews">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">Trust</span>
+              <h2>Designed to feel organized from both sides.</h2>
+            </div>
+            <p>This section is intentionally honest for launch. As real reviews and project proof come in, we can replace these with verified testimonials.</p>
+          </div>
+
+          <div class="trust-grid">
+            <article class="review-card">
+              <p>Homeowners should feel like they understand the process before making a decision.</p>
+              <strong>Homeowner-first communication</strong>
+            </article>
+            <article class="review-card">
+              <p>Reps should have a clear place to see their leads, customers, jobs, profile, and onboarding progress.</p>
+              <strong>Cleaner internal workflow</strong>
+            </article>
+            <article class="review-card">
+              <p>Admins should be able to review everything without losing the rep-level visibility that keeps the team focused.</p>
+              <strong>Admin oversight</strong>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <div class="section-header">
+            <div>
+              <span class="eyebrow">FAQ</span>
+              <h2>Good answers before the first call.</h2>
+            </div>
+            <p>Keep the public site simple now, then add deeper answers as the sales and onboarding system grows.</p>
+          </div>
+
+          <div class="faq-grid">
+            <article class="faq-card">
+              <h3>Is this only for Orlando?</h3>
+              <p>Flourish Solar is being built around Orlando and Central Florida, with room to support additional service areas as the team grows.</p>
+            </article>
+            <article class="faq-card">
+              <h3>Does the consultation cost anything?</h3>
+              <p>No. The first consultation is meant to help you understand whether solar is worth exploring for your home.</p>
+            </article>
+            <article class="faq-card">
+              <h3>Where do new reps start?</h3>
+              <p>New reps start at join.flourishsolar.com, complete onboarding and training, then wait for admin approval.</p>
+            </article>
+            <article class="faq-card">
+              <h3>Where do active reps log in?</h3>
+              <p>Approved reps use portal.flourishsolar.com. Reps see their assigned records, while admins can see everything.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section cta-section" id="consultation">
+          <div class="consult-card">
+            <div class="consult-copy">
+              <div>
+                <span class="eyebrow">Start Here</span>
+                <h2>Request a free solar consultation.</h2>
+                <p>Tell us a little about the home and what you want to explore. We will keep the conversation clear, useful, and focused on your next best step.</p>
+              </div>
+              <div class="hero-proof">
+                <article class="proof-card">
+                  <strong>No pressure</strong>
+                  <span>Designed as an educational first step.</span>
+                </article>
+                <article class="proof-card">
+                  <strong>Organized notes</strong>
+                  <span>Your request is captured for cleaner follow-up.</span>
+                </article>
+                <article class="proof-card">
+                  <strong>Local focus</strong>
+                  <span>Built for Central Florida homeowners.</span>
+                </article>
+              </div>
+            </div>
+
+            <form class="consult-form" id="consult-form">
+              <div class="field-grid">
+                <label>
+                  Full name
+                  <input name="customerName" autocomplete="name" required />
+                </label>
+                <label>
+                  Phone
+                  <input name="phone" type="tel" autocomplete="tel" required />
+                </label>
+                <label>
+                  Email
+                  <input name="email" type="email" autocomplete="email" />
+                </label>
+                <label>
+                  ZIP code
+                  <input name="postalCode" autocomplete="postal-code" />
+                </label>
+                <label class="full">
+                  What are you interested in?
+                  <select name="interest">
+                    <option>Solar consultation</option>
+                    <option>Design review</option>
+                    <option>Financing options</option>
+                    <option>Joining the sales team</option>
+                  </select>
+                </label>
+                <label class="full">
+                  Notes
+                  <textarea name="projectNotes" placeholder="Tell us anything helpful about the home, bill, roof, or timing."></textarea>
+                </label>
+              </div>
+              <button class="button primary" type="submit">Send Consultation Request</button>
+              <div class="form-status" id="form-status" role="status"></div>
+            </form>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div class="footer-inner">
+          <div class="brand">
+            <span class="brand-mark">FS</span>
+            <span>Flourish Solar<small>Cleaner energy, clearer process.</small></span>
+          </div>
+          <div class="footer-links">
+            <a href="https://join.flourishsolar.com">Join</a>
+            <a href="https://portal.flourishsolar.com">Portal</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      const form = document.getElementById("consult-form");
+      const status = document.getElementById("form-status");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const button = form.querySelector("button");
+        const payload = Object.fromEntries(new FormData(form).entries());
+        status.textContent = "Sending request...";
+        button.disabled = true;
+        try {
+          const response = await fetch("/api/site/consultation", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const data = await response.json();
+          if (!response.ok) throw new Error(data.error || "The request could not be sent.");
+          status.textContent = "Request received. The Flourish team will review it next.";
+          form.reset();
+        } catch (error) {
+          status.textContent = error.message;
+        } finally {
+          button.disabled = false;
+        }
+      });
+    </script>
+  </body>
+</html>

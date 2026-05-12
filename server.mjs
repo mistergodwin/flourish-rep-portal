@@ -19,6 +19,8 @@ const port = Number(process.env.PORT || 4177);
 const host = process.env.HOST || (process.env.NODE_ENV === "production" ? "0.0.0.0" : "127.0.0.1");
 const locationId = process.env.GHL_LOCATION_ID || "YfwlbtO6dLJ7ho2JKvzI";
 const token = process.env.GHL_PRIVATE_INTEGRATION_TOKEN || "";
+const mistralApiKey = process.env.MISTRAL_API_KEY || "";
+const mistralModel = process.env.MISTRAL_MODEL || "mistral-small-latest";
 const dataDir = join(rootDir, "data");
 const profileStorePath = join(dataDir, "profile-completions.json");
 const createdContactsPath = join(dataDir, "portal-created-contacts.json");
@@ -251,6 +253,121 @@ const hostedRepApprovalScript = `
         };
       }
       document.addEventListener("DOMContentLoaded", () => setTimeout(decorateRepApplications, 500));
+    })();
+  </script>
+`;
+
+const hostedAiAssistantScript = `
+  <style>
+    .ai-assistant-panel {
+      display: grid;
+      gap: 10px;
+    }
+
+    .ai-assistant-panel textarea {
+      width: 100%;
+      min-height: 92px;
+      resize: vertical;
+      border: 1px solid #d7e0eb;
+      border-radius: 8px;
+      padding: 11px 12px;
+      font: inherit;
+      color: #172132;
+      background: #fff;
+    }
+
+    .ai-assistant-panel textarea:focus {
+      outline: 3px solid rgba(42, 139, 99, 0.16);
+      border-color: #2a8b63;
+    }
+
+    .ai-assistant-response {
+      display: none;
+      white-space: pre-wrap;
+      border: 1px solid #d7e0eb;
+      border-radius: 8px;
+      background: #f7faf9;
+      color: #273446;
+      padding: 12px;
+      line-height: 1.5;
+    }
+
+    .ai-assistant-response.visible {
+      display: block;
+    }
+
+    .ai-assistant-response.error {
+      border-color: #f0c2c2;
+      background: #fce8e8;
+      color: #9a2b2b;
+    }
+  </style>
+  <script>
+    (() => {
+      const isHosted = location.protocol !== "file:";
+      if (!isHosted) return;
+
+      function getSession() {
+        try {
+          return JSON.parse(sessionStorage.getItem("flourishPortalSession") || "null");
+        } catch {
+          return null;
+        }
+      }
+
+      function ensureAiPanel() {
+        const session = getSession();
+        const rail = document.querySelector(".right-rail");
+        if (!rail || !session || session.role !== "Admin") return;
+        if (document.getElementById("ai-assistant-panel")) return;
+
+        const panel = document.createElement("section");
+        panel.id = "ai-assistant-panel";
+        panel.innerHTML = [
+          "<h2>AI Assistant</h2>",
+          "<p class=\\"muted\\">Internal help for admin planning, lead cleanup, rep follow-up, and onboarding next steps.</p>",
+          "<form class=\\"ai-assistant-panel\\" id=\\"ai-assistant-form\\">",
+          "<textarea id=\\"ai-assistant-question\\" placeholder=\\"Ask what needs attention, who needs follow-up, or how to clean up the pipeline.\\"></textarea>",
+          "<button class=\\"primary-action\\" id=\\"ai-assistant-submit\\" type=\\"submit\\">Ask AI</button>",
+          "<div class=\\"ai-assistant-response\\" id=\\"ai-assistant-response\\"></div>",
+          "</form>"
+        ].join("");
+
+        rail.insertBefore(panel, document.getElementById("admin-panel"));
+        document.getElementById("ai-assistant-form").addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const question = document.getElementById("ai-assistant-question").value.trim();
+          const button = document.getElementById("ai-assistant-submit");
+          const output = document.getElementById("ai-assistant-response");
+          if (!question) return;
+          button.disabled = true;
+          button.textContent = "Thinking...";
+          output.className = "ai-assistant-response visible";
+          output.textContent = "Reviewing the portal data...";
+          try {
+            const response = await fetch("/api/portal/ai-assistant", {
+              method: "POST",
+              headers: { "content-type": "application/json" },
+              body: JSON.stringify({ email: session.email, role: session.role, question })
+            });
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || "AI assistant is not ready yet.");
+            output.textContent = result.answer;
+          } catch (error) {
+            output.className = "ai-assistant-response visible error";
+            output.textContent = error.message;
+          } finally {
+            button.disabled = false;
+            button.textContent = "Ask AI";
+          }
+        });
+      }
+
+      const observer = new MutationObserver(ensureAiPanel);
+      observer.observe(document.documentElement, { childList: true, subtree: true });
+      window.addEventListener("storage", ensureAiPanel);
+      document.addEventListener("DOMContentLoaded", ensureAiPanel);
+      setTimeout(ensureAiPanel, 250);
     })();
   </script>
 `;
@@ -568,6 +685,38 @@ async function createDesignContact(payload) {
       projectNotes: payload.projectNotes || "",
     },
   };
+}
+
+async function createWebsiteConsultation(payload) {
+  if (!payload.customerName || !payload.phone) {
+    throw new Error("Name and phone are required");
+  }
+  const { firstName, lastName } = splitName(payload.customerName);
+  const body = {
+    locationId,
+    firstName,
+    lastName,
+    name: payload.customerName,
+    email: payload.email || undefined,
+    phone: payload.phone,
+    postalCode: payload.postalCode || undefined,
+    source: "Flourish Solar Website Consultation",
+    tags: ["website-consultation", "flourishsolar.com", "portal-status-new-project"],
+  };
+
+  const result = await ghlJson("/contacts/", "POST", body);
+  const contact = result.contact || result;
+  await savePortalCreatedContact({
+    ...normalizeCreatedContact(contact, "admin"),
+    stage: "New Project",
+    nextStep: payload.interest || "Website consultation request",
+    portalStatus: "new-project",
+    summary: {
+      interest: payload.interest || "",
+      projectNotes: payload.projectNotes || "",
+    },
+  });
+  return { contact };
 }
 
 async function createRepApplication(payload) {
@@ -937,6 +1086,121 @@ async function validateMagicLogin(magicToken) {
   return findPortalUserByEmail(login.email);
 }
 
+function buildAiPortalContext(portalData) {
+  const statusCounts = leadStatuses.map((status) => ({
+    stage: status.label,
+    count: portalData.records.filter((record) => (record.portalStatus || "new-project") === status.value).length,
+  }));
+  const reps = portalData.reps
+    .filter((rep) => rep.role === "Rep")
+    .map((rep) => ({
+      name: rep.name,
+      email: rep.email,
+      territory: rep.territory,
+      status: rep.status,
+      profileComplete: Boolean(portalData.profileCompletions?.[rep.id]),
+      assignedRecords: portalData.records.filter((record) => record.ownerId === rep.id).length,
+    }));
+  const records = portalData.records.slice(0, 80).map((record) => ({
+    type: record.type,
+    name: record.name,
+    email: record.email || "",
+    phone: record.phone || "",
+    ownerId: record.ownerId || "",
+    stage: statusByValue.get(record.portalStatus || "new-project")?.label || record.stage || "New Project",
+    nextStep: record.nextStep || "",
+    value: record.value || "",
+    source: record.source || record.sourceKind || "",
+  }));
+  const notes = portalData.notes.slice(0, 30).map((note) => ({
+    title: note.title,
+    body: note.body,
+    time: note.time,
+  }));
+  const applications = portalData.repApplications.slice(0, 40).map((application) => ({
+    name: application.name,
+    email: application.email,
+    territory: application.territory,
+    status: application.status,
+    experience: application.experience,
+  }));
+
+  return {
+    locationId: portalData.locationId,
+    dataMode: portalData.mode,
+    totals: {
+      reps: reps.length,
+      records: portalData.records.length,
+      applications: applications.length,
+    },
+    statusCounts,
+    reps,
+    records,
+    recentInternalActivity: notes,
+    onboardingApplications: applications,
+  };
+}
+
+async function askMistralForPortal({ question, portalData }) {
+  if (!mistralApiKey) throw new Error("Mistral is not configured yet.");
+
+  const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${mistralApiKey}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify({
+      model: mistralModel,
+      temperature: 0.2,
+      max_tokens: 700,
+      messages: [
+        {
+          role: "system",
+          content: [
+            "You are the internal AI assistant for Flourish Solar's admin portal.",
+            "Help the admin organize reps, leads, customers, jobs, onboarding, and internal follow-up.",
+            "Use only the provided portal data. If data is missing, say what should be checked.",
+            "Do not write customer-facing messages or claim any customer communication was sent.",
+            "Keep answers practical, concise, and action-focused.",
+          ].join(" "),
+        },
+        {
+          role: "user",
+          content: JSON.stringify({
+            question,
+            portalContext: buildAiPortalContext(portalData),
+          }),
+        },
+      ],
+    }),
+  });
+
+  const result = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(result.message || result.error?.message || "Mistral did not return a usable response.");
+  }
+  return result.choices?.[0]?.message?.content?.trim() || "I could not generate an answer from the current portal data.";
+}
+
+async function getPortalDataForAssistant() {
+  try {
+    return await getLivePortalData();
+  } catch (error) {
+    return {
+      mode: "sample",
+      locationId,
+      reps: sampleReps,
+      records: sampleRecords,
+      notes: [...await getInternalActivity(), ...sampleNotes],
+      profileCompletions: await getProfileCompletions(),
+      repApplications: await getRepApplications(),
+      leadStatuses,
+      warning: error.message,
+    };
+  }
+}
+
 async function handleApi(request, response) {
   const url = new URL(request.url, `http://${request.headers.host}`);
   if (url.pathname === "/api/health") {
@@ -944,6 +1208,7 @@ async function handleApi(request, response) {
       ok: true,
       locationId,
       highLevelConfigured: Boolean(token),
+      mistralConfigured: Boolean(mistralApiKey),
     });
   }
 
@@ -1029,6 +1294,34 @@ async function handleApi(request, response) {
     }
   }
 
+  if (url.pathname === "/api/portal/ai-assistant" && request.method === "POST") {
+    const payload = await readJsonBody(request);
+    const email = String(payload.email || "").trim().toLowerCase();
+    const role = String(payload.role || "");
+    const question = String(payload.question || "").trim();
+    if (!question) return sendJson(response, 400, { error: "Ask a question first." });
+    if (role !== "Admin" || !adminEmails.has(email)) {
+      return sendJson(response, 403, { error: "The AI assistant is admin-only." });
+    }
+    try {
+      const portalData = await getPortalDataForAssistant();
+      const answer = await askMistralForPortal({ question, portalData });
+      return sendJson(response, 200, { ok: true, answer });
+    } catch (error) {
+      return sendJson(response, mistralApiKey ? 502 : 503, { error: error.message });
+    }
+  }
+
+  if (url.pathname === "/api/site/consultation" && request.method === "POST") {
+    const payload = await readJsonBody(request);
+    try {
+      const result = await createWebsiteConsultation(payload);
+      return sendJson(response, 200, { ok: true, ...result });
+    } catch (error) {
+      return sendJson(response, 502, { error: error.message });
+    }
+  }
+
   if (url.pathname === "/api/portal/contact" && request.method === "PUT") {
     const payload = await readJsonBody(request);
     if (!payload.contactId || !payload.customerName) {
@@ -1062,11 +1355,15 @@ async function handleStatic(request, response) {
   const url = new URL(request.url, `http://${request.headers.host}`);
   const hostname = (request.headers["x-forwarded-host"] || request.headers.host || "").toString().split(":")[0].toLowerCase();
   const isJoinHost = hostname === "join.flourishsolar.com" || hostname.startsWith("join.");
+  const isPortalHost = hostname === "portal.flourishsolar.com" || hostname.startsWith("portal.");
   const joinPaths = new Set(["/join", "/join/", "/join.html", "/join-flourish-solar.html"]);
+  const portalPaths = new Set(["/portal", "/portal/", "/portal.html", "/flourish-rep-portal.html"]);
   const requestedPath = isJoinHost || joinPaths.has(url.pathname)
     ? "/join-flourish-solar.html"
-    : url.pathname === "/" || url.pathname === "/flourish-rep-portal.html"
+    : isPortalHost || portalPaths.has(url.pathname)
       ? "/flourish-rep-portal-live.html"
+      : url.pathname === "/" || url.pathname === "/home" || url.pathname === "/flourish-solar-site.html"
+        ? "/flourish-solar-site.html"
       : url.pathname;
   const filePath = normalize(join(rootDir, decodeURIComponent(requestedPath)));
 
@@ -1083,13 +1380,13 @@ async function handleStatic(request, response) {
   });
   if (extension === ".html") {
     const html = await readFile(filePath, "utf8");
-    if (requestedPath === "/join-flourish-solar.html") {
+    if (requestedPath === "/join-flourish-solar.html" || requestedPath === "/flourish-solar-site.html") {
       response.end(html);
       return;
     }
     response.end(html
       .replace("</head>", `${repReadOnlyStageStyle}</head>`)
-      .replace("</body>", `${hostedMagicLinkScript}${hostedRepApprovalScript}</body>`));
+      .replace("</body>", `${hostedMagicLinkScript}${hostedRepApprovalScript}${hostedAiAssistantScript}</body>`));
     return;
   }
   createReadStream(filePath).pipe(response);

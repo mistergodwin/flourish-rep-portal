@@ -16,6 +16,7 @@ Custom rep/admin portal for Flourish Solar.
 - Admin lead stage changes update HighLevel tags, then refresh back into the portal. Reps can view stages but cannot change them.
 - Admin stage tabs filter records by New Project, Design, Proposal, Pre-Qualification, Sold, and NTP. Reps do not see these admin filters.
 - Admin workflow checklist shows the draft GHL automations needed for stage tags.
+- Admin-only AI assistant uses Mistral for internal lead, rep, onboarding, and cleanup guidance.
 
 ## Local Preview
 
@@ -61,6 +62,8 @@ Copy `.env.local.example` to `.env.local` and fill in:
 GHL_LOCATION_ID=YfwlbtO6dLJ7ho2JKvzI
 GHL_PRIVATE_INTEGRATION_TOKEN=your_private_integration_token
 ADMIN_EMAILS=godwin.inc@gmail.com
+MISTRAL_API_KEY=your_mistral_api_key
+MISTRAL_MODEL=mistral-small-latest
 PORT=4177
 NODE_ENV=development
 ```
@@ -90,6 +93,14 @@ Both routes write to HighLevel first. The portal then reloads live data so reps 
 Lead stages are saved as HighLevel tags like `portal-status-design`, `portal-status-proposal`, `portal-status-sold`, and `portal-status-ntp`, which can later trigger internal GHL workflows. Only admin can change these stages from the portal.
 
 Workflow setup details are in `ghl-rep-portal-workflows.md`. These are internal workflows for admin and sales reps only, not customer-facing communication.
+
+The admin AI assistant uses:
+
+```text
+POST /api/portal/ai-assistant
+```
+
+Set `MISTRAL_API_KEY` on the server or in Render. The key must stay server-side and should not be pasted into any HTML file.
 
 ## Needed HighLevel Scopes
 
