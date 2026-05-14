@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Flourish Solar Rep Portal</title>
+    <script>
+      if (location.protocol === "file:" || ["localhost", "127.0.0.1"].includes(location.hostname)) document.documentElement.classList.add("file-preview");
+    </script>
     <style>
       :root {
         font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -932,6 +935,3046 @@
         color: var(--muted);
       }
 
+      html.file-preview .login-page,
+      html.file-preview .profile-setup {
+        display: none;
+      }
+
+      html.file-preview .portal-shell {
+        display: grid;
+      }
+
+      .portal-shell {
+        grid-template-columns: 310px minmax(0, 1fr);
+        background: #f8fafc;
+      }
+
+      .portal-sidebar {
+        align-items: stretch;
+        gap: 0;
+        padding: 0;
+        border-right: 1px solid #e1e7ef;
+        background: #fff;
+        color: #101827;
+      }
+
+      .portal-brand {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 12px;
+        min-height: 90px;
+        padding: 0 28px;
+        border-bottom: 1px solid #e1e7ef;
+      }
+
+      .portal-brand .brand-mark {
+        width: 34px;
+        height: 34px;
+        border-radius: 0;
+        background: transparent;
+        color: #101827;
+      }
+
+      .portal-brand span:last-child {
+        display: inline;
+        color: #111827;
+        font-size: 25px;
+        font-weight: 900;
+      }
+
+      .portal-nav {
+        display: grid;
+        gap: 10px;
+        padding: 22px 20px;
+      }
+
+      .portal-sidebar button {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 16px;
+        width: 100%;
+        height: 52px;
+        padding: 0 16px;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        color: #667385;
+        font-size: 17px;
+        font-weight: 850;
+      }
+
+      .portal-sidebar button.active,
+      .portal-sidebar button:hover {
+        background: #111827;
+        color: #fff;
+      }
+
+      .portal-sidebar svg,
+      .metric-icon svg {
+        width: 21px;
+        height: 21px;
+      }
+
+      .nav-badge,
+      .notification-count {
+        display: grid;
+        place-items: center;
+        min-width: 24px;
+        height: 24px;
+        margin-left: auto;
+        border-radius: 999px;
+        background: #e95353;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 900;
+      }
+
+      .logout {
+        margin: auto 20px 24px;
+      }
+
+      .portal-workspace {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        padding: 28px 28px 44px;
+      }
+
+      .portal-header {
+        align-items: flex-start;
+        margin-bottom: 34px;
+      }
+
+      .portal-header h1 {
+        margin-top: 0;
+        color: #0b1120;
+        font-size: clamp(36px, 4vw, 50px);
+        letter-spacing: 0;
+      }
+
+      .portal-subtitle {
+        margin-top: 6px;
+        color: #667385;
+        font-size: 20px;
+      }
+
+      .portal-actions {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+      }
+
+      .notification-button,
+      .user-chip {
+        position: relative;
+        min-height: 58px;
+        border: 1px solid #dbe1e8;
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: none;
+      }
+
+      .notification-button {
+        display: grid;
+        place-items: center;
+        width: 58px;
+        color: #0b1120;
+      }
+
+      .notification-count {
+        position: absolute;
+        top: -11px;
+        right: -8px;
+        margin-left: 0;
+      }
+
+      .user-chip {
+        min-width: 226px;
+        padding: 0 16px;
+        color: #0b1120;
+        font-size: 17px;
+      }
+
+      .user-chip small,
+      .avatar {
+        display: none;
+      }
+
+      .metric-strip {
+        order: 1;
+        grid-template-columns: repeat(4, minmax(170px, 1fr));
+        gap: 20px;
+        margin-bottom: 24px;
+      }
+
+      .metric {
+        align-items: start;
+        justify-content: space-between;
+        min-height: 154px;
+        padding: 30px;
+        border-color: #dfe5ec;
+        box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+      }
+
+      .metric div {
+        gap: 18px;
+      }
+
+      .metric span {
+        max-width: 160px;
+        color: #0b1120;
+        font-size: 18px;
+        font-weight: 850;
+        line-height: 1.25;
+      }
+
+      .metric strong {
+        margin-top: 0;
+        color: #060b16;
+        font-size: 31px;
+      }
+
+      .metric-icon {
+        color: #667385;
+      }
+
+      .overview-grid {
+        order: 2;
+        display: grid;
+        grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+        gap: 20px;
+        margin-bottom: 22px;
+      }
+
+      .dashboard-panel {
+        min-height: 430px;
+        padding: 30px;
+        border: 1px solid #dfe5ec;
+        border-radius: 8px;
+        background: #fff;
+      }
+
+      .attention-panel {
+        border-color: #ffd6d6;
+      }
+
+      .panel-heading {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 14px;
+        align-items: start;
+        margin-bottom: 26px;
+      }
+
+      .panel-heading svg {
+        width: 28px;
+        height: 28px;
+        margin-top: 3px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .panel-heading h2 {
+        color: #060b16;
+        font-size: 30px;
+        line-height: 1.1;
+      }
+
+      .panel-heading p {
+        margin-top: 8px;
+        color: #667385;
+        font-size: 17px;
+      }
+
+      .attention-panel .panel-heading {
+        color: #e95353;
+      }
+
+      .attention-panel .panel-heading h2 {
+        color: #060b16;
+      }
+
+      .attention-list {
+        display: grid;
+      }
+
+      .attention-list article {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 16px;
+        padding: 18px 0;
+        border-top: 1px solid #e5e9ef;
+      }
+
+      .attention-list svg {
+        width: 20px;
+        height: 20px;
+        margin-top: 2px;
+        stroke: #0b1120;
+        stroke-width: 2;
+        fill: none;
+      }
+
+      .attention-list strong {
+        color: #111827;
+        font-size: 16px;
+      }
+
+      .attention-list p,
+      .attention-list small,
+      .schedule-empty {
+        margin-top: 4px;
+        color: #667385;
+      }
+
+      .schedule-empty {
+        display: grid;
+        place-items: center;
+        min-height: 250px;
+        font-size: 18px;
+      }
+
+      .schedule-empty.has-items {
+        place-items: stretch;
+        align-content: start;
+        gap: 12px;
+        min-height: 0;
+        font-size: 14px;
+      }
+
+      .schedule-empty article {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+        align-items: start;
+        padding: 14px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #f8fafc;
+      }
+
+      .schedule-time {
+        min-width: 72px;
+        color: #047857;
+        font-weight: 900;
+      }
+
+      .schedule-empty strong {
+        display: block;
+        color: #0f172a;
+      }
+
+      .design-form {
+        order: 4;
+      }
+
+      .content-grid {
+        order: 3;
+      }
+
+      .portal-shell {
+        grid-template-columns: 292px minmax(0, 1fr);
+        background:
+          radial-gradient(circle at 78% 6%, rgba(245, 176, 65, 0.12), transparent 28%),
+          linear-gradient(180deg, #f8fafc 0%, #eef3f7 100%);
+      }
+
+      .portal-sidebar {
+        border-right: 1px solid rgba(15, 23, 42, 0.08);
+        background: #ffffff;
+        box-shadow: 8px 0 30px rgba(15, 23, 42, 0.04);
+      }
+
+      .portal-brand {
+        min-height: 104px;
+      }
+
+      .portal-brand .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: #fff7df;
+        color: #d58b16;
+      }
+
+      .portal-nav {
+        gap: 8px;
+      }
+
+      .portal-sidebar button {
+        height: 50px;
+        color: #64748b;
+        transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+      }
+
+      .portal-sidebar button.active,
+      .portal-sidebar button:hover {
+        background: #0f172a;
+        color: #ffffff;
+        transform: translateX(2px);
+      }
+
+      .nav-badge,
+      .notification-count {
+        background: #ef4444;
+        box-shadow: 0 8px 18px rgba(239, 68, 68, 0.24);
+      }
+
+      .portal-workspace {
+        padding: 30px clamp(22px, 3vw, 42px) 56px;
+      }
+
+      .portal-header {
+        align-items: center;
+        margin-bottom: 22px;
+      }
+
+      .portal-header h1 {
+        max-width: 760px;
+        font-size: clamp(38px, 4.4vw, 58px);
+        line-height: 0.95;
+      }
+
+      .portal-subtitle {
+        color: #64748b;
+      }
+
+      .notification-button,
+      .user-chip {
+        border-color: rgba(148, 163, 184, 0.35);
+        box-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+      }
+
+      .solar-command {
+        order: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1.45fr) minmax(320px, 0.75fr);
+        gap: 20px;
+        margin-bottom: 22px;
+      }
+
+      .command-hero,
+      .sun-card,
+      .pipeline-card {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 8px;
+        box-shadow: 0 22px 60px rgba(15, 23, 42, 0.10);
+      }
+
+      .command-hero {
+        display: grid;
+        align-content: space-between;
+        min-height: 260px;
+        padding: 30px;
+        background:
+          linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(18, 56, 46, 0.96)),
+          #0f172a;
+        color: #ffffff;
+      }
+
+      .command-hero::after {
+        content: "";
+        position: absolute;
+        right: -90px;
+        bottom: -120px;
+        width: 340px;
+        height: 340px;
+        border-radius: 50%;
+        background: rgba(245, 176, 65, 0.16);
+      }
+
+      .command-hero > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .command-kicker {
+        display: inline-flex;
+        width: fit-content;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 10px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #fde68a;
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .command-hero h2 {
+        max-width: 700px;
+        margin-top: 18px;
+        font-size: clamp(30px, 3.4vw, 48px);
+        line-height: 1.02;
+      }
+
+      .command-hero p {
+        max-width: 620px;
+        margin-top: 12px;
+        color: #cbd5e1;
+        font-size: 17px;
+        line-height: 1.5;
+      }
+
+      .command-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .command-stats div {
+        padding: 14px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .command-stats span,
+      .sun-card span,
+      .pipeline-card span {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .command-stats span {
+        color: #cbd5e1;
+      }
+
+      .command-stats strong {
+        display: block;
+        margin-top: 8px;
+        color: #ffffff;
+        font-size: 24px;
+      }
+
+      .sun-card {
+        display: grid;
+        gap: 18px;
+        padding: 24px;
+        background:
+          linear-gradient(180deg, #ffffff, #fffaf0);
+      }
+
+      .sun-card h2 {
+        color: #0f172a;
+        font-size: 24px;
+      }
+
+      .sun-score {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 16px;
+        align-items: center;
+        padding: 16px;
+        border-radius: 8px;
+        background: #0f172a;
+        color: #fff;
+      }
+
+      .sun-score svg {
+        width: 38px;
+        height: 38px;
+        color: #fbbf24;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+      }
+
+      .sun-score strong {
+        display: block;
+        font-size: 26px;
+      }
+
+      .command-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .command-list div {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .command-list div:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .command-list strong {
+        color: #0f172a;
+      }
+
+      .metric-strip {
+        grid-template-columns: repeat(4, minmax(170px, 1fr));
+        gap: 16px;
+      }
+
+      .metric {
+        min-height: 132px;
+        padding: 22px;
+        border: 1px solid rgba(148, 163, 184, 0.26);
+        background: rgba(255, 255, 255, 0.92);
+        box-shadow: 0 18px 44px rgba(15, 23, 42, 0.07);
+      }
+
+      .metric span {
+        color: #475569;
+        font-size: 15px;
+      }
+
+      .metric strong {
+        font-size: 34px;
+      }
+
+      .metric-icon {
+        display: grid;
+        place-items: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 8px;
+        background: #ecfdf5;
+        color: #047857;
+      }
+
+      .pipeline-card {
+        order: 2;
+        margin-bottom: 20px;
+        padding: 22px;
+        background: #ffffff;
+      }
+
+      .pipeline-card header {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 18px;
+      }
+
+      .pipeline-card h2 {
+        color: #0f172a;
+        font-size: 24px;
+      }
+
+      .pipeline-steps {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .pipeline-steps article {
+        min-height: 92px;
+        padding: 14px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #f8fafc;
+      }
+
+      .pipeline-steps strong {
+        display: block;
+        margin-top: 10px;
+        color: #0f172a;
+        font-size: 24px;
+      }
+
+      .overview-grid {
+        grid-template-columns: minmax(0, 1fr) minmax(350px, 0.82fr);
+      }
+
+      .dashboard-panel {
+        min-height: 360px;
+        border-color: rgba(148, 163, 184, 0.26);
+        box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
+      }
+
+      .attention-panel {
+        border-color: rgba(239, 68, 68, 0.22);
+      }
+
+      .design-form,
+      .records-section,
+      .right-rail section {
+        border-color: rgba(148, 163, 184, 0.26);
+        box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
+      }
+
+      .design-form {
+        display: none;
+        grid-template-columns: minmax(0, 1fr);
+        overflow: hidden;
+        padding: 0;
+        background:
+          linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(239, 253, 245, 0.96));
+      }
+
+      .design-form.visible {
+        display: grid;
+      }
+
+      .design-form header {
+        margin: 0;
+        padding: 24px 26px;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+        background: #ffffff;
+      }
+
+      .design-form header h2 {
+        color: #0f172a;
+        font-size: 26px;
+      }
+
+      .design-form .form-grid {
+        padding: 24px 26px 8px;
+      }
+
+      .design-form .primary-action,
+      .design-form .form-message {
+        margin: 0 26px 24px;
+      }
+
+      .records-section {
+        background: rgba(255, 255, 255, 0.94);
+      }
+
+      .section-title {
+        align-items: center;
+        padding: 22px 24px;
+        background: #ffffff;
+      }
+
+      .section-title h2 {
+        color: #0f172a;
+        font-size: 25px;
+      }
+
+      .section-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .mini-action {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 40px;
+        border: 1px solid #cbd5e1;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #0f172a;
+        font-size: 13px;
+        font-weight: 900;
+        padding: 0 14px;
+      }
+
+      .mini-action.primary {
+        border-color: #0f172a;
+        background: #0f172a;
+        color: #ffffff;
+      }
+
+      .record-row {
+        grid-template-columns: 92px minmax(220px, 1.25fr) minmax(220px, 1fr) 130px;
+        padding: 18px 24px;
+        transition: background 140ms ease;
+      }
+
+      .record-row:hover {
+        background: #f8fafc;
+      }
+
+      .record-main h3 {
+        font-size: 18px;
+      }
+
+      .record-type,
+      .status-badge {
+        border-radius: 999px;
+        text-transform: none;
+      }
+
+      .status-select {
+        min-height: 38px;
+      }
+
+      .secondary-action {
+        min-height: 38px;
+        border-radius: 8px;
+        font-size: 12px;
+      }
+
+      .right-rail {
+        gap: 14px;
+      }
+
+      .right-rail section {
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.94);
+      }
+
+      .right-rail section h2 {
+        color: #0f172a;
+        font-size: 18px;
+      }
+
+      #launch-panel,
+      #workflow-panel,
+      #field-map-panel {
+        display: none;
+      }
+
+      .journey-track {
+        display: grid;
+        gap: 8px;
+        margin: 16px 0;
+      }
+
+      .journey-step {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 10px;
+        align-items: center;
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 850;
+      }
+
+      .journey-dot {
+        width: 12px;
+        height: 12px;
+        border: 2px solid #cbd5e1;
+        border-radius: 50%;
+        background: #fff;
+      }
+
+      .journey-step.complete .journey-dot,
+      .journey-step.active .journey-dot {
+        border-color: #047857;
+        background: #10b981;
+      }
+
+      .journey-step.active {
+        color: #0f172a;
+      }
+
+      .portal-workspace {
+        gap: 0;
+      }
+
+      .command-hero {
+        min-height: 300px;
+        background:
+          linear-gradient(135deg, rgba(6, 12, 26, 0.98), rgba(18, 56, 46, 0.96) 58%, rgba(4, 120, 87, 0.9)),
+          #0f172a;
+      }
+
+      .command-hero::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.055) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+        background-size: 42px 42px;
+        mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.45), transparent 78%);
+      }
+
+      .command-hero h2 {
+        letter-spacing: 0;
+      }
+
+      .sun-card,
+      .metric,
+      .pipeline-card,
+      .dashboard-panel,
+      .design-form,
+      .records-section,
+      .right-rail section {
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        box-shadow:
+          0 18px 45px rgba(15, 23, 42, 0.07),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      }
+
+      .sun-card {
+        background:
+          linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 251, 235, 0.92));
+      }
+
+      .metric {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .metric::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto;
+        height: 4px;
+        background: linear-gradient(90deg, #f59e0b, #10b981);
+      }
+
+      .metric:nth-child(2)::before {
+        background: linear-gradient(90deg, #10b981, #0ea5e9);
+      }
+
+      .metric:nth-child(3)::before {
+        background: linear-gradient(90deg, #ef4444, #f59e0b);
+      }
+
+      .metric:nth-child(4)::before {
+        background: linear-gradient(90deg, #0ea5e9, #10b981);
+      }
+
+      .pipeline-card {
+        padding: 24px;
+      }
+
+      .pipeline-steps {
+        gap: 12px;
+      }
+
+      .pipeline-steps article {
+        position: relative;
+        overflow: hidden;
+        min-height: 104px;
+        background: linear-gradient(180deg, #ffffff, #f8fafc);
+      }
+
+      .pipeline-steps article::after {
+        content: "";
+        position: absolute;
+        left: 14px;
+        right: 14px;
+        bottom: 12px;
+        height: 5px;
+        border-radius: 999px;
+        background: #e2e8f0;
+      }
+
+      .pipeline-steps article:nth-child(1)::after,
+      .pipeline-steps article:nth-child(2)::after,
+      .pipeline-steps article:nth-child(3)::after {
+        background: linear-gradient(90deg, #10b981, #f59e0b);
+      }
+
+      .dashboard-panel {
+        background: rgba(255, 255, 255, 0.96);
+      }
+
+      .attention-list article {
+        border-top: 1px solid #edf2f7;
+      }
+
+      .attention-list article:first-child {
+        border-top: 0;
+      }
+
+      .schedule-empty article {
+        border-color: rgba(148, 163, 184, 0.22);
+        background: linear-gradient(180deg, #ffffff, #f8fafc);
+      }
+
+      .overview-grid {
+        gap: 16px;
+      }
+
+      .overview-grid .dashboard-panel {
+        min-height: 0;
+      }
+
+      .panel-heading {
+        margin-bottom: 18px;
+      }
+
+      .panel-heading h2 {
+        font-size: 24px;
+      }
+
+      .attention-list article {
+        padding: 14px 0;
+      }
+
+      .schedule-empty.has-items {
+        gap: 10px;
+      }
+
+      .schedule-empty article {
+        min-height: 70px;
+      }
+
+      .design-form {
+        margin-top: 8px;
+        background: #ffffff;
+      }
+
+      .design-form header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        background:
+          linear-gradient(135deg, #ffffff, #f8fafc);
+      }
+
+      .design-form header::after {
+        content: "Internal design intake";
+        display: inline-flex;
+        align-items: center;
+        min-height: 32px;
+        width: fit-content;
+        padding: 0 12px;
+        border-radius: 999px;
+        background: #ecfdf5;
+        color: #047857;
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .design-form input,
+      .design-form select,
+      .design-form textarea {
+        border-color: #d8e0ea;
+        background: #fbfdff;
+      }
+
+      .design-form input:focus,
+      .design-form select:focus,
+      .design-form textarea:focus {
+        background: #ffffff;
+      }
+
+      .design-intake-strip {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        padding: 18px 24px 0;
+      }
+
+      .design-intake-strip article {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 2px 12px;
+        align-items: center;
+        min-height: 76px;
+        padding: 14px;
+        border: 1px solid #dbe3ee;
+        border-radius: 14px;
+        background: #f8fafc;
+      }
+
+      .design-intake-strip span {
+        grid-row: span 2;
+        width: 34px;
+        height: 34px;
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        background: #0d1628;
+        color: #ffffff;
+        font-weight: 950;
+      }
+
+      .design-intake-strip strong {
+        color: #071225;
+      }
+
+      .design-intake-strip small {
+        color: #64748b;
+        font-weight: 750;
+      }
+
+      .content-grid {
+        grid-template-columns: minmax(0, 1fr) 380px;
+        gap: 20px;
+      }
+
+      .record-list {
+        gap: 10px;
+        padding: 12px;
+        background: #f8fafc;
+      }
+
+      .record-row {
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.045);
+      }
+
+      .record-row:last-child {
+        border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+      }
+
+      .record-type {
+        min-width: 74px;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .record-progress strong {
+        display: inline-flex;
+        width: fit-content;
+        align-items: center;
+        min-height: 30px;
+        padding: 0 10px;
+        border-radius: 999px;
+        background: #f1f5f9;
+        color: #0f172a;
+      }
+
+      .record-value {
+        color: #0f172a;
+        font-size: 18px;
+      }
+
+      .secondary-action {
+        border-color: #0f172a;
+        background: #0f172a;
+        color: #fff;
+      }
+
+      .secondary-action:hover {
+        border-color: #047857;
+        background: #047857;
+        color: #fff;
+      }
+
+      .right-rail {
+        position: sticky;
+        top: 18px;
+      }
+
+      #contact-focus-panel {
+        border-color: rgba(16, 185, 129, 0.32);
+        background:
+          linear-gradient(180deg, #ffffff, #f0fdf4);
+      }
+
+      #contact-focus-panel h2::after {
+        content: " view only";
+        color: #10b981;
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .journey-track {
+        padding: 14px;
+        border: 1px solid rgba(16, 185, 129, 0.16);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.76);
+      }
+
+      .note-list article,
+      .rep-list article,
+      .launch-list article,
+      .workflow-list article,
+      .field-map-list article {
+        border-color: rgba(148, 163, 184, 0.18);
+        background: #ffffff;
+      }
+
+      .jobs-command {
+        order: 1;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 360px;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      .sold-board,
+      .sold-summary {
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow:
+          0 18px 45px rgba(15, 23, 42, 0.07),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      }
+
+      .sold-board header,
+      .sold-summary header {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 22px 24px;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .sold-board header span,
+      .sold-summary header span {
+        color: #047857;
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .sold-board h2,
+      .sold-summary h2 {
+        color: #0f172a;
+        font-size: 24px;
+      }
+
+      .sold-board header,
+      .sold-summary header {
+        align-items: center;
+      }
+
+      .job-list {
+        display: grid;
+        gap: 12px;
+        padding: 14px;
+        background: #f8fafc;
+      }
+
+      .job-card {
+        display: grid;
+        grid-template-columns: minmax(280px, 1fr) minmax(320px, 0.9fr);
+        gap: 26px;
+        align-items: stretch;
+        padding: 26px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .job-card h3 {
+        color: #0f172a;
+        font-size: 19px;
+      }
+
+      .job-card p,
+      .job-meta span,
+      .sold-summary p {
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      .job-address {
+        display: block;
+        margin-top: 8px;
+        color: #64748b;
+        font-size: 17px;
+      }
+
+      .job-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .job-meta span {
+        min-height: 28px;
+        padding: 5px 9px;
+        border-radius: 999px;
+        background: #f1f5f9;
+        color: #334155;
+        font-weight: 850;
+      }
+
+      .job-progress {
+        display: grid;
+        gap: 10px;
+      }
+
+      .job-progress strong {
+        color: #0f172a;
+      }
+
+      .progress-bar {
+        height: 9px;
+        overflow: hidden;
+        border-radius: 999px;
+        background: #e2e8f0;
+      }
+
+      .progress-bar span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: linear-gradient(90deg, #10b981, #f59e0b);
+      }
+
+      .job-value {
+        text-align: right;
+      }
+
+      .job-value strong {
+        display: block;
+        color: #0f172a;
+        font-size: 22px;
+      }
+
+      .sale-breakdown {
+        display: grid;
+        gap: 12px;
+        margin-top: 26px;
+      }
+
+      .sale-breakdown h4 {
+        color: #64748b;
+        font-size: 15px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .sale-line {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 18px;
+        color: #64748b;
+        font-size: 17px;
+      }
+
+      .sale-line strong {
+        color: #020617;
+      }
+
+      .sale-total {
+        margin-top: 8px;
+        padding-top: 14px;
+        border-top: 1px solid #e2e8f0;
+      }
+
+      .commission-line {
+        align-items: end;
+        margin-top: 24px;
+        color: #020617;
+        font-size: 18px;
+        font-weight: 900;
+      }
+
+      .commission-line strong {
+        font-size: 30px;
+      }
+
+      .survey-box {
+        display: grid;
+        place-items: center;
+        min-height: 280px;
+        border: 1px dashed #cbd5e1;
+        border-radius: 8px;
+        background: #f8fafc;
+        color: #64748b;
+        text-align: center;
+        font-size: 16px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .survey-box small {
+        display: block;
+        margin-top: 10px;
+        color: #94a3b8;
+        font-size: 13px;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+
+      .job-status-panel {
+        display: grid;
+        gap: 16px;
+        align-content: start;
+        min-height: 280px;
+        padding: 22px;
+        border: 1px solid #dbe3ee;
+        border-radius: 14px;
+        background: #f8fafc;
+      }
+
+      .job-status-panel header {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 0;
+        border: 0;
+      }
+
+      .job-status-panel header span {
+        color: #047857;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .job-status-panel header strong {
+        min-height: 34px;
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        background: #ecfdf5;
+        color: #047857;
+        padding: 0 12px;
+        white-space: nowrap;
+      }
+
+      .job-status-steps {
+        display: grid;
+        gap: 10px;
+      }
+
+      .job-status-step {
+        display: grid;
+        grid-template-columns: 20px minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: center;
+        min-height: 44px;
+        padding: 10px 12px;
+        border-radius: 12px;
+        background: #ffffff;
+      }
+
+      .job-status-step span:first-child {
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        background: #cbd5e1;
+      }
+
+      .job-status-step.done span:first-child {
+        background: #10b981;
+      }
+
+      .job-status-step.active span:first-child {
+        background: #f59e0b;
+      }
+
+      .job-status-step strong {
+        color: #071225;
+      }
+
+      .job-status-step small {
+        color: #64748b;
+        font-weight: 900;
+      }
+
+      .job-docs {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .job-docs div {
+        min-height: 54px;
+        display: grid;
+        align-content: center;
+        gap: 2px;
+        padding: 10px 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: #ffffff;
+      }
+
+      .job-docs strong {
+        color: #071225;
+        font-size: 13px;
+      }
+
+      .job-docs span {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 850;
+      }
+
+      .sold-summary {
+        display: grid;
+        align-content: start;
+      }
+
+      .sold-stats {
+        display: grid;
+        gap: 12px;
+        padding: 14px;
+      }
+
+      .sold-summary .sold-stats {
+        grid-template-columns: 1fr;
+      }
+
+      .sold-stats div {
+        padding: 16px;
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 8px;
+        background: #ffffff;
+      }
+
+      .sold-stats span {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+      }
+
+      .sold-stats strong {
+        display: block;
+        margin-top: 8px;
+        color: #0f172a;
+        font-size: 26px;
+      }
+
+      .customer-detail {
+        order: 4;
+        display: grid;
+        gap: 20px;
+        margin-bottom: 20px;
+        padding: 26px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 8px;
+        background: #f8fafc;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.07);
+      }
+
+      .customer-detail-header {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 20px;
+        align-items: center;
+      }
+
+      .back-button {
+        display: grid;
+        place-items: center;
+        width: 56px;
+        height: 56px;
+        border: 1px solid #dbe3ee;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #0f172a;
+      }
+
+      .back-button svg,
+      .detail-icon svg {
+        width: 22px;
+        height: 22px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .customer-detail h2 {
+        color: #020617;
+        font-size: clamp(34px, 4vw, 52px);
+        line-height: 1;
+      }
+
+      .customer-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        margin-top: 12px;
+        color: #64748b;
+        font-size: 18px;
+      }
+
+      .customer-id,
+      .detail-status {
+        display: inline-flex;
+        align-items: center;
+        min-height: 34px;
+        padding: 0 14px;
+        border-radius: 999px;
+        background: #eef2f7;
+        color: #0f172a;
+        font-size: 14px;
+        font-weight: 900;
+      }
+
+      .detail-status {
+        background: #dbeafe;
+        color: #1d4ed8;
+        font-size: 18px;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 330px minmax(0, 1fr);
+        gap: 20px;
+      }
+
+      .detail-card {
+        border: 1px solid #dfe6ef;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.045);
+      }
+
+      .contact-card {
+        padding: 30px;
+      }
+
+      .contact-card h3,
+      .project-card h3 {
+        color: #020617;
+        font-size: 28px;
+      }
+
+      .contact-methods {
+        display: grid;
+        gap: 26px;
+        margin-top: 28px;
+      }
+
+      .contact-method {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 16px;
+        align-items: center;
+      }
+
+      .detail-icon {
+        display: grid;
+        place-items: center;
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: #eef2f7;
+        color: #0f172a;
+      }
+
+      .contact-method strong {
+        display: block;
+        color: #020617;
+        font-size: 18px;
+      }
+
+      .contact-method span {
+        display: block;
+        margin-top: 4px;
+        color: #64748b;
+        font-size: 17px;
+      }
+
+      .contact-card hr {
+        border: 0;
+        border-top: 1px solid #e2e8f0;
+        margin: 28px 0;
+      }
+
+      .project-card {
+        padding: 30px;
+      }
+
+      .detail-tabs {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+        margin: 28px 0 22px;
+        padding: 6px;
+        border-radius: 8px;
+        background: #eef2f7;
+      }
+
+      .detail-tabs button {
+        min-height: 50px;
+        border: 0;
+        border-radius: 7px;
+        background: transparent;
+        color: #64748b;
+        font-weight: 900;
+      }
+
+      .detail-tabs button.active {
+        background: #ffffff;
+        color: #020617;
+        box-shadow: 0 1px 6px rgba(15, 23, 42, 0.08);
+      }
+
+      .spec-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .spec-card {
+        min-height: 118px;
+        padding: 18px;
+        border: 1px solid #dfe6ef;
+        border-radius: 8px;
+        background: #f8fafc;
+      }
+
+      .spec-card span {
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .spec-card strong {
+        display: block;
+        margin-top: 18px;
+        color: #020617;
+        font-size: clamp(23px, 2.2vw, 32px);
+        line-height: 1.12;
+      }
+
+      .spec-card.highlight {
+        border-color: #bfdbfe;
+        background: #eff6ff;
+      }
+
+      .detail-commission-title {
+        margin-top: 24px;
+        padding-top: 22px;
+        border-top: 1px solid #e2e8f0;
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .detail-commission-grid.compact {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .detail-commission-grid.compact div {
+        display: grid;
+        align-content: center;
+        min-height: 86px;
+        border-radius: 8px;
+        background: #f8fafc;
+      }
+
+      .detail-ops-grid,
+      .detail-bottom-grid {
+        display: grid;
+        gap: 20px;
+      }
+
+      .detail-ops-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-bottom-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .detail-timeline-card,
+      .detail-doc-card,
+      .detail-commission-card {
+        padding: 26px;
+      }
+
+      .detail-timeline-card header,
+      .detail-doc-card header,
+      .detail-commission-card header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+
+      .detail-timeline-card header span,
+      .detail-doc-card header span,
+      .detail-commission-card header span {
+        color: #047857;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .detail-timeline-card h3,
+      .detail-doc-card h3,
+      .detail-commission-card h3 {
+        margin-top: 4px;
+        color: #020617;
+        font-size: 24px;
+      }
+
+      .detail-timeline-card header > strong {
+        min-height: 34px;
+        display: inline-flex;
+        align-items: center;
+        max-width: 260px;
+        border-radius: 999px;
+        background: #ecfdf5;
+        color: #047857;
+        padding: 0 12px;
+        line-height: 1.25;
+        white-space: normal;
+      }
+
+      .detail-timeline-card header > strong {
+        border-radius: 12px;
+        padding: 8px 12px;
+      }
+
+      .detail-timeline {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .detail-timeline div {
+        display: grid;
+        grid-template-columns: 22px minmax(0, 1fr);
+        gap: 12px;
+        align-items: center;
+        min-height: 76px;
+        padding: 14px;
+        border-radius: 12px;
+        background: #f8fafc;
+      }
+
+      .detail-timeline span {
+        width: 18px;
+        height: 18px;
+        border-radius: 999px;
+        background: #cbd5e1;
+      }
+
+      .detail-timeline .done span {
+        background: #10b981;
+      }
+
+      .detail-timeline .active span {
+        background: #f59e0b;
+      }
+
+      .detail-timeline strong {
+        color: #0f172a;
+      }
+
+      .detail-timeline small {
+        grid-column: 2;
+        color: #64748b;
+        font-weight: 900;
+      }
+
+      .detail-doc-list,
+      .detail-commission-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .detail-doc-list div,
+      .detail-commission-grid div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 14px;
+        min-height: 48px;
+        padding: 12px 14px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: #f8fafc;
+      }
+
+      .detail-doc-list strong,
+      .detail-commission-grid span {
+        color: #334155;
+        font-weight: 900;
+      }
+
+      .detail-doc-list span,
+      .detail-commission-grid strong {
+        color: #0f172a;
+        font-weight: 950;
+      }
+
+        .rep-profile {
+        order: 5;
+        display: grid;
+        gap: 24px;
+        margin-bottom: 20px;
+        padding: 26px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 8px;
+        background: #f8fafc;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.07);
+      }
+
+      .profile-hero {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 28px;
+        align-items: center;
+      }
+
+      .profile-avatar-large {
+        display: grid;
+        place-items: center;
+        width: 138px;
+        height: 138px;
+        border: 8px solid #ffffff;
+        border-radius: 50%;
+        background: #e5e7eb;
+        color: #0f172a;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.1);
+        font-size: 58px;
+        font-weight: 900;
+      }
+
+      .profile-hero h2 {
+        color: #020617;
+        font-size: clamp(40px, 5vw, 58px);
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .profile-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px 28px;
+        margin-top: 20px;
+        color: #64748b;
+        font-size: 18px;
+      }
+
+      .profile-meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+      }
+
+      .profile-meta svg,
+      .profile-action svg {
+        width: 21px;
+        height: 21px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+      }
+
+      .profile-tabs {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 650px;
+        gap: 6px;
+        padding: 6px;
+        border-radius: 8px;
+        background: #eef2f7;
+      }
+
+      .profile-tabs button {
+        min-height: 50px;
+        border: 0;
+        border-radius: 7px;
+        background: transparent;
+        color: #64748b;
+        font-size: 18px;
+        font-weight: 900;
+      }
+
+      .profile-tabs button.active {
+        background: #ffffff;
+        color: #020617;
+        box-shadow: 0 1px 6px rgba(15, 23, 42, 0.08);
+      }
+
+      .profile-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        gap: 20px;
+      }
+
+      .profile-panel {
+        min-height: 250px;
+        padding: 30px;
+        border: 1px solid #dfe6ef;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.045);
+      }
+
+      .profile-panel header {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+
+      .profile-panel h3 {
+        color: #64748b;
+        font-size: 17px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .commission-focus-panel header span {
+        color: #047857;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .commission-focus-panel header h3 {
+        margin-top: 6px;
+        color: #020617;
+        font-size: 24px;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+
+      .commission-snapshot {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .commission-snapshot div {
+        min-height: 104px;
+        display: grid;
+        align-content: center;
+        gap: 10px;
+        padding: 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        background: #f8fafc;
+      }
+
+      .commission-snapshot span {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .commission-snapshot strong {
+        color: #020617;
+        font-size: 26px;
+        line-height: 1;
+      }
+
+      .stage-select {
+        width: 100%;
+        max-width: 460px;
+        min-height: 58px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #fbfdff;
+        color: #020617;
+        font-size: 18px;
+        padding: 0 18px;
+      }
+
+      .status-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      .status-item {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 14px;
+        align-items: center;
+      }
+
+      .status-dot {
+        display: grid;
+        place-items: center;
+        width: 26px;
+        height: 26px;
+        border: 2px solid #cbd5e1;
+        border-radius: 50%;
+        color: #94a3b8;
+        font-size: 14px;
+        font-weight: 900;
+      }
+
+      .status-item.complete .status-dot {
+        border-color: #10b981;
+        color: #10b981;
+      }
+
+      .status-item strong {
+        display: block;
+        color: #020617;
+        font-size: 18px;
+      }
+
+      .status-item span {
+        display: block;
+        margin-top: 3px;
+        color: #64748b;
+      }
+
+      .profile-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        min-height: 50px;
+        border: 1px solid #dbe3ee;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #020617;
+        font-weight: 900;
+        padding: 0 18px;
+      }
+
+      .payment-panel {
+        padding: 30px;
+        border: 1px solid #dfe6ef;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.045);
+      }
+
+      .payment-panel header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 26px;
+      }
+
+      .payment-panel h3 {
+        color: #64748b;
+        font-size: 18px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .payment-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .payment-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .payment-tile {
+        min-height: 116px;
+        padding: 22px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #f8fafc;
+      }
+
+      .payment-tile strong {
+        display: block;
+        color: #020617;
+        font-size: 34px;
+      }
+
+      .payment-tile span {
+        display: block;
+        margin-top: 14px;
+        font-weight: 900;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .payment-tile.paid {
+        border-color: #bbf7d0;
+        background: #ecfdf5;
+        color: #10b981;
+      }
+
+      .payment-tile.pending {
+        border-color: #fed7aa;
+        background: #fff7ed;
+        color: #f59e0b;
+      }
+
+      .payment-tile.overdue {
+        border-color: #fecaca;
+        background: #fef2f2;
+        color: #ef4444;
+      }
+
+      .payment-tile.total {
+        border-color: #cbd5e1;
+        background: #e5e7eb;
+      }
+
+      .commission-history-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .commission-history-list article {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 18px;
+        align-items: center;
+        min-height: 76px;
+        padding: 16px 18px;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        background: #f8fafc;
+      }
+
+      .commission-history-list article > strong {
+        color: #020617;
+        font-size: 22px;
+      }
+
+      .commission-history-list article div strong {
+        display: block;
+        color: #020617;
+        font-size: 17px;
+      }
+
+      .commission-history-list article span {
+        display: block;
+        margin-top: 5px;
+        color: #64748b;
+        font-weight: 800;
+      }
+
+      .workflow-hub {
+        order: 0;
+        display: grid;
+        gap: 18px;
+        margin-bottom: 22px;
+      }
+
+      .workflow-hub header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 18px;
+      }
+
+      .workflow-hub h2 {
+        color: #020617;
+        font-size: clamp(34px, 4vw, 52px);
+        line-height: 0.98;
+      }
+
+      .workflow-hub p {
+        max-width: 760px;
+        margin-top: 8px;
+        color: #64748b;
+        font-size: 18px;
+        line-height: 1.45;
+      }
+
+      .workflow-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .workflow-card {
+        min-height: 190px;
+        display: grid;
+        align-content: space-between;
+        gap: 22px;
+        padding: 22px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow:
+          0 18px 45px rgba(15, 23, 42, 0.07),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      }
+
+      .workflow-card.primary {
+        background:
+          linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(18, 56, 46, 0.96));
+        color: #ffffff;
+      }
+
+      .workflow-card-icon {
+        display: grid;
+        place-items: center;
+        width: 46px;
+        height: 46px;
+        border-radius: 8px;
+        background: #ecfdf5;
+        color: #047857;
+      }
+
+      .workflow-card.primary .workflow-card-icon {
+        background: rgba(255, 255, 255, 0.12);
+        color: #fbbf24;
+      }
+
+      .workflow-card svg {
+        width: 23px;
+        height: 23px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .workflow-card h3 {
+        color: #020617;
+        font-size: 23px;
+      }
+
+      .workflow-card.primary h3 {
+        color: #ffffff;
+      }
+
+      .workflow-card p {
+        margin-top: 8px;
+        color: #64748b;
+        font-size: 14px;
+      }
+
+      .workflow-card.primary p {
+        color: #cbd5e1;
+      }
+
+      .workflow-card strong {
+        color: #047857;
+        font-size: 28px;
+      }
+
+      .workflow-card.primary strong {
+        color: #fbbf24;
+      }
+
+      .operations-summary {
+        order: 0;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(340px, 0.55fr);
+        gap: 18px;
+        margin-bottom: 22px;
+      }
+
+      .ops-main,
+      .ops-side {
+        overflow: hidden;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 8px;
+        box-shadow:
+          0 18px 45px rgba(15, 23, 42, 0.07),
+          inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      }
+
+      .ops-main {
+        position: relative;
+        min-height: 280px;
+        display: grid;
+        align-content: space-between;
+        padding: 30px;
+        background:
+          linear-gradient(135deg, rgba(2, 6, 23, 0.96), rgba(19, 76, 61, 0.95)),
+          #020617;
+        color: #fff;
+      }
+
+      .ops-main::after {
+        content: "";
+        position: absolute;
+        right: -120px;
+        top: -120px;
+        width: 340px;
+        height: 340px;
+        border-radius: 50%;
+        background: rgba(251, 191, 36, 0.16);
+      }
+
+      .ops-main > * {
+        position: relative;
+        z-index: 1;
+      }
+
+      .ops-main h2 {
+        max-width: 780px;
+        margin-top: 10px;
+        color: #fff;
+        font-size: clamp(38px, 4.6vw, 64px);
+        line-height: 0.95;
+      }
+
+      .ops-main p {
+        max-width: 720px;
+        margin-top: 16px;
+        color: #cbd5e1;
+        font-size: 18px;
+        line-height: 1.52;
+      }
+
+      .ops-pill-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 24px;
+      }
+
+      .ops-pill-row span {
+        min-height: 34px;
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #fef3c7;
+        font-size: 13px;
+        font-weight: 900;
+        padding: 0 12px;
+      }
+
+      .ops-scoreboard {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .ops-scoreboard div {
+        padding: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.08);
+      }
+
+      .ops-scoreboard span,
+      .ops-side span {
+        color: #94a3b8;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .ops-scoreboard strong {
+        display: block;
+        margin-top: 8px;
+        color: #fff;
+        font-size: 26px;
+      }
+
+      .ops-side {
+        display: grid;
+        gap: 16px;
+        align-content: start;
+        padding: 24px;
+        background: #fff;
+      }
+
+      .ops-side h3 {
+        color: #020617;
+        font-size: 26px;
+        line-height: 1.05;
+      }
+
+      .ops-list {
+        display: grid;
+        gap: 12px;
+      }
+
+      .ops-list article {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 12px;
+        align-items: start;
+        padding: 14px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #f8fafc;
+      }
+
+      .ops-dot {
+        width: 12px;
+        height: 12px;
+        margin-top: 5px;
+        border-radius: 50%;
+        background: #10b981;
+        box-shadow: 0 0 0 5px #dcfce7;
+      }
+
+      .ops-list strong {
+        display: block;
+        color: #020617;
+      }
+
+      .ops-list p {
+        margin-top: 4px;
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.42;
+      }
+
+      .business-strip {
+        order: 0;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 22px;
+      }
+
+      .business-card {
+        min-height: 118px;
+        padding: 18px;
+        border: 1px solid rgba(148, 163, 184, 0.22);
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.055);
+      }
+
+      .business-card span {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .business-card strong {
+        display: block;
+        margin-top: 12px;
+        color: #020617;
+        font-size: 22px;
+        line-height: 1.12;
+      }
+
+      .design-form {
+        order: 6;
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .view-section:not(.dashboard-view),
+      .portal-workspace[data-active-view="design"] .view-section:not(.design-view),
+      .portal-workspace[data-active-view="projects"] .view-section:not(.projects-view),
+      .portal-workspace[data-active-view="commissions"] .view-section:not(.commissions-view),
+      .portal-workspace[data-active-view="profile"] .view-section:not(.profile-view) {
+        display: none;
+      }
+
+      .portal-workspace[data-active-view="projects"] .pipeline-card {
+        display: none;
+      }
+
+      .portal-workspace[data-active-view="projects"] .project-board {
+        order: 1;
+      }
+
+      .portal-workspace[data-active-view="projects"] .customer-detail {
+        order: 2;
+      }
+
+      .portal-workspace[data-active-view="projects"] .jobs-command {
+        display: none;
+      }
+
+      .portal-workspace[data-active-view="projects"] .content-grid {
+        display: none;
+      }
+
+      .portal-workspace[data-active-view="design"] .design-form {
+        display: grid;
+        order: 1;
+      }
+
+      .portal-workspace[data-active-view="design"] .content-grid {
+        order: 2;
+      }
+
+      .metric-strip {
+        display: none;
+      }
+
+      .pipeline-card {
+        order: 2;
+        padding: 18px 20px;
+      }
+
+      .pipeline-card header {
+        margin-bottom: 12px;
+      }
+
+      .pipeline-card h2 {
+        font-size: 20px;
+      }
+
+      .pipeline-steps {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .pipeline-steps article {
+        min-height: 72px;
+        padding: 12px;
+      }
+
+      .pipeline-steps strong {
+        margin-top: 6px;
+        font-size: 20px;
+      }
+
+      .overview-grid {
+        order: 3;
+        grid-template-columns: minmax(0, 1fr) minmax(330px, 0.78fr);
+      }
+
+      .dashboard-panel {
+        min-height: 280px;
+      }
+
+      .design-form {
+        order: 5;
+      }
+
+      .content-grid {
+        order: 4;
+      }
+
+      .portal-shell {
+        background: #f5f7fb;
+      }
+
+      .portal-sidebar {
+        background: #ffffff;
+        border-right: 1px solid #dbe3ee;
+      }
+
+      .portal-nav button {
+        border-radius: 12px;
+        cursor: pointer;
+        pointer-events: auto;
+      }
+
+      .portal-nav button.active {
+        background: #0d1628;
+        color: #ffffff;
+      }
+
+      .portal-actions svg,
+      .user-chip svg {
+        flex: 0 0 auto;
+        width: 22px;
+        height: 22px;
+        stroke: currentColor;
+        stroke-width: 2;
+        fill: none;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      .portal-actions .user-chip {
+        min-width: 226px;
+        gap: 10px;
+        padding: 0 16px;
+      }
+
+      .portal-workspace {
+        background: #f5f7fb;
+      }
+
+      .portal-header {
+        align-items: start;
+        margin-bottom: 24px;
+        padding: 4px 0 2px;
+      }
+
+      .portal-header h1 {
+        max-width: 760px;
+        color: #071225;
+        font-size: clamp(38px, 4.5vw, 58px);
+        line-height: 0.98;
+      }
+
+      .portal-subtitle {
+        max-width: 720px;
+        margin-top: 10px;
+        color: #64748b;
+        font-size: 19px;
+        line-height: 1.35;
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .operations-summary,
+      .portal-workspace[data-active-view="dashboard"] .workflow-hub,
+      .portal-workspace[data-active-view="dashboard"] .solar-command,
+      .portal-workspace[data-active-view="dashboard"] .jobs-command {
+        display: none;
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .business-strip {
+        order: 1;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+        margin-bottom: 22px;
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .business-card {
+        min-height: 148px;
+        padding: 22px;
+        border: 1px solid #dbe3ee;
+        border-radius: 16px;
+        background: #ffffff;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .business-card span {
+        display: block;
+        color: #64748b;
+        font-size: 15px;
+        font-weight: 900;
+        letter-spacing: 0;
+        text-transform: none;
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .business-card strong {
+        display: block;
+        margin-top: 18px;
+        color: #071225;
+        font-size: clamp(34px, 3.4vw, 46px);
+        line-height: 0.95;
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .business-card small {
+        display: block;
+        margin-top: 12px;
+        color: #64748b;
+        font-size: 15px;
+        font-weight: 800;
+        line-height: 1.25;
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .pipeline-card {
+        order: 2;
+        margin-bottom: 22px;
+        padding: 22px;
+        border: 1px solid #dbe3ee;
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .pipeline-card header {
+        align-items: center;
+        margin-bottom: 16px;
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .pipeline-card header span,
+      .panel-heading p {
+        color: #64748b;
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .pipeline-card h2,
+      .panel-heading h2 {
+        color: #071225;
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .pipeline-steps {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .pipeline-steps article {
+        min-height: 88px;
+        border-color: #dbe3ee;
+        border-radius: 14px;
+        background: #f8fafc;
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .overview-grid {
+        order: 3;
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(330px, 0.8fr);
+        gap: 22px;
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .dashboard-panel {
+        min-height: 340px;
+        border: 1px solid #dbe3ee;
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .attention-panel {
+        border-color: #ffd6d6;
+      }
+
+      .portal-workspace[data-active-view="dashboard"] .attention-list article,
+      .portal-workspace[data-active-view="dashboard"] .schedule-empty article {
+        border-color: #e6edf5;
+      }
+
+      .portal-workspace[data-active-view="projects"] .customer-detail,
+      .portal-workspace[data-active-view="projects"] .jobs-command,
+      .portal-workspace[data-active-view="commissions"] .rep-profile,
+      .portal-workspace[data-active-view="profile"] .rep-profile {
+        border-radius: 18px;
+      }
+
+      .portal-workspace[data-active-view="projects"] .detail-card,
+      .portal-workspace[data-active-view="projects"] .job-card,
+      .portal-workspace[data-active-view="commissions"] .profile-panel,
+      .portal-workspace[data-active-view="commissions"] .payment-panel,
+      .portal-workspace[data-active-view="profile"] .profile-panel,
+      .portal-workspace[data-active-view="profile"] .payment-panel {
+        border-radius: 16px;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+      }
+
+      .portal-workspace[data-active-view="projects"] .detail-status {
+        width: fit-content;
+        justify-self: start;
+      }
+
+      .project-board {
+        display: grid;
+        gap: 18px;
+        margin-bottom: 22px;
+        padding: 22px;
+        border: 1px solid #dbe3ee;
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+      }
+
+      .project-board header {
+        display: flex;
+        justify-content: space-between;
+        gap: 18px;
+        align-items: start;
+      }
+
+      .project-board header span {
+        color: #047857;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .project-board header h2 {
+        margin-top: 4px;
+        color: #071225;
+        font-size: clamp(26px, 3vw, 36px);
+        line-height: 1.05;
+      }
+
+      .project-board header p {
+        max-width: 720px;
+        margin-top: 8px;
+        color: #64748b;
+        font-size: 16px;
+        line-height: 1.45;
+      }
+
+      .project-board header strong {
+        flex: 0 0 auto;
+        min-height: 36px;
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        background: #eef2f7;
+        color: #334155;
+        padding: 0 14px;
+      }
+
+      .project-overview-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .project-overview-grid article {
+        min-height: 112px;
+        display: grid;
+        align-content: center;
+        gap: 8px;
+        padding: 18px;
+        border: 1px solid #dbe3ee;
+        border-radius: 16px;
+        background: #f8fafc;
+      }
+
+      .project-overview-grid span {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+      }
+
+      .project-overview-grid strong {
+        color: #071225;
+        font-size: clamp(26px, 2.7vw, 36px);
+        line-height: 1;
+      }
+
+      .project-overview-grid small {
+        color: #64748b;
+        font-weight: 800;
+        line-height: 1.25;
+      }
+
+      .project-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .project-list-row {
+        display: grid;
+        grid-template-columns: minmax(240px, 1.25fr) minmax(210px, 1fr) minmax(260px, 1.1fr) minmax(112px, auto);
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+        min-height: 84px;
+        padding: 14px 16px;
+        border: 1px solid #d8e2ee;
+        border-radius: 12px;
+        background: #ffffff;
+        color: #071225;
+        text-align: left;
+        box-shadow: none;
+      }
+
+      .project-list-row:hover {
+        border-color: #93c5fd;
+        background: #fbfdff;
+        box-shadow: 0 10px 22px rgba(37, 99, 235, 0.09);
+      }
+
+      .project-row-main {
+        display: grid;
+        gap: 6px;
+        min-width: 260px;
+      }
+
+      .project-row-main strong {
+        font-size: 18px;
+      }
+
+      .project-row-main small {
+        color: #64748b;
+        font-weight: 800;
+      }
+
+      .project-row-pill {
+        width: fit-content;
+        min-height: 26px;
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        background: #eff6ff;
+        color: #1d4ed8;
+        font-size: 12px;
+        font-weight: 900;
+        padding: 0 10px;
+      }
+
+      .project-row-status {
+        display: grid;
+        gap: 5px;
+        min-width: 210px;
+      }
+
+      .project-row-status span,
+      .project-row-money span {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .project-row-status strong,
+      .project-row-money strong {
+        color: #0f172a;
+        font-size: 16px;
+      }
+
+      .project-row-checks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        min-width: 240px;
+      }
+
+      .project-row-checks span {
+        min-height: 26px;
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        background: #f1f5f9;
+        color: #475569;
+        font-size: 12px;
+        font-weight: 900;
+        padding: 0 10px;
+      }
+
+      .project-row-checks span.done {
+        background: #ecfdf5;
+        color: #047857;
+      }
+
+      .project-row-checks span.next {
+        background: #fff7ed;
+        color: #c2410c;
+      }
+
+      .project-row-money {
+        display: grid;
+        gap: 5px;
+        justify-items: end;
+      }
+
+      .project-column-empty {
+        min-height: 118px;
+        display: grid;
+        place-items: center;
+        border: 1px dashed #cbd5e1;
+        border-radius: 14px;
+        color: #94a3b8;
+        font-weight: 850;
+        text-align: center;
+        padding: 14px;
+      }
+
+      .portal-workspace[data-active-view="projects"] .records-section {
+        border-radius: 18px;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+      }
+
+      .portal-workspace[data-active-view="projects"] .record-list {
+        gap: 10px;
+      }
+
+      .portal-workspace[data-active-view="projects"] .record-row {
+        grid-template-columns: 78px minmax(210px, 1fr) minmax(230px, 0.9fr) minmax(150px, auto);
+        border: 1px solid #dbe3ee;
+        border-radius: 14px;
+        background: #ffffff;
+      }
+
+      .right-rail section:not(#contact-focus-panel):not(:first-child) {
+        display: none;
+      }
+
       @media (max-width: 980px) {
         .login-page,
         .profile-setup,
@@ -969,6 +4012,42 @@
           gap: 8px;
         }
 
+        .portal-nav button span:not(.nav-badge),
+        .logout span {
+          display: none;
+        }
+
+        .solar-command,
+        .overview-grid,
+        .jobs-command,
+        .workflow-grid,
+        .operations-summary,
+        .business-strip,
+        .design-intake-strip,
+        .detail-ops-grid,
+        .detail-bottom-grid,
+        .ops-scoreboard {
+          grid-template-columns: 1fr;
+        }
+
+        .project-overview-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .detail-grid,
+        .customer-detail-header {
+          grid-template-columns: 1fr;
+        }
+
+        .project-list-row {
+          grid-template-columns: 1fr;
+          align-items: stretch;
+        }
+
+        .pipeline-steps {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
         .right-rail {
           position: static;
         }
@@ -996,6 +4075,21 @@
           grid-template-columns: 1fr 1fr;
         }
 
+        .command-stats,
+        .pipeline-steps,
+        .project-overview-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .project-row-main,
+        .project-row-status,
+        .project-row-checks,
+        .project-row-money {
+          min-width: 0;
+          justify-items: start;
+          width: 100%;
+        }
+
         .form-grid {
           grid-template-columns: 1fr;
         }
@@ -1003,6 +4097,22 @@
         .record-row {
           grid-template-columns: 1fr;
           gap: 10px;
+        }
+
+        .job-card {
+          grid-template-columns: 1fr;
+        }
+
+        .spec-grid,
+        .job-docs,
+        .profile-grid,
+        .payment-grid,
+        .profile-hero {
+          grid-template-columns: 1fr;
+        }
+
+        .job-value {
+          text-align: left;
         }
 
         .record-value-group {
@@ -1131,80 +4241,522 @@
     <main class="portal-shell" id="portal">
       <aside class="portal-sidebar">
         <div class="portal-brand" aria-label="Flourish Solar CRM">
-          <span class="brand-mark">FS</span>
-          <span>Solar CRM</span>
+          <span class="brand-mark">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 1v4"></path><path d="M12 19v4"></path><path d="M4.22 4.22l2.83 2.83"></path><path d="M16.95 16.95l2.83 2.83"></path><path d="M1 12h4"></path><path d="M19 12h4"></path><path d="M4.22 19.78l2.83-2.83"></path><path d="M16.95 7.05l2.83-2.83"></path></svg>
+          </span>
+          <span>Flourish</span>
         </div>
         <nav class="portal-nav" aria-label="Portal navigation">
-          <button class="active" aria-label="Dashboard">
+          <button class="active" type="button" aria-label="Home" data-view="dashboard" onclick="window.switchPortalView && window.switchPortalView('dashboard', this)">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span>Home</span>
           </button>
-          <button aria-label="Profile">
+          <button type="button" aria-label="Submit Design" data-view="design" onclick="window.switchPortalView && window.switchPortalView('design', this)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+            <span>Submit Design</span>
+          </button>
+          <button type="button" aria-label="Solar Projects" data-view="projects" onclick="window.switchPortalView && window.switchPortalView('projects', this)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg>
+            <span>Solar Projects</span>
+            <span class="nav-badge" id="lead-menu-count">0</span>
+          </button>
+          <button type="button" aria-label="Commissions" data-view="commissions" onclick="window.switchPortalView && window.switchPortalView('commissions', this)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1v22"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span>Commissions</span>
+            <span class="nav-badge" id="commission-menu-count">1</span>
+          </button>
+          <button type="button" aria-label="My Profile" data-view="profile" onclick="window.switchPortalView && window.switchPortalView('profile', this)">
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+            <span>Profile</span>
           </button>
-          <button aria-label="Customers">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-          </button>
-          <button aria-label="Jobs">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><path d="M3 13h18"></path></svg>
-          </button>
-          <button aria-label="Notifications">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          <button type="button" aria-label="My Tasks" data-view="dashboard" onclick="window.switchPortalView && window.switchPortalView('dashboard', this)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+            <span>My Tasks</span>
+            <span class="nav-badge" id="task-menu-count">0</span>
           </button>
         </nav>
         <button class="logout" id="logout" aria-label="Log out">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><path d="M16 17l5-5-5-5"></path><path d="M21 12H9"></path></svg>
         </button>
       </aside>
-      <section class="portal-workspace">
+      <section class="portal-workspace" id="portal-workspace" data-active-view="dashboard">
         <header class="portal-header">
           <div>
-            <span class="eyebrow" id="access-label">Rep access</span>
-            <h1 id="headline">My assigned work</h1>
+            <h1 id="headline">Welcome, Daniel Godwin</h1>
+            <p class="portal-subtitle">Here is your daily overview.</p>
           </div>
-          <div class="user-chip">
-            <span class="avatar" id="avatar">DG</span>
-            <div>
-              <strong id="user-name">Daniel Godwin</strong>
+          <div class="portal-actions">
+            <button class="notification-button" type="button" aria-label="Notifications">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              <span class="notification-count" id="top-note-count">0</span>
+            </button>
+            <div class="user-chip">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+              <strong id="user-name">Daniel Godwin (rep)</strong>
+              <span class="avatar" id="avatar">DG</span>
               <small id="user-email">dan@flourishsolar.com</small>
             </div>
           </div>
         </header>
-        <section class="metric-strip">
-          <article class="metric">
-            <span class="metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></span>
-            <div><span>Visible records</span><strong id="record-count">1</strong></div>
+        <section class="operations-summary view-section dashboard-view" aria-label="Business operations summary">
+          <article class="ops-main">
+            <div>
+              <span class="command-kicker">Operations dashboard</span>
+              <h2>Designs, projects, sold jobs, and commissions in one place.</h2>
+              <p>Use this portal to submit new design requests, track each homeowner through the solar workflow, review sold jobs, and monitor commission status.</p>
+              <div class="ops-pill-row">
+                <span>Design intake</span>
+                <span>Project tracking</span>
+                <span>Install visibility</span>
+                <span>Commission status</span>
+              </div>
+            </div>
+            <div class="ops-scoreboard">
+              <div><span>Designs in motion</span><strong>4</strong></div>
+              <div><span>Sold/NTP jobs</span><strong>2</strong></div>
+              <div><span>Commission pending</span><strong>$10.2k</strong></div>
+            </div>
           </article>
-          <article class="metric">
-            <span class="metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></span>
-            <div><span>Reps</span><strong id="rep-count">1</strong></div>
+          <aside class="ops-side">
+            <span>Needs action</span>
+            <h3>Items that can slow down projects.</h3>
+            <div class="ops-list">
+              <article><span class="ops-dot"></span><div><strong>Design package missing</strong><p>Alyssa Morgan needs roof photos and utility bill uploaded.</p></div></article>
+              <article><span class="ops-dot"></span><div><strong>Proposal review</strong><p>Marcus Ellison proposal is ready for internal review.</p></div></article>
+              <article><span class="ops-dot"></span><div><strong>Post-site survey</strong><p>Carter project is waiting on post-site survey completion.</p></div></article>
+            </div>
+          </aside>
+        </section>
+        <section class="business-strip view-section dashboard-view" aria-label="Business workflow summary">
+          <article class="business-card"><span>Designs in motion</span><strong>6</strong><small>2 waiting on proposal</small></article>
+          <article class="business-card"><span>Sold jobs</span><strong>3</strong><small>$92,640 sold volume</small></article>
+          <article class="business-card"><span>Surveys due</span><strong>2</strong><small>Pre-site and post-site</small></article>
+          <article class="business-card"><span>Commission ready</span><strong>$5,034</strong><small>1 paid, 1 pending</small></article>
+        </section>
+        <section class="workflow-hub view-section dashboard-view" aria-label="Rep solar workflow">
+          <header>
+            <div>
+              <span class="eyebrow">Rep Solar Workspace</span>
+              <h2>Submit, track, sell, install, get paid.</h2>
+              <p>This is the daily home base for design requests, project stages, sold jobs, surveys, install progress, and commissions.</p>
+            </div>
+          </header>
+          <div class="workflow-grid">
+            <article class="workflow-card primary">
+              <div class="workflow-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></div>
+              <div><h3>Submit Design</h3><p>Start a new homeowner design request with contact, roof, utility, and project notes.</p></div>
+              <strong>New</strong>
+            </article>
+            <article class="workflow-card">
+              <div class="workflow-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg></div>
+              <div><h3>Track Projects</h3><p>Follow every customer from design submitted to proposal, sold, NTP, and install.</p></div>
+              <strong id="workflow-project-count">6</strong>
+            </article>
+            <article class="workflow-card">
+              <div class="workflow-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></div>
+              <div><h3>Sold Work</h3><p>See sold jobs, site survey status, install progress, and payment state.</p></div>
+              <strong id="workflow-job-count">2</strong>
+            </article>
+            <article class="workflow-card">
+              <div class="workflow-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1v22"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
+              <div><h3>Commissions</h3><p>Track estimated, pending, and paid commission tied back to each sold job.</p></div>
+              <strong id="workflow-commission-total">$5.1k</strong>
+            </article>
+          </div>
+        </section>
+        <section class="solar-command view-section dashboard-view" aria-label="Solar command center">
+          <article class="command-hero">
+            <div>
+              <span class="command-kicker">Flourish Solar Command Center</span>
+              <h2>Submit designs, track installs, and know every commission.</h2>
+              <p id="command-copy">A rep workspace for moving each homeowner from design request to sold job, install, and paid commission.</p>
+            </div>
+            <div class="command-stats">
+              <div><span>Design-to-install health</span><strong id="pipeline-health">0%</strong></div>
+              <div><span>Priority items</span><strong id="priority-count">0</strong></div>
+              <div><span>Open projects</span><strong id="closing-window">Today</strong></div>
+            </div>
           </article>
-          <article class="metric">
-            <span class="metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></span>
-            <div><span>Notifications</span><strong id="note-count">1</strong></div>
+          <aside class="sun-card">
+            <div>
+              <span>Daily focus</span>
+              <h2 id="daily-focus">Move new projects into design.</h2>
+            </div>
+            <div class="sun-score">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"></circle><path d="M12 1v4"></path><path d="M12 19v4"></path><path d="M4.22 4.22l2.83 2.83"></path><path d="M16.95 16.95l2.83 2.83"></path><path d="M1 12h4"></path><path d="M19 12h4"></path><path d="M4.22 19.78l2.83-2.83"></path><path d="M16.95 7.05l2.83-2.83"></path></svg>
+              <div><span>Readiness</span><strong id="readiness-score">Ready</strong></div>
+            </div>
+            <div class="command-list">
+              <div><span>Stage focus</span><strong id="stage-focus">New Project</strong></div>
+              <div><span>Owner view</span><strong id="owner-view">Assigned</strong></div>
+              <div><span>CRM source</span><strong id="crm-source">HighLevel</strong></div>
+            </div>
+          </aside>
+        </section>
+        <section class="pipeline-card view-section dashboard-view projects-view" aria-label="Pipeline stages">
+          <header>
+            <div>
+              <span>Pipeline</span>
+              <h2>Solar project flow</h2>
+            </div>
+            <strong id="pipeline-summary">0 active records</strong>
+          </header>
+          <div class="pipeline-steps" id="pipeline-steps">
+            <article><span>New Project</span><strong>1</strong></article>
+            <article><span>Design</span><strong>1</strong></article>
+            <article><span>Proposal</span><strong>1</strong></article>
+            <article><span>Pre-Qualification</span><strong>1</strong></article>
+            <article><span>Sold</span><strong>1</strong></article>
+            <article><span>NTP</span><strong>1</strong></article>
+          </div>
+        </section>
+        <section class="project-board view-section projects-view" aria-label="Project board">
+          <header>
+            <div>
+              <span>Project command center</span>
+              <h2>Top-level project view</h2>
+              <p id="project-board-copy">Scan every customer, see the next step, then open the full project when more detail is needed.</p>
+            </div>
+            <strong id="project-board-summary">6 active records</strong>
+          </header>
+          <div class="project-overview-grid" aria-label="Project summary">
+            <article><span>Active Designs</span><strong id="projects-active-designs">2</strong><small>Designs and proposals moving</small></article>
+            <article><span>Needs Action</span><strong id="projects-needs-action">4</strong><small>Items blocking the next step</small></article>
+            <article><span>Sold / NTP</span><strong id="projects-sold-ntp">2</strong><small>Projects moving to install</small></article>
+            <article><span>Installed</span><strong id="projects-installed">1</strong><small>Ready for payout review</small></article>
+          </div>
+          <div class="project-list" id="project-list">
+            <button class="project-list-row" type="button">
+              <span class="project-row-main">
+                <span class="project-row-pill">Design</span>
+                <strong>Alyssa Morgan</strong>
+                <small>7824 Laureate Blvd, Lake Nona, FL</small>
+              </span>
+              <span class="project-row-status"><span>Next step</span><strong>Submit roof photos</strong></span>
+              <span class="project-row-checks"><span class="next">Design</span><span>Survey</span><span>Install</span><span>Commission</span></span>
+              <span class="project-row-money"><span>Value</span><strong>$32,400</strong></span>
+            </button>
+          </div>
+        </section>
+        <section class="overview-grid view-section dashboard-view" aria-label="Daily overview">
+          <article class="dashboard-panel attention-panel">
+            <div class="panel-heading">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v5"></path><path d="M12 17h.01"></path></svg>
+              <div>
+                <h2>Today's Work Queue</h2>
+                <p>Internal items that need action before projects can move forward.</p>
+              </div>
+            </div>
+            <div class="attention-list" id="attention-list">
+              <article>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                <div><strong>Design package incomplete</strong><p>Alyssa Morgan needs roof photos and utility bill before design can start.</p></div>
+                <small>Design</small>
+              </article>
+              <article>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                <div><strong>Proposal ready for review</strong><p>Marcus Ellison is ready for pricing review before customer presentation.</p></div>
+                <small>Proposal</small>
+              </article>
+            </div>
           </article>
-          <article class="metric">
-            <span class="metric-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span>
-            <div><span>Access mode</span><strong id="access-mode">Assigned</strong></div>
+          <article class="dashboard-panel">
+            <div class="panel-heading">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path></svg>
+              <div>
+                <h2>Survey & Install Calendar</h2>
+                <p>Upcoming survey, handoff, and install-related checkpoints.</p>
+              </div>
+            </div>
+            <div class="schedule-empty has-items" id="schedule-list">
+              <article><span class="schedule-time">9:30 AM</span><div><strong>Design review</strong><p>Alyssa Morgan roof package</p></div></article>
+              <article><span class="schedule-time">1:00 PM</span><div><strong>Proposal review</strong><p>Marcus Ellison solar proposal</p></div></article>
+              <article><span class="schedule-time">3:45 PM</span><div><strong>Post-site survey</strong><p>Carter project pending survey update</p></div></article>
+            </div>
           </article>
         </section>
-        <form class="design-form" id="design-form">
+        <section class="customer-detail view-section projects-view" id="customer-detail" aria-label="Customer project detail">
+          <header class="customer-detail-header">
+            <button class="back-button" type="button" aria-label="Back to customer list">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"></path><path d="M12 19l-7-7 7-7"></path></svg>
+            </button>
+            <div>
+              <h2 id="detail-name">Alyssa Morgan</h2>
+              <div class="customer-meta">
+                <span class="customer-id" id="detail-id">lead-lake-nona</span>
+                <span>•</span>
+                <span id="detail-address">7824 Laureate Blvd, Lake Nona, FL</span>
+              </div>
+            </div>
+            <span class="detail-status" id="detail-status">Design</span>
+          </header>
+          <div class="detail-grid">
+            <aside class="detail-card contact-card">
+              <h3>Contact Info</h3>
+              <div class="contact-methods">
+                <div class="contact-method">
+                  <span class="detail-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg></span>
+                  <div><strong>Email</strong><span id="detail-email">alyssa.morgan@example.com</span></div>
+                </div>
+                <div class="contact-method">
+                  <span class="detail-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.32 1.77.59 2.61a2 2 0 0 1-.45 2.11L8 9.69a16 16 0 0 0 6 6l1.25-1.25a2 2 0 0 1 2.11-.45c.84.27 1.71.47 2.61.59A2 2 0 0 1 22 16.92z"></path></svg></span>
+                  <div><strong>Phone</strong><span id="detail-phone">407-555-0134</span></div>
+                </div>
+                <div class="contact-method">
+                  <span class="detail-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4"></path><path d="M8 2v4"></path><path d="M3 10h18"></path></svg></span>
+                  <div><strong>Customer Since</strong><span id="detail-since">2026-05-13</span></div>
+                </div>
+              </div>
+              <hr />
+              <div class="contact-method">
+                <div><strong>Sales Rep</strong><span id="detail-rep">Daniel Godwin</span></div>
+              </div>
+            </aside>
+            <article class="detail-card project-card">
+              <h3>Project Details</h3>
+              <div class="detail-tabs">
+                <button class="active" type="button">System Specs</button>
+                <button type="button">Timeline</button>
+                <button type="button">Commission</button>
+              </div>
+              <div class="spec-grid">
+                <div class="spec-card"><span>System Size</span><strong id="detail-system">9.8 kW</strong></div>
+                <div class="spec-card"><span>Est. Production</span><strong id="detail-production">14,200<br />kWh/year</strong></div>
+              </div>
+              <div class="detail-commission-title">Commission</div>
+              <div class="detail-commission-grid compact">
+                <div><span>Estimated</span><strong id="detail-commission-estimate">$3,888</strong></div>
+                <div><span>Status</span><strong id="detail-commission-status">Pending sale</strong></div>
+                <div><span>Payment</span><strong id="detail-payment-status">Not ready</strong></div>
+              </div>
+            </article>
+          </div>
+          <div class="detail-ops-grid">
+            <article class="detail-card detail-timeline-card">
+              <header>
+                <div>
+                  <span>Install path</span>
+                  <h3>Survey & Job Timeline</h3>
+                </div>
+                <strong id="detail-next-step">Design</strong>
+              </header>
+              <div class="detail-timeline" id="detail-timeline">
+                <div class="done"><span></span><strong>Design submitted</strong><small>Complete</small></div>
+                <div class="active"><span></span><strong>Proposal</strong><small>Next</small></div>
+                <div><span></span><strong>Pre-site survey</strong><small>Not ready</small></div>
+                <div><span></span><strong>Install</strong><small>Not ready</small></div>
+                <div><span></span><strong>Post-site survey</strong><small>Not ready</small></div>
+                <div><span></span><strong>Commission</strong><small>Pending</small></div>
+              </div>
+            </article>
+          </div>
+          <div class="detail-bottom-grid">
+            <article class="detail-card detail-doc-card">
+              <header>
+                <div>
+                  <span>Documents</span>
+                  <h3>Project Files</h3>
+                </div>
+              </header>
+              <div class="detail-doc-list" id="detail-doc-list">
+                <div><strong>Utility bill</strong><span>Needed</span></div>
+                <div><strong>Roof photos</strong><span>Needed</span></div>
+                <div><strong>Proposal PDF</strong><span>Pending</span></div>
+              </div>
+            </article>
+          </div>
+        </section>
+        <section class="jobs-command view-section projects-view" aria-label="Sold jobs and install readiness">
+          <article class="sold-board">
+            <header>
+              <div>
+                <span>Sold jobs</span>
+                <h2>Job status and install readiness</h2>
+              </div>
+              <strong id="jobs-summary-label">2 jobs sold</strong>
+            </header>
+            <div class="job-list" id="job-command-list">
+              <article class="job-card">
+                <div>
+                  <h3>The Reynolds Home</h3>
+                  <span class="job-address">992 Citrus Tower Blvd, Clermont, FL</span>
+                  <div class="job-meta"><span>Sold</span><span>Installed</span><span>Paid</span></div>
+                  <div class="sale-breakdown">
+                    <h4>At sale</h4>
+                    <div class="sale-line"><span>12.4 kW Solar</span><strong>$42,900.00</strong></div>
+                    <div class="sale-line"><span>Battery-ready design</span><strong>$2,850.00</strong></div>
+                    <div class="sale-line"><span>Main panel upgrade</span><strong>$1,950.00</strong></div>
+                    <div class="sale-line"><span>Attic run</span><strong>$500.00</strong></div>
+                    <div class="sale-line sale-total"><span>Install Total</span><strong>$48,200.00</strong></div>
+                    <div class="sale-line"><span>Total Project Amount</span><strong>$48,200.00</strong></div>
+                    <div class="sale-line commission-line"><span>Est. Commission</span><strong>$5,784.00</strong></div>
+                  </div>
+                </div>
+                <div class="survey-box">
+                  Pre site survey - complete
+                  <small>Post site survey - pending final upload</small>
+                </div>
+              </article>
+              <article class="job-card">
+                <div>
+                  <h3>Apopka Install - Carter</h3>
+                  <span class="job-address">231 Magnolia Park Trl, Apopka, FL</span>
+                  <div class="job-meta"><span>NTP</span><span>Survey pending</span><span>Paid</span></div>
+                  <div class="sale-breakdown">
+                    <h4>At sale</h4>
+                    <div class="sale-line"><span>10.1 kW Solar</span><strong>$32,600.00</strong></div>
+                    <div class="sale-line"><span>Tile roof adder</span><strong>$1,850.00</strong></div>
+                    <div class="sale-line"><span>Line side tap</span><strong>$425.00</strong></div>
+                    <div class="sale-line"><span>Permit package</span><strong>$1,975.00</strong></div>
+                    <div class="sale-line sale-total"><span>Install Total</span><strong>$36,850.00</strong></div>
+                    <div class="sale-line"><span>Total Project Amount</span><strong>$36,850.00</strong></div>
+                    <div class="sale-line commission-line"><span>Est. Commission</span><strong>$4,422.00</strong></div>
+                  </div>
+                </div>
+                <div class="survey-box">
+                  Pre site survey - complete
+                  <small>Post site survey - pending</small>
+                </div>
+              </article>
+            </div>
+          </article>
+          <aside class="sold-summary">
+            <header>
+              <div>
+                <span>Job Snapshot</span>
+                <h2>Sold work summary</h2>
+              </div>
+            </header>
+            <div class="sold-stats">
+              <div><span>Sold volume</span><strong id="sold-volume">$85,050</strong><p>Total value of sold/NTP jobs in this view.</p></div>
+              <div><span>Average system</span><strong id="avg-system-size">11.3 kW</strong><p>Average size across sold and NTP projects.</p></div>
+              <div><span>Current blocker</span><strong id="job-bottleneck">Permit packet</strong><p>Highest priority handoff slowing install readiness.</p></div>
+            </div>
+          </aside>
+        </section>
+        <section class="rep-profile view-section profile-view" aria-label="Rep profile overview">
+          <div class="profile-hero">
+            <div class="profile-avatar-large" id="profile-avatar-large">D</div>
+            <div>
+              <h2 id="profile-display-name">Daniel Godwin</h2>
+              <div class="profile-meta">
+                <span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"></rect><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg><span id="profile-title">SDR</span></span>
+                <span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="m3 7 9 6 9-6"></path></svg><span id="profile-display-email">dan@flourishsolar.com</span></span>
+                <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.32 1.77.59 2.61a2 2 0 0 1-.45 2.11L8 9.69a16 16 0 0 0 6 6l1.25-1.25a2 2 0 0 1 2.11-.45c.84.27 1.71.47 2.61.59A2 2 0 0 1 22 16.92z"></path></svg><span id="profile-display-phone">407-555-0188</span></span>
+                <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-4.35 7-11a7 7 0 0 0-14 0c0 6.65 7 11 7 11z"></path><circle cx="12" cy="10" r="2"></circle></svg><span id="profile-display-address">Orlando, FL</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="profile-grid">
+            <section class="profile-panel commission-focus-panel">
+              <header>
+                <div>
+                  <span>Rep snapshot</span>
+                  <h3>Project Focus</h3>
+                </div>
+              </header>
+              <div class="commission-snapshot">
+                <div><span>Active projects</span><strong id="profile-active-projects">4</strong></div>
+                <div><span>Sold projects</span><strong id="profile-sold-projects">2</strong></div>
+                <div><span>Installed</span><strong id="profile-installed-projects">1</strong></div>
+              </div>
+            </section>
+            <section class="profile-panel commission-focus-panel">
+              <header>
+                <div>
+                  <span>Sales goals</span>
+                  <h3>Monthly Performance</h3>
+                </div>
+              </header>
+              <div class="commission-snapshot">
+                <div><span>Goal progress</span><strong id="profile-goal-progress">60%</strong></div>
+                <div><span>Monthly goal</span><strong id="profile-monthly-goal">5 sold</strong></div>
+                <div><span>Design to sold</span><strong id="profile-design-sold-rate">33%</strong></div>
+              </div>
+            </section>
+          </div>
+          <section class="payment-panel">
+            <header>
+              <h3>Current Project Goals</h3>
+            </header>
+            <div class="commission-history-list" id="profile-goals-list">
+              <article><div><strong>Move 2 designs to proposal</strong><span>Focus on clean design packages and utility bills.</span></div><strong>2</strong></article>
+              <article><div><strong>Reach 5 sold projects</strong><span>Monthly target for this rep view.</span></div><strong>5</strong></article>
+            </div>
+          </section>
+        </section>
+        <section class="rep-profile view-section commissions-view" aria-label="Commission overview">
+          <div class="profile-grid">
+            <section class="profile-panel commission-focus-panel">
+              <header>
+                <div>
+                  <span>Commission structure</span>
+                  <h3>Payout Rules</h3>
+                </div>
+              </header>
+              <div class="commission-snapshot">
+                <div><span>Base commission</span><strong>6%</strong></div>
+                <div><span>Install bonus</span><strong>+6%</strong></div>
+                <div><span>Payout trigger</span><strong>NTP</strong></div>
+              </div>
+            </section>
+            <section class="profile-panel commission-focus-panel">
+              <header>
+                <div>
+                  <span>Payout readiness</span>
+                  <h3>Commission Status</h3>
+                </div>
+              </header>
+              <div class="commission-snapshot">
+                <div><span>Estimated</span><strong id="commission-estimated">$5,103</strong></div>
+                <div><span>Ready</span><strong id="commission-ready">$0</strong></div>
+                <div><span>Pending</span><strong id="commission-pending">$5,103</strong></div>
+              </div>
+            </section>
+          </div>
+          <section class="payment-panel">
+            <header>
+              <h3>Commission Types</h3>
+            </header>
+            <div class="commission-history-list" id="commission-structure-list">
+              <article><div><strong>Design to sold commission</strong><span>Estimated once the project reaches Sold.</span></div><strong>6%</strong></article>
+              <article><div><strong>Install / NTP payout</strong><span>Additional payout review once the job reaches NTP.</span></div><strong>+6%</strong></article>
+              <article><div><strong>Monthly goal bonus</strong><span>Bonus tier for hitting sold project goals.</span></div><strong>TBD</strong></article>
+            </div>
+          </section>
+          <section class="payment-panel">
+            <header>
+              <h3>Commission History</h3>
+            </header>
+            <div class="commission-history-list" id="commission-history-list">
+              <article><div><strong>The Reynolds Home</strong><span>Sold - install pending</span></div><strong>$5,784</strong></article>
+              <article><div><strong>Apopka Install - Carter</strong><span>NTP - payout review</span></div><strong>$4,422</strong></article>
+            </div>
+          </section>
+        </section>
+        <form class="design-form view-section design-view" id="design-form">
           <header>
             <span class="eyebrow">Design form</span>
             <h2>Add a new customer lead</h2>
             <p>This creates the contact in HighLevel first, then refreshes this portal from HighLevel.</p>
           </header>
+          <div class="design-intake-strip" aria-label="Design intake steps">
+            <article><span>1</span><strong>Customer</strong><small>Contact and address</small></article>
+            <article><span>2</span><strong>Home</strong><small>Roof, utility, notes</small></article>
+            <article><span>3</span><strong>Sync</strong><small>GHL contact and portal record</small></article>
+          </div>
           <div class="form-grid">
             <label>
               <span>Customer name</span>
-              <input id="design-name" type="text" placeholder="Jane Homeowner" required />
+              <input id="design-name" type="text" value="Elena Rodriguez" placeholder="Jane Homeowner" required />
             </label>
             <label>
               <span>Mobile phone</span>
-              <input id="design-phone" type="tel" placeholder="407-555-0100" required />
+              <input id="design-phone" type="tel" value="407-555-0166" placeholder="407-555-0100" required />
             </label>
             <label>
               <span>Email</span>
-              <input id="design-email" type="email" placeholder="customer@email.com" />
+              <input id="design-email" type="email" value="elena.rodriguez@example.com" placeholder="customer@email.com" />
             </label>
             <label>
               <span>Assigned rep</span>
@@ -1212,11 +4764,11 @@
             </label>
             <label class="full-field">
               <span>Street address</span>
-              <input id="design-address" type="text" placeholder="123 Solar Way" />
+              <input id="design-address" type="text" value="528 Solar Vista Ct" placeholder="123 Solar Way" />
             </label>
             <label>
               <span>City</span>
-              <input id="design-city" type="text" placeholder="Orlando" />
+              <input id="design-city" type="text" value="Orlando" placeholder="Orlando" />
             </label>
             <label>
               <span>State</span>
@@ -1224,13 +4776,13 @@
             </label>
             <label>
               <span>ZIP</span>
-              <input id="design-postal" type="text" placeholder="32801" />
+              <input id="design-postal" type="text" value="32832" placeholder="32801" />
             </label>
             <label>
               <span>Roof type</span>
               <select id="design-roof">
                 <option>Not sure</option>
-                <option>Shingle</option>
+                <option selected>Shingle</option>
                 <option>Tile</option>
                 <option>Metal</option>
                 <option>Flat</option>
@@ -1238,68 +4790,48 @@
             </label>
             <label>
               <span>Monthly utility bill</span>
-              <input id="design-utility" type="text" placeholder="$180" />
+              <input id="design-utility" type="text" value="$238" placeholder="$180" />
             </label>
             <label class="full-field">
               <span>Project notes</span>
-              <textarea id="design-notes" placeholder="Gate code, timing, roof notes, or anything the design team needs."></textarea>
+              <textarea id="design-notes" placeholder="Gate code, timing, roof notes, or anything the design team needs.">Homeowner wants battery option, east/west roof planes, HOA packet needed.</textarea>
             </label>
           </div>
           <button class="primary-action" id="design-submit" type="submit">Create in HighLevel</button>
           <p class="form-message" id="design-message"></p>
         </form>
-        <form class="design-form" id="edit-contact-form" hidden>
-          <header>
-            <span class="eyebrow">Contact update</span>
-            <h2>Update contact info</h2>
-            <p>Changes save to HighLevel first, then this portal refreshes from live CRM data.</p>
-          </header>
-          <div class="form-grid">
-            <label>
-              <span>Customer name</span>
-              <input id="edit-name" type="text" required />
-            </label>
-            <label>
-              <span>Mobile phone</span>
-              <input id="edit-phone" type="tel" />
-            </label>
-            <label>
-              <span>Email</span>
-              <input id="edit-email" type="email" />
-            </label>
-            <label>
-              <span>Assigned rep</span>
-              <select id="edit-rep"></select>
-            </label>
-            <label class="full-field">
-              <span>Street address</span>
-              <input id="edit-address" type="text" />
-            </label>
-            <label>
-              <span>City</span>
-              <input id="edit-city" type="text" />
-            </label>
-            <label>
-              <span>State</span>
-              <input id="edit-state" type="text" />
-            </label>
-            <label>
-              <span>ZIP</span>
-              <input id="edit-postal" type="text" />
-            </label>
-          </div>
-          <button class="primary-action" id="edit-submit" type="submit">Update in HighLevel</button>
-          <button class="secondary-action" id="edit-cancel" type="button">Cancel</button>
-          <p class="form-message" id="edit-message"></p>
-        </form>
-        <div class="content-grid">
+        <div class="content-grid view-section design-view projects-view">
           <section class="records-section">
             <div class="section-title">
-              <h2 id="records-title">My leads, customers, and jobs</h2>
-              <p id="records-copy">Rep view only shows records assigned to this login.</p>
+              <div>
+                <h2 id="records-title">My leads, customers, and jobs</h2>
+                <p id="records-copy">Rep view only shows records assigned to this login.</p>
+              </div>
+              <div class="section-actions">
+                <button class="mini-action primary" id="toggle-design-form" type="button">New design request</button>
+              </div>
             </div>
             <div class="stage-tabs" id="stage-tabs"></div>
-            <div class="record-list" id="record-list"></div>
+            <div class="record-list" id="record-list">
+              <article class="record-row">
+                <span class="record-type lead">Lead</span>
+                <div class="record-main"><h3>Alyssa Morgan</h3><p>alyssa.morgan@example.com</p></div>
+                <div class="record-progress"><strong>Design</strong><span>Submit roof photos and utility bill</span></div>
+                <div class="record-value-group"><strong class="record-value">$32,400</strong><button class="secondary-action" type="button">Contact</button></div>
+              </article>
+              <article class="record-row">
+                <span class="record-type lead">Lead</span>
+                <div class="record-main"><h3>Marcus Ellison</h3><p>marcus.ellison@example.com</p></div>
+                <div class="record-progress"><strong>Proposal</strong><span>Review proposal with homeowner</span></div>
+                <div class="record-value-group"><strong class="record-value">$41,750</strong><button class="secondary-action" type="button">Contact</button></div>
+              </article>
+              <article class="record-row">
+                <span class="record-type customer">Customer</span>
+                <div class="record-main"><h3>Priya Shah</h3><p>priya.shah@example.com</p></div>
+                <div class="record-progress"><strong>Pre-Qualification</strong><span>Verify income docs internally</span></div>
+                <div class="record-value-group"><strong class="record-value">$27,600</strong><button class="secondary-action" type="button">Contact</button></div>
+              </article>
+            </div>
           </section>
           <aside class="right-rail">
             <section>
@@ -1310,9 +4842,32 @@
                 <div><dt>Status</dt><dd id="profile-status">Active</dd></div>
               </dl>
             </section>
+            <section id="contact-focus-panel">
+              <h2>Contact Focus</h2>
+              <dl>
+                <div><dt>Name</dt><dd id="focus-name">Alyssa Morgan</dd></div>
+                <div><dt>Stage</dt><dd id="focus-stage">Design</dd></div>
+                <div><dt>Next step</dt><dd id="focus-next">Submit roof photos and utility bill</dd></div>
+                <div><dt>System</dt><dd id="focus-system">9.8 kW</dd></div>
+                <div><dt>Utility bill</dt><dd id="focus-utility">$246/mo</dd></div>
+                <div><dt>Roof</dt><dd id="focus-roof">Tile</dd></div>
+              </dl>
+              <div class="journey-track" id="focus-journey">
+                <div class="journey-step complete"><span class="journey-dot"></span><span>New Project</span></div>
+                <div class="journey-step active"><span class="journey-dot"></span><span>Design</span></div>
+                <div class="journey-step"><span class="journey-dot"></span><span>Proposal</span></div>
+                <div class="journey-step"><span class="journey-dot"></span><span>Pre-Qualification</span></div>
+                <div class="journey-step"><span class="journey-dot"></span><span>Sold</span></div>
+                <div class="journey-step"><span class="journey-dot"></span><span>NTP</span></div>
+              </div>
+              <p class="muted" id="focus-copy">7824 Laureate Blvd, Lake Nona, FL - contact details live on the customer record.</p>
+            </section>
             <section>
               <h2 id="notes-title">Notifications</h2>
-              <div class="note-list" id="note-list"></div>
+              <div class="note-list" id="note-list">
+                <article><div><strong>Design package needed</strong><p>Alyssa Morgan needs roof photos and utility bill uploaded.</p><small>Today</small></div></article>
+                <article><div><strong>Proposal ready</strong><p>Marcus Ellison has a proposal ready for rep review.</p><small>Today</small></div></article>
+              </div>
             </section>
             <section id="admin-panel" hidden>
               <h2>Rep Access</h2>
@@ -1343,12 +4898,20 @@
         { id: "admin", name: "Daniel Godwin", email: "godwin.inc@gmail.com", role: "Admin", territory: "All markets", status: "Owner" },
       ];
       let records = [
-        { id: "jw2NkX7pU5Svc1jaXAOc", type: "Lead", name: "Test Rep Lead", email: "test.rep.lead.20260510@example.com", ownerId: "F7kz2DXoX9xMvyIP3Duj", stage: "New lead", nextStep: "Confirm portal visibility", value: "$0" },
-        { id: "homeowner-001", type: "Customer", name: "Sample Homeowner", email: "sample.homeowner@example.com", ownerId: "admin", stage: "Proposal sent", nextStep: "Awaiting admin assignment", value: "$18,400" },
-        { id: "install-001", type: "Job", name: "Mock Solar Install", email: "operations@example.com", ownerId: "admin", stage: "Permitting", nextStep: "Upload permit packet", value: "$24,900" },
+        { id: "jw2NkX7pU5Svc1jaXAOc", type: "Lead", name: "Test Rep Lead", email: "test.rep.lead.20260510@example.com", phone: "407-555-0198", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "new-project", stage: "New Project", nextStep: "Confirm portal visibility", value: "$18,900", systemSize: "6.4 kW", utilityBill: "$162/mo", roofType: "Shingle", address: "1849 Harbor Sun Dr, Orlando, FL" },
+        { id: "lead-lake-nona", type: "Lead", name: "Alyssa Morgan", email: "alyssa.morgan@example.com", phone: "407-555-0134", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "design", stage: "Design", nextStep: "Submit roof photos and utility bill", value: "$32,400", systemSize: "9.8 kW", utilityBill: "$246/mo", roofType: "Tile", address: "7824 Laureate Blvd, Lake Nona, FL" },
+        { id: "lead-winter-garden", type: "Lead", name: "Marcus Ellison", email: "marcus.ellison@example.com", phone: "321-555-0182", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "proposal", stage: "Proposal", nextStep: "Review proposal with homeowner", value: "$41,750", systemSize: "11.2 kW", utilityBill: "$318/mo", roofType: "Shingle", address: "1166 Plant St, Winter Garden, FL" },
+        { id: "customer-sanford", type: "Customer", name: "Priya Shah", email: "priya.shah@example.com", phone: "407-555-0155", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "pre-qualification", stage: "Pre-Qualification", nextStep: "Verify income docs internally", value: "$27,600", systemSize: "7.6 kW", utilityBill: "$205/mo", roofType: "Metal", address: "420 Riverwalk Dr, Sanford, FL" },
+        { id: "job-clermont", type: "Job", name: "The Reynolds Home", email: "reynolds.home@example.com", phone: "352-555-0177", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "sold", stage: "Sold", nextStep: "Operations handoff started", value: "$48,200", systemSize: "12.4 kW", utilityBill: "$352/mo", roofType: "Shingle", address: "992 Citrus Tower Blvd, Clermont, FL" },
+        { id: "job-apopka", type: "Job", name: "Apopka Install - Carter", email: "carter.home@example.com", phone: "689-555-0141", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "ntp", stage: "NTP", nextStep: "NTP checklist ready", value: "$36,850", systemSize: "10.1 kW", utilityBill: "$284/mo", roofType: "Tile", address: "231 Magnolia Park Trl, Apopka, FL" },
+        { id: "homeowner-001", type: "Customer", name: "Sample Homeowner", email: "sample.homeowner@example.com", ownerId: "admin", portalStatus: "proposal", stage: "Proposal sent", nextStep: "Awaiting admin assignment", value: "$18,400" },
+        { id: "install-001", type: "Job", name: "Mock Solar Install", email: "operations@example.com", ownerId: "admin", portalStatus: "design", stage: "Permitting", nextStep: "Upload permit packet", value: "$24,900" },
       ];
       let notes = [
         { id: "note-1", ownerId: "F7kz2DXoX9xMvyIP3Duj", title: "New lead assigned", body: "Test Rep Lead is ready for review.", time: "Today" },
+        { id: "note-3", ownerId: "F7kz2DXoX9xMvyIP3Duj", title: "Design package needed", body: "Alyssa Morgan needs roof photos and utility bill uploaded.", time: "Today" },
+        { id: "note-4", ownerId: "F7kz2DXoX9xMvyIP3Duj", title: "Proposal ready", body: "Marcus Ellison has a proposal ready for rep review.", time: "Today" },
+        { id: "note-5", ownerId: "F7kz2DXoX9xMvyIP3Duj", title: "NTP checklist ready", body: "Carter project is ready for internal NTP review.", time: "Tomorrow" },
         { id: "note-2", ownerId: "admin", title: "Portal test ready", body: "Rep visibility passed with one assigned contact.", time: "Today" },
       ];
       let repApplications = [];
@@ -1389,18 +4952,24 @@
       let pendingRep = null;
       let pendingEmail = "";
       let currentSession = null;
-      let currentEditingContactId = "";
+      let focusedContactId = "";
       let activeStageFilter = "all";
       let completedProfiles = JSON.parse(localStorage.getItem("flourishCompletedProfiles") || "{}");
 
       initializePortal();
 
       function isFilePreview() {
-        return location.protocol === "file:";
+        return location.protocol === "file:" || ["localhost", "127.0.0.1"].includes(location.hostname);
       }
 
       async function initializePortal() {
         await loadPortalData();
+        if (isFilePreview()) {
+          const previewRep = reps.find((rep) => rep.role === "Rep") || reps[0];
+          currentSession = { ...previewRep, profileComplete: true };
+          renderDashboard(currentSession);
+          return;
+        }
         const savedSession = sessionStorage.getItem("flourishPortalSession");
         if (savedSession) {
           try {
@@ -1596,25 +5165,70 @@
         }
       });
 
-      document.getElementById("record-list").addEventListener("click", (event) => {
-        const button = event.target.closest("[data-edit-contact]");
+      document.getElementById("toggle-design-form").addEventListener("click", () => {
+        const form = document.getElementById("design-form");
+        const isOpening = !form.classList.contains("visible");
+        form.classList.toggle("visible", isOpening);
+        document.getElementById("toggle-design-form").textContent = isOpening ? "Close design form" : "New design request";
+        if (isOpening) form.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      function switchPortalView(view, activeButton) {
+        document.getElementById("portal-workspace").dataset.activeView = view;
+        document.querySelectorAll(".portal-nav [data-view]").forEach((item) => {
+          item.classList.toggle("active", item === activeButton);
+        });
+        document.getElementById("headline").textContent = {
+          dashboard: `Welcome, ${currentSession?.name || "Daniel Godwin"}`,
+          design: "Submit a new solar design",
+          projects: "Solar Projects",
+          commissions: "Commissions",
+          profile: "Rep Profile",
+        }[view] || `Welcome, ${currentSession?.name || "Daniel Godwin"}`;
+        document.querySelector(".portal-subtitle").textContent = {
+          dashboard: "Your design, project, job, and commission command center.",
+          design: "Submit homeowner details and design notes so the project can start cleanly.",
+          projects: "Track every customer from design request to sold work, NTP, install, and commission review.",
+          commissions: "Review payout structure, commission types, estimated pay, and payout readiness.",
+          profile: "Track rep goals, project progress, and sales performance.",
+        }[view] || "Here is your daily overview.";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      window.switchPortalView = switchPortalView;
+
+      document.querySelector(".portal-nav").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-view]");
         if (!button) return;
-        const record = records.find((item) => item.id === button.dataset.editContact);
+        event.preventDefault();
+        switchPortalView(button.dataset.view, button);
+      });
+
+      document.querySelectorAll(".portal-nav [data-view]").forEach((button) => {
+        button.addEventListener("click", (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+          switchPortalView(button.dataset.view, button);
+        });
+      });
+
+      document.getElementById("record-list").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-focus-contact]");
+        if (!button) return;
+        const record = records.find((item) => item.id === button.dataset.focusContact);
         if (!record) return;
-        currentEditingContactId = record.id;
-        document.getElementById("edit-contact-form").hidden = false;
-        document.getElementById("edit-name").value = record.name || "";
-        document.getElementById("edit-phone").value = record.phone || "";
-        document.getElementById("edit-email").value = record.email || "";
-        document.getElementById("edit-address").value = record.address || "";
-        document.getElementById("edit-city").value = record.city || "";
-        document.getElementById("edit-state").value = record.state || "";
-        document.getElementById("edit-postal").value = record.postalCode || "";
-        document.getElementById("edit-rep").innerHTML = repOptions(record.ownerId);
-        document.getElementById("edit-rep").disabled = currentSession?.role !== "Admin";
-        document.getElementById("edit-message").className = "form-message";
-        document.getElementById("edit-message").textContent = "";
-        document.getElementById("edit-contact-form").scrollIntoView({ behavior: "smooth", block: "start" });
+        focusedContactId = record.id;
+        renderDashboard(currentSession);
+        document.getElementById("contact-focus-panel").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      document.getElementById("project-list").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-focus-contact]");
+        if (!button) return;
+        const record = records.find((item) => item.id === button.dataset.focusContact);
+        if (!record) return;
+        focusedContactId = record.id;
+        renderDashboard(currentSession);
+        document.getElementById("customer-detail").scrollIntoView({ behavior: "smooth", block: "start" });
       });
 
       document.getElementById("record-list").addEventListener("change", async (event) => {
@@ -1650,73 +5264,6 @@
           dataWarning = error.message;
           select.disabled = false;
           alert(error.message);
-        }
-      });
-
-      document.getElementById("edit-cancel").addEventListener("click", () => {
-        currentEditingContactId = "";
-        document.getElementById("edit-contact-form").hidden = true;
-      });
-
-      document.getElementById("edit-contact-form").addEventListener("submit", async (event) => {
-        event.preventDefault();
-        if (!currentEditingContactId || !currentSession) return;
-        const button = document.getElementById("edit-submit");
-        const message = document.getElementById("edit-message");
-        button.disabled = true;
-        button.textContent = "Updating HighLevel...";
-        message.className = "form-message";
-        message.textContent = "";
-
-        const payload = {
-          contactId: currentEditingContactId,
-          customerName: document.getElementById("edit-name").value.trim(),
-          phone: document.getElementById("edit-phone").value.trim(),
-          email: document.getElementById("edit-email").value.trim(),
-          assignedRepId: document.getElementById("edit-rep").value || currentSession.id,
-          address: document.getElementById("edit-address").value.trim(),
-          city: document.getElementById("edit-city").value.trim(),
-          state: document.getElementById("edit-state").value.trim(),
-          postalCode: document.getElementById("edit-postal").value.trim(),
-        };
-
-        try {
-          if (isFilePreview()) {
-            records = records.map((record) => record.id === payload.contactId
-              ? {
-                ...record,
-                name: payload.customerName,
-                phone: payload.phone,
-                email: payload.email,
-                ownerId: payload.assignedRepId,
-                address: payload.address,
-                city: payload.city,
-                state: payload.state,
-                postalCode: payload.postalCode,
-              }
-              : record);
-            message.textContent = "Updated in this local preview. Live HighLevel sync will run from the hosted portal.";
-            message.classList.add("visible");
-            renderDashboard(currentSession);
-            return;
-          }
-          const response = await fetch("/api/portal/contact", {
-            method: "PUT",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify(payload),
-          });
-          const result = await response.json();
-          if (!response.ok) throw new Error(result.error || "Could not update the contact.");
-          await loadPortalData();
-          message.textContent = "Updated in HighLevel. The portal refreshed from live CRM data.";
-          message.classList.add("visible");
-          renderDashboard(currentSession);
-        } catch (error) {
-          message.textContent = error.message;
-          message.classList.add("visible", "error");
-        } finally {
-          button.disabled = false;
-          button.textContent = "Update in HighLevel";
         }
       });
 
@@ -1835,22 +5382,177 @@
           counts[status.value] = baseVisibleRecords.filter((record) => (record.portalStatus || "new-project") === status.value).length;
           return counts;
         }, {});
+        const activePipelineCount = baseVisibleRecords.filter((record) => !["sold", "ntp"].includes(record.portalStatus || "new-project")).length;
+        const completedPipelineCount = baseVisibleRecords.filter((record) => ["sold", "ntp"].includes(record.portalStatus || "new-project")).length;
+        const pipelineHealth = baseVisibleRecords.length
+          ? Math.round((completedPipelineCount / baseVisibleRecords.length) * 100)
+          : 0;
+        const stageFocus = leadStatuses.reduce((top, status) => {
+          const count = stageCounts[status.value] || 0;
+          return count > top.count ? { label: status.label, count } : top;
+        }, { label: "New Project", count: 0 });
 
         sessionStorage.setItem("flourishPortalSession", JSON.stringify(session));
         history.replaceState(null, "", portalRoute(isAdmin ? "#/admin/access" : "#/profile"));
         document.getElementById("login").style.display = "none";
         document.getElementById("profile-setup").style.display = "none";
         document.getElementById("portal").style.display = "grid";
-        document.getElementById("access-label").textContent = isAdmin ? "Admin access" : "Rep access";
-        document.getElementById("headline").textContent = isAdmin ? "All records dashboard" : "My assigned work";
+        document.getElementById("headline").textContent = isAdmin ? `Welcome, ${session.name}` : `Welcome, ${session.name}`;
         document.getElementById("avatar").textContent = session.name.slice(0, 2).toUpperCase();
-        document.getElementById("user-name").textContent = session.name;
+        document.getElementById("user-name").textContent = `${session.name} (${isAdmin ? "admin" : "rep"})`;
         document.getElementById("user-email").textContent = session.email;
-        document.getElementById("record-count").textContent = visibleRecords.length;
-        document.getElementById("rep-count").textContent = isAdmin ? reps.length - 1 : 1;
-        document.getElementById("note-count").textContent = visibleNotes.length;
+        const activeLeads = visibleRecords.filter((record) => record.type.toLowerCase() === "lead").length;
+        const activeJobs = visibleRecords.filter((record) => record.type.toLowerCase() === "job").length;
+        const pendingTasks = Math.max(
+          visibleNotes.length,
+          visibleRecords.filter((record) => !["sold", "ntp"].includes(record.portalStatus || "new-project")).length
+        );
+        const estimatedCommission = visibleRecords.reduce((total, record) => {
+          const value = Number(String(record.value || "").replace(/[^0-9.-]/g, ""));
+          return total + (Number.isFinite(value) ? value * 0.06 : 0);
+        }, 0);
+        document.getElementById("top-note-count").textContent = visibleNotes.length;
+        document.getElementById("lead-menu-count").textContent = baseVisibleRecords.length;
+        document.getElementById("commission-menu-count").textContent = estimatedCommission ? 1 : 0;
+        document.getElementById("task-menu-count").textContent = pendingTasks;
+        document.getElementById("command-copy").textContent = isAdmin
+          ? "Admin view shows design requests, sold jobs, install progress, rep ownership, and commission status."
+          : "Rep view keeps the day focused on submitted designs, active projects, sold jobs, install progress, and commission.";
+        document.getElementById("pipeline-health").textContent = `${pipelineHealth}%`;
+        document.getElementById("priority-count").textContent = pendingTasks;
+        document.getElementById("closing-window").textContent = activePipelineCount ? `${activePipelineCount} open` : "Clear";
+        document.getElementById("workflow-project-count").textContent = visibleRecords.length;
+        document.getElementById("workflow-job-count").textContent = visibleRecords.filter((record) => (
+          record.type.toLowerCase() === "job" || ["sold", "ntp"].includes(record.portalStatus || "new-project")
+        )).length;
+        document.getElementById("workflow-commission-total").textContent = estimatedCommission
+          ? estimatedCommission >= 1000 ? `$${(estimatedCommission / 1000).toFixed(1)}k` : estimatedCommission.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })
+          : "$0";
+        document.getElementById("daily-focus").textContent = stageFocus.count
+          ? `Move ${stageFocus.count} ${stageFocus.label.toLowerCase()} ${stageFocus.count === 1 ? "record" : "records"} forward.`
+          : "Keep the pipeline clean and ready.";
+        document.getElementById("readiness-score").textContent = pendingTasks > 8 ? "Focus" : "Ready";
+        document.getElementById("stage-focus").textContent = stageFocus.label;
+        document.getElementById("owner-view").textContent = isAdmin ? "All reps" : "Assigned";
+        document.getElementById("crm-source").textContent = dataMode === "live" ? "HighLevel" : "Sample";
+        document.getElementById("pipeline-summary").textContent = `${baseVisibleRecords.length} active ${baseVisibleRecords.length === 1 ? "record" : "records"}`;
+        document.getElementById("pipeline-steps").innerHTML = leadStatuses.map((status) => `
+          <article>
+            <span>${status.label}</span>
+            <strong>${stageCounts[status.value] || 0}</strong>
+          </article>
+        `).join("");
+        const pipelineValue = baseVisibleRecords.reduce((total, record) => {
+          const value = Number(String(record.value || "").replace(/[^0-9.-]/g, ""));
+          return total + (Number.isFinite(value) ? value : 0);
+        }, 0);
+        const designMotionCount = baseVisibleRecords.filter((record) => ["new-project", "design", "proposal", "pre-qualification"].includes(record.portalStatus || "new-project")).length;
+        const soldNtpCount = baseVisibleRecords.filter((record) => ["sold", "ntp"].includes(record.portalStatus || "new-project")).length;
+        const installedProjectCount = baseVisibleRecords.filter((record) => (record.portalStatus || "new-project") === "ntp").length;
+        document.getElementById("projects-active-designs").textContent = designMotionCount;
+        document.getElementById("projects-needs-action").textContent = pendingTasks;
+        document.getElementById("projects-sold-ntp").textContent = soldNtpCount;
+        document.getElementById("projects-installed").textContent = installedProjectCount;
+        document.getElementById("project-board-copy").textContent = isAdmin
+          ? "Admin can scan every homeowner path, sold job, install handoff, and commission review from one top-level view."
+          : "Scan every customer, see the next step, then open the full project when more detail is needed.";
+        document.getElementById("project-board-summary").textContent = `${baseVisibleRecords.length} active ${baseVisibleRecords.length === 1 ? "record" : "records"}`;
+        document.getElementById("project-list").innerHTML = baseVisibleRecords.length ? baseVisibleRecords.map((record) => {
+          const status = record.portalStatus || "new-project";
+          const currentStageIndex = Math.max(0, leadStatuses.findIndex((item) => item.value === status));
+          const progressLabels = [
+            { label: "Design", stage: 1 },
+            { label: "Survey", stage: 4 },
+            { label: "Install", stage: 5 },
+            { label: "Commission", stage: 6 },
+          ];
+          return `
+            <button class="project-list-row" type="button" data-focus-contact="${record.id}" aria-label="Open ${record.name}">
+              <span class="project-row-main">
+                <span class="project-row-pill">${statusLabel(status)}</span>
+                <strong>${record.name || "Unnamed contact"}</strong>
+                <small>${record.address || record.email || record.phone || "Address not added yet"}</small>
+              </span>
+              <span class="project-row-status"><span>Next step</span><strong>${record.nextStep || "Review contact details"}</strong></span>
+              <span class="project-row-checks">
+                ${progressLabels.map((item) => `<span class="${currentStageIndex >= item.stage ? "done" : currentStageIndex + 1 === item.stage ? "next" : ""}">${item.label}</span>`).join("")}
+              </span>
+              <span class="project-row-money"><span>${record.systemSize || "TBD"}</span><strong>${record.value || "$0"}</strong></span>
+            </button>
+          `;
+        }).join("") : `<div class="project-column-empty">No projects match this view yet.</div>`;
+        const soldJobs = visibleRecords.filter((record) => (
+          record.type.toLowerCase() === "job" || ["sold", "ntp"].includes(record.portalStatus || "new-project")
+        ));
+        const soldVolume = soldJobs.reduce((total, record) => {
+          const value = Number(String(record.value || "").replace(/[^0-9.-]/g, ""));
+          return total + (Number.isFinite(value) ? value : 0);
+        }, 0);
+        const avgSystemSize = soldJobs.length
+          ? soldJobs.reduce((total, record) => total + (Number(String(record.systemSize || "").replace(/[^0-9.]/g, "")) || 0), 0) / soldJobs.length
+          : 0;
+        document.getElementById("jobs-summary-label").textContent = `${soldJobs.length} ${soldJobs.length === 1 ? "job" : "jobs"} sold`;
+        document.getElementById("sold-volume").textContent = soldVolume
+          ? soldVolume.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })
+          : "$0";
+        document.getElementById("avg-system-size").textContent = avgSystemSize ? `${avgSystemSize.toFixed(1)} kW` : "0 kW";
+        document.getElementById("job-bottleneck").textContent = soldJobs.some((record) => (record.portalStatus || "") === "ntp") ? "Permit packet" : "Ops handoff";
+        document.getElementById("job-command-list").innerHTML = soldJobs.length ? soldJobs.slice(0, 4).map((record) => {
+          const progress = (record.portalStatus || "new-project") === "ntp" ? 92 : (record.portalStatus || "new-project") === "sold" ? 78 : 52;
+          const soldValue = Number(String(record.value || "").replace(/[^0-9.-]/g, "")) || 0;
+          const commissionValue = soldValue * 0.12;
+          const systemSize = record.systemSize || "8.6 kW";
+          const baseSolar = Math.round(soldValue * 0.86);
+          const roofAdder = Math.round(soldValue * 0.055);
+          const electricalAdder = Math.round(soldValue * 0.035);
+          const permitPackage = Math.max(395, Math.round(soldValue - baseSolar - roofAdder - electricalAdder));
+          const jobSteps = [
+            ["Sold", progress >= 52 ? "done" : "", progress >= 52 ? "Complete" : "Pending"],
+            ["Pre-site survey", progress >= 78 ? "done" : "active", progress >= 78 ? "Complete" : "Next"],
+            ["Install", progress >= 90 ? "done" : progress >= 78 ? "active" : "", progress >= 90 ? "Complete" : progress >= 78 ? "Next" : "Not ready"],
+            ["Post-site survey", progress >= 92 ? "active" : "", progress >= 92 ? "Next" : "Not ready"],
+            ["Commission", progress >= 92 ? "active" : "", progress >= 92 ? "Review" : "Pending"],
+          ];
+          return `
+            <article class="job-card">
+              <div>
+                <h3>${record.name}</h3>
+                <span class="job-address">${record.address || record.email || record.phone || "Solar project record"}</span>
+                <div class="job-meta"><span>${statusLabel(record.portalStatus || "new-project")}</span><span>${progress >= 78 ? "Pre-site complete" : "Pre-site pending"}</span><span>${progress >= 90 ? "Post-site pending" : "Ops handoff"}</span></div>
+                <div class="sale-breakdown">
+                  <h4>At sale</h4>
+                  <div class="sale-line"><span>${systemSize} Solar</span><strong>${baseSolar.toLocaleString("en-US", { style: "currency", currency: "USD" })}</strong></div>
+                  <div class="sale-line"><span>${record.roofType || "Roof"} adder</span><strong>${roofAdder.toLocaleString("en-US", { style: "currency", currency: "USD" })}</strong></div>
+                  <div class="sale-line"><span>Electrical adder</span><strong>${electricalAdder.toLocaleString("en-US", { style: "currency", currency: "USD" })}</strong></div>
+                  <div class="sale-line"><span>Permit package</span><strong>${permitPackage.toLocaleString("en-US", { style: "currency", currency: "USD" })}</strong></div>
+                  <div class="sale-line sale-total"><span>Install Total</span><strong>${soldValue.toLocaleString("en-US", { style: "currency", currency: "USD" })}</strong></div>
+                  <div class="sale-line"><span>Total Project Amount</span><strong>${soldValue.toLocaleString("en-US", { style: "currency", currency: "USD" })}</strong></div>
+                  <div class="sale-line commission-line"><span>Est. Commission</span><strong>${commissionValue.toLocaleString("en-US", { style: "currency", currency: "USD" })}</strong></div>
+                </div>
+              </div>
+              <div class="job-status-panel">
+                <header>
+                  <div><span>Install path</span><h3>Job Status</h3></div>
+                  <strong>${progress}% ready</strong>
+                </header>
+                <div class="job-status-steps">
+                  ${jobSteps.map(([label, state, stepStatus]) => `
+                    <div class="job-status-step ${state}">
+                      <span></span><strong>${label}</strong><small>${stepStatus}</small>
+                    </div>
+                  `).join("")}
+                </div>
+                <div class="job-docs">
+                  <div><strong>Agreement</strong><span>${progress >= 52 ? "Signed" : "Pending"}</span></div>
+                  <div><strong>Pre-site</strong><span>${progress >= 78 ? "Complete" : "Needed"}</span></div>
+                  <div><strong>Install packet</strong><span>${progress >= 90 ? "Ready" : "In progress"}</span></div>
+                  <div><strong>Post-site</strong><span>${progress >= 92 ? "Pending" : "Not ready"}</span></div>
+                </div>
+              </div>
+            </article>
+          `;
+        }).join("") : `<article class="job-card"><div><h3>No sold jobs yet</h3><p>Sold projects will appear here as soon as the pipeline reaches Sold or NTP.</p></div></article>`;
         document.getElementById("notes-title").textContent = isAdmin ? "Internal Activity" : "Notifications";
-        document.getElementById("access-mode").textContent = isAdmin ? "All" : "Assigned";
         document.getElementById("records-title").textContent = isAdmin ? "All leads, customers, and jobs" : "My leads, customers, and jobs";
         document.getElementById("records-copy").textContent = isAdmin
           ? activeStageFilter === "all" ? "Admin can inspect every record and assignment." : `Filtered to ${leadStatuses.find((status) => status.value === activeStageFilter)?.label || "selected"} records.`
@@ -1858,11 +5560,130 @@
         document.getElementById("profile-role").textContent = session.role;
         document.getElementById("profile-territory").textContent = session.territory;
         document.getElementById("profile-status").textContent = session.status;
+        document.getElementById("profile-avatar-large").textContent = session.name.slice(0, 1).toUpperCase();
+        document.getElementById("profile-display-name").textContent = session.name;
+        document.getElementById("profile-title").textContent = isAdmin ? "Owner" : "SDR";
+        document.getElementById("profile-display-email").textContent = session.email;
+        document.getElementById("profile-display-phone").textContent = session.phone || "407-555-0188";
+        document.getElementById("profile-display-address").textContent = session.territory || "Orlando, FL";
+        const readyCommission = soldJobs
+          .filter((record) => (record.portalStatus || "") === "ntp")
+          .reduce((total, record) => {
+            const value = Number(String(record.value || "").replace(/[^0-9.-]/g, ""));
+            return total + (Number.isFinite(value) ? value * 0.12 : 0);
+          }, 0);
+        const pendingCommission = Math.max(0, estimatedCommission - readyCommission);
+        const installedProjects = soldJobs.filter((record) => (record.portalStatus || "") === "ntp").length;
+        const monthlySoldGoal = 5;
+        const goalProgress = monthlySoldGoal ? Math.min(100, Math.round((soldJobs.length / monthlySoldGoal) * 100)) : 0;
+        const designToSoldRate = baseVisibleRecords.length ? Math.round((soldJobs.length / baseVisibleRecords.length) * 100) : 0;
+        document.getElementById("profile-active-projects").textContent = activePipelineCount;
+        document.getElementById("profile-sold-projects").textContent = soldJobs.length;
+        document.getElementById("profile-installed-projects").textContent = installedProjects;
+        document.getElementById("profile-goal-progress").textContent = `${goalProgress}%`;
+        document.getElementById("profile-monthly-goal").textContent = `${monthlySoldGoal} sold`;
+        document.getElementById("profile-design-sold-rate").textContent = `${designToSoldRate}%`;
+        document.getElementById("profile-goals-list").innerHTML = `
+          <article><div><strong>Move active projects forward</strong><span>${activePipelineCount} active ${activePipelineCount === 1 ? "project" : "projects"} need clean next steps.</span></div><strong>${activePipelineCount}</strong></article>
+          <article><div><strong>Hit monthly sold goal</strong><span>${soldJobs.length} of ${monthlySoldGoal} sold projects completed.</span></div><strong>${goalProgress}%</strong></article>
+          <article><div><strong>Install readiness</strong><span>${installedProjects} ${installedProjects === 1 ? "project is" : "projects are"} installed or in payout review.</span></div><strong>${installedProjects}</strong></article>
+        `;
+        document.getElementById("commission-estimated").textContent = estimatedCommission
+          ? estimatedCommission.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })
+          : "$0";
+        document.getElementById("commission-ready").textContent = readyCommission
+          ? readyCommission.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })
+          : "$0";
+        document.getElementById("commission-pending").textContent = pendingCommission
+          ? pendingCommission.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })
+          : "$0";
+        document.getElementById("commission-history-list").innerHTML = soldJobs.length ? soldJobs.map((record) => {
+          const value = Number(String(record.value || "").replace(/[^0-9.-]/g, ""));
+          const commission = Number.isFinite(value) ? value * 0.12 : 0;
+          const status = (record.portalStatus || "") === "ntp" ? "NTP - payout review" : "Sold - install pending";
+          return `
+            <article>
+              <div><strong>${record.name}</strong><span>${status}</span></div>
+              <strong>${commission.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })}</strong>
+            </article>
+          `;
+        }).join("") : `<article><div><strong>No commissions yet</strong><span>Sold jobs will appear here.</span></div><strong>$0</strong></article>`;
+        const focusedRecord = visibleRecords.find((record) => record.id === focusedContactId) || visibleRecords[0];
+        document.getElementById("contact-focus-panel").hidden = !focusedRecord;
+        if (focusedRecord) {
+          const currentStageIndex = Math.max(0, leadStatuses.findIndex((status) => status.value === (focusedRecord.portalStatus || "new-project")));
+          const systemSizeValue = Number(String(focusedRecord.systemSize || "").replace(/[^0-9.]/g, "")) || 8.5;
+          const productionEstimate = Math.round(systemSizeValue * 1450);
+          const soldValue = Number(String(focusedRecord.value || "").replace(/[^0-9.-]/g, "")) || 0;
+          const commissionValue = soldValue * 0.12;
+          const isSoldOrLater = ["sold", "ntp"].includes(focusedRecord.portalStatus || "new-project");
+          document.getElementById("focus-name").textContent = focusedRecord.name || "Unnamed contact";
+          document.getElementById("focus-stage").textContent = statusLabel(focusedRecord.portalStatus || "new-project");
+          document.getElementById("focus-next").textContent = focusedRecord.nextStep || "Review contact";
+          document.getElementById("focus-system").textContent = focusedRecord.systemSize || "8.7 kW";
+          document.getElementById("focus-utility").textContent = focusedRecord.utilityBill || "$225/mo";
+          document.getElementById("focus-roof").textContent = focusedRecord.roofType || "Shingle";
+          document.getElementById("focus-copy").textContent = focusedRecord.address
+            ? `${focusedRecord.address} - contact details live on the customer record.`
+            : `${focusedRecord.email || focusedRecord.phone || "No contact info yet"} - contact details live on the customer record.`;
+          document.getElementById("focus-journey").innerHTML = leadStatuses.map((status, index) => `
+            <div class="journey-step ${index < currentStageIndex ? "complete" : ""} ${index === currentStageIndex ? "active" : ""}">
+              <span class="journey-dot"></span>
+              <span>${status.label}</span>
+            </div>
+          `).join("");
+          document.getElementById("detail-name").textContent = focusedRecord.name || "Unnamed contact";
+          document.getElementById("detail-id").textContent = focusedRecord.id || "customer";
+          document.getElementById("detail-address").textContent = focusedRecord.address || "Address not added yet";
+          document.getElementById("detail-status").textContent = statusLabel(focusedRecord.portalStatus || "new-project");
+          document.getElementById("detail-email").textContent = focusedRecord.email || "No email added";
+          document.getElementById("detail-phone").textContent = focusedRecord.phone || "No phone added";
+          document.getElementById("detail-since").textContent = "2026-05-13";
+          document.getElementById("detail-rep").textContent = session.name;
+          document.getElementById("detail-system").textContent = focusedRecord.systemSize || "8.5 kW";
+          document.getElementById("detail-production").innerHTML = `${productionEstimate.toLocaleString("en-US")}<br />kWh/year`;
+          document.getElementById("detail-next-step").textContent = focusedRecord.nextStep || statusLabel(focusedRecord.portalStatus || "new-project");
+          const timelineItems = [
+            { label: "Design submitted", completeAt: 1 },
+            { label: "Proposal", completeAt: 2 },
+            { label: "Pre-site survey", completeAt: 4 },
+            { label: "Install", completeAt: 5 },
+            { label: "Post-site survey", completeAt: 6 },
+            { label: "Commission", completeAt: 6 },
+          ];
+          document.getElementById("detail-timeline").innerHTML = timelineItems.map((item, index) => {
+            const state = currentStageIndex >= item.completeAt ? "done" : index === Math.min(currentStageIndex + 1, timelineItems.length - 1) ? "active" : "";
+            const status = state === "done" ? "Complete" : state === "active" ? "Next" : "Not ready";
+            return `<div class="${state}"><span></span><strong>${item.label}</strong><small>${status}</small></div>`;
+          }).join("");
+          document.getElementById("detail-doc-list").innerHTML = [
+            ["Utility bill", currentStageIndex >= 1 ? "Uploaded" : "Needed"],
+            ["Roof photos", currentStageIndex >= 1 ? "Uploaded" : "Needed"],
+            ["Design package", currentStageIndex >= 1 ? "In review" : "Pending"],
+            ["Proposal PDF", currentStageIndex >= 2 ? "Ready" : "Pending"],
+            ["Signed agreement", isSoldOrLater ? "Complete" : "Not ready"],
+          ].map(([label, state]) => `<div><strong>${label}</strong><span>${state}</span></div>`).join("");
+          document.getElementById("detail-commission-estimate").textContent = commissionValue.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+          document.getElementById("detail-commission-status").textContent = isSoldOrLater ? "Earned" : "Projected";
+          document.getElementById("detail-payment-status").textContent = (focusedRecord.portalStatus || "") === "ntp" ? "Pending payout" : isSoldOrLater ? "Install pending" : "Not ready";
+        }
         document.getElementById("design-rep").innerHTML = reps
           .filter((rep) => rep.role === "Rep")
           .map((rep) => `<option value="${rep.id}" ${rep.id === session.id ? "selected" : ""}>${rep.name}</option>`)
           .join("");
         document.getElementById("design-rep").disabled = !isAdmin;
+        if (isFilePreview() && !document.getElementById("design-name").value) {
+          document.getElementById("design-name").value = "Elena Rodriguez";
+          document.getElementById("design-phone").value = "407-555-0166";
+          document.getElementById("design-email").value = "elena.rodriguez@example.com";
+          document.getElementById("design-address").value = "528 Solar Vista Ct";
+          document.getElementById("design-city").value = "Orlando";
+          document.getElementById("design-state").value = "FL";
+          document.getElementById("design-postal").value = "32832";
+          document.getElementById("design-roof").value = "Shingle";
+          document.getElementById("design-utility").value = "$238";
+          document.getElementById("design-notes").value = "Homeowner wants battery option, east/west roof planes, HOA packet needed.";
+        }
         document.getElementById("stage-tabs").classList.toggle("visible", isAdmin);
         document.getElementById("stage-tabs").innerHTML = isAdmin ? [
           `<button type="button" class="${activeStageFilter === "all" ? "active" : ""}" data-stage-filter="all">All (${baseVisibleRecords.length})</button>`,
@@ -1886,7 +5707,7 @@
             </div>
             <div class="record-value-group">
               <strong class="record-value">${record.value}</strong>
-              ${record.sourceKind === "opportunity" ? "" : `<button class="secondary-action" type="button" data-edit-contact="${record.id}">Edit</button>`}
+              <button class="secondary-action" type="button" data-focus-contact="${record.id}">Contact</button>
             </div>
           </article>
         `).join("") : `<div class="record-empty">No records match this view yet.</div>`;
@@ -1896,6 +5717,30 @@
             <div><strong>${note.title}</strong><p>${note.body}</p><small>${note.time}</small></div>
           </article>
         `).join("");
+        const attentionItems = visibleNotes.length ? visibleNotes.slice(0, 5) : visibleRecords.slice(0, 5).map((record) => ({
+          title: `${record.type} needs review`,
+          body: `${record.name} - ${record.nextStep || statusLabel(record.portalStatus || "new-project")}`,
+          time: "Today",
+        }));
+        document.getElementById("attention-list").innerHTML = attentionItems.length ? attentionItems.map((item) => `
+          <article>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+            <div><strong>${item.title}</strong><p>${item.body}</p></div>
+            <small>${item.time || "Today"}</small>
+          </article>
+        `).join("") : `<p class="muted">Nothing needs attention right now.</p>`;
+        const scheduleItems = [
+          { time: "9:30 AM", title: "Design review", body: "Alyssa Morgan roof package" },
+          { time: "1:00 PM", title: "Proposal review", body: "Marcus Ellison solar proposal" },
+          { time: "3:45 PM", title: "NTP check", body: "Carter project handoff" },
+        ].slice(0, Math.min(3, Math.max(1, visibleRecords.length)));
+        document.getElementById("schedule-list").classList.toggle("has-items", Boolean(scheduleItems.length));
+        document.getElementById("schedule-list").innerHTML = scheduleItems.length ? scheduleItems.map((item) => `
+          <article>
+            <span class="schedule-time">${item.time}</span>
+            <div><strong>${item.title}</strong><p>${item.body}</p></div>
+          </article>
+        `).join("") : "Nothing scheduled for today.";
 
         document.getElementById("admin-panel").hidden = !isAdmin;
         document.getElementById("launch-panel").hidden = !isAdmin;
