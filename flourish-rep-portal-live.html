@@ -1966,6 +1966,26 @@
         background: #ffffff;
       }
 
+      .address-source-input {
+        display: none !important;
+      }
+
+      .address-autocomplete-input {
+        display: block;
+        width: 100%;
+        min-height: 48px;
+        border: 1px solid #d8e0ea;
+        border-radius: 8px;
+        background: #fbfdff;
+        color: #16202d;
+        overflow: hidden;
+      }
+
+      .address-autocomplete-input:focus-within {
+        border-color: #1a8f67;
+        box-shadow: 0 0 0 3px rgba(26, 143, 103, 0.14);
+      }
+
       .design-intake-strip {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -5653,7 +5673,29 @@
       function fillAddressPart(componentMap, type, targetId, shortName = false) {
         const component = componentMap.get(type);
         if (!component) return;
-        document.getElementById(targetId).value = shortName ? component.short_name : component.long_name;
+        document.getElementById(targetId).value = shortName
+          ? (component.short_name || component.shortText || component.shortText?.text || "")
+          : (component.long_name || component.longText || component.longText?.text || "");
+      }
+
+      function mapAddressComponents(addressComponents = []) {
+        const componentMap = new Map();
+        addressComponents.forEach((component) => {
+          (component.types || []).forEach((type) => componentMap.set(type, component));
+        });
+        return componentMap;
+      }
+
+      function fillProjectAddress(addressInput, addressComponents = [], formattedAddress = "") {
+        const componentMap = mapAddressComponents(addressComponents);
+        const streetNumber = componentMap.get("street_number")?.long_name || componentMap.get("street_number")?.longText || "";
+        const route = componentMap.get("route")?.long_name || componentMap.get("route")?.longText || "";
+        const street = [streetNumber, route].filter(Boolean).join(" ");
+        addressInput.value = street || formattedAddress || addressInput.value;
+        fillAddressPart(componentMap, "locality", "design-city");
+        if (!document.getElementById("design-city").value) fillAddressPart(componentMap, "postal_town", "design-city");
+        fillAddressPart(componentMap, "administrative_area_level_1", "design-state", true);
+        fillAddressPart(componentMap, "postal_code", "design-postal", true);
       }
 
       function setupAddressLookup() {
@@ -5665,33 +5707,26 @@
           hint.textContent = "Enter the homeowner address. Address lookup can be enabled before launch.";
           return;
         }
-        window.initFlourishAddressLookup = () => {
-          if (!window.google?.maps?.places) return;
-          const autocomplete = new google.maps.places.Autocomplete(addressInput, {
-            componentRestrictions: { country: "us" },
-            fields: ["address_components", "formatted_address"],
-            types: ["address"],
+        window.initFlourishAddressLookup = async () => {
+          if (!window.google?.maps?.importLibrary) return;
+          const { PlaceAutocompleteElement } = await google.maps.importLibrary("places");
+          const addressLookup = new PlaceAutocompleteElement();
+          addressLookup.id = "design-address-lookup";
+          addressLookup.className = "address-autocomplete-input";
+          addressLookup.includedRegionCodes = ["us"];
+          addressLookup.placeholder = "Start typing homeowner address";
+          if (addressInput.value) addressLookup.value = addressInput.value;
+          addressInput.classList.add("address-source-input");
+          addressInput.insertAdjacentElement("beforebegin", addressLookup);
+          addressLookup.addEventListener("gmp-select", async ({ placePrediction }) => {
+            const place = placePrediction.toPlace();
+            await place.fetchFields({ fields: ["addressComponents", "formattedAddress"] });
+            fillProjectAddress(addressInput, place.addressComponents, place.formattedAddress);
           });
-          autocomplete.addListener("place_changed", () => {
-            const place = autocomplete.getPlace();
-            if (!place?.address_components) return;
-            const componentMap = new Map();
-            place.address_components.forEach((component) => {
-              component.types.forEach((type) => componentMap.set(type, component));
-            });
-            const streetNumber = componentMap.get("street_number")?.long_name || "";
-            const route = componentMap.get("route")?.long_name || "";
-            const street = [streetNumber, route].filter(Boolean).join(" ");
-            if (street) addressInput.value = street;
-            fillAddressPart(componentMap, "locality", "design-city");
-            if (!document.getElementById("design-city").value) fillAddressPart(componentMap, "postal_town", "design-city");
-            fillAddressPart(componentMap, "administrative_area_level_1", "design-state", true);
-            fillAddressPart(componentMap, "postal_code", "design-postal", true);
-          });
-          hint.textContent = "Address lookup is enabled. Pick the matching address to fill city, state, and ZIP.";
+          hint.textContent = "Address lookup is enabled. Start typing, then pick the matching address to fill city, state, and ZIP.";
         };
         const script = document.createElement("script");
-        script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&libraries=places&callback=initFlourishAddressLookup`;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&libraries=places&loading=async&callback=initFlourishAddressLookup`;
         script.async = true;
         script.defer = true;
         script.onerror = () => {
