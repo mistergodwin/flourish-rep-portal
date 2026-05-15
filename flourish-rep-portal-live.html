@@ -5650,7 +5650,9 @@
           await loadPortalData();
           document.getElementById("design-form").reset();
           document.getElementById("design-state").value = "FL";
-          message.textContent = "Project created. Next, open the project to submit design details or update customer info.";
+          message.textContent = result.reusedExisting
+            ? "This customer already existed in the CRM, so the portal linked this project to the existing contact. Next, open the project to submit design details or update customer info."
+            : "Project created. Next, open the project to submit design details or update customer info.";
           message.classList.add("visible");
           renderDashboard(currentSession);
         } catch (error) {

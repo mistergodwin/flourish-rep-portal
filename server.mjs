@@ -714,6 +714,22 @@ async function ghlJson(path, method, payload) {
   return response.json();
 }
 
+function parseCrmError(error) {
+  const message = String(error?.message || "");
+  const jsonStart = message.indexOf("{");
+  if (jsonStart === -1) return null;
+  try {
+    return JSON.parse(message.slice(jsonStart));
+  } catch {
+    return null;
+  }
+}
+
+function duplicateContactIdFromError(error) {
+  const payload = parseCrmError(error);
+  return payload?.meta?.contactId || payload?.contactId || "";
+}
+
 async function ghlJsonWithVersion(path, method, payload, version = "2021-07-28") {
   if (!token) throw new Error("Missing CRM integration token");
   const response = await fetch(`https://services.leadconnectorhq.com${path}`, {
@@ -752,6 +768,7 @@ function splitName(fullName) {
 async function createDesignContact(payload) {
   const { firstName, lastName } = splitName(payload.customerName);
   const assignedTo = payload.assignedRepId || "F7kz2DXoX9xMvyIP3Duj";
+  const portalTags = ["portal-design-form", "rep-portal-lead"];
   const body = {
     locationId,
     firstName,
@@ -765,10 +782,38 @@ async function createDesignContact(payload) {
     postalCode: payload.postalCode || undefined,
     assignedTo,
     source: "Flourish Rep Portal Design Form",
-    tags: ["portal-design-form", "rep-portal-lead"],
+    tags: portalTags,
   };
 
-  const result = await ghlJson("/contacts/", "POST", body);
+  let result;
+  let reusedExisting = false;
+  try {
+    result = await ghlJson("/contacts/", "POST", body);
+  } catch (error) {
+    const duplicateContactId = duplicateContactIdFromError(error);
+    if (!duplicateContactId) {
+      const crmPayload = parseCrmError(error);
+      throw new Error(crmPayload?.message || error.message);
+    }
+    const current = await ghlFetch(`/contacts/${encodeURIComponent(duplicateContactId)}`);
+    const existingContact = current.contact || current;
+    const existingTags = Array.isArray(existingContact.tags) ? existingContact.tags : [];
+    const updateBody = {
+      firstName,
+      lastName,
+      name: payload.customerName,
+      email: payload.email || existingContact.email || undefined,
+      phone: payload.phone || existingContact.phone || undefined,
+      address1: payload.address || existingContact.address1 || existingContact.address || undefined,
+      city: payload.city || existingContact.city || undefined,
+      state: payload.state || existingContact.state || undefined,
+      postalCode: payload.postalCode || existingContact.postalCode || existingContact.postal_code || undefined,
+      assignedTo,
+      tags: Array.from(new Set([...existingTags, ...portalTags])),
+    };
+    result = await ghlJson(`/contacts/${encodeURIComponent(duplicateContactId)}`, "PUT", updateBody);
+    reusedExisting = true;
+  }
   const contact = result.contact || result;
   await savePortalCreatedContact({
     ...normalizeCreatedContact(contact, assignedTo),
@@ -781,6 +826,7 @@ async function createDesignContact(payload) {
   return {
     contact,
     assignedTo,
+    reusedExisting,
     summary: {
       roofType: payload.roofType || "",
       utilityBill: payload.utilityBill || "",
