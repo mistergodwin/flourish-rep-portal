@@ -1492,8 +1492,8 @@ async function handleStatic(request, response) {
       return;
     }
     response.end(html
-      .replace("</head>", `${repReadOnlyStageStyle}</head>`)
-      .replace("</body>", `${hostedPortalConfigScript}${hostedMagicLinkScript}${hostedRepApprovalScript}${hostedAiAssistantScript}</body>`));
+      .replace("</head>", `${repReadOnlyStageStyle}${hostedPortalConfigScript}</head>`)
+      .replace("</body>", `${hostedMagicLinkScript}${hostedRepApprovalScript}${hostedAiAssistantScript}</body>`));
     return;
   }
   createReadStream(filePath).pipe(response);
