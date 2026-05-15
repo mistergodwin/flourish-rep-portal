@@ -25,3 +25,5 @@ services:
         sync: false
       - key: MISTRAL_MODEL
         value: mistral-small-latest
+      - key: GOOGLE_MAPS_BROWSER_KEY
+        sync: false

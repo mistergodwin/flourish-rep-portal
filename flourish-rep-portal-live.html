@@ -429,6 +429,13 @@
         grid-column: 1 / -1;
       }
 
+      .field-hint {
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.35;
+      }
+
       .portal-sidebar {
         display: flex;
         flex-direction: column;
@@ -2447,23 +2454,15 @@
 
       .customer-detail-header {
         display: grid;
-        grid-template-columns: auto 1fr auto;
+        grid-template-columns: minmax(0, 1fr) auto;
         gap: 20px;
         align-items: center;
-      }
-
-      .back-button {
-        display: grid;
-        place-items: center;
-        width: 56px;
-        height: 56px;
-        border: 1px solid #dbe3ee;
+        padding: 24px;
+        border: 1px solid #dfe6ef;
         border-radius: 8px;
         background: #ffffff;
-        color: #0f172a;
       }
 
-      .back-button svg,
       .detail-icon svg {
         width: 22px;
         height: 22px;
@@ -2476,7 +2475,7 @@
 
       .customer-detail h2 {
         color: #020617;
-        font-size: clamp(34px, 4vw, 52px);
+        font-size: clamp(30px, 3.2vw, 44px);
         line-height: 1;
       }
 
@@ -2506,7 +2505,234 @@
       .detail-status {
         background: #dbeafe;
         color: #1d4ed8;
+        font-size: 16px;
+      }
+
+      .project-contact-summary {
+        display: grid;
+        gap: 3px;
+        justify-items: end;
+        color: #64748b;
+        font-size: 15px;
+        text-align: right;
+      }
+
+      .project-contact-summary strong {
+        color: #1e3a8a;
+        font-size: 17px;
+      }
+
+      .project-steps-card,
+      .sales-steps-card {
+        padding: 0;
+        overflow: hidden;
+      }
+
+      .project-steps-card header,
+      .sales-steps-card header {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 22px 28px;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .project-steps-card h3,
+      .sales-steps-card h3 {
+        color: #020617;
+        font-size: 25px;
+      }
+
+      .project-path {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 18px;
+        align-items: start;
+        padding: 42px 34px;
+      }
+
+      .project-path-line {
+        height: 3px;
+        margin-top: 28px;
+        background: #e2e8f0;
+      }
+
+      .project-path-step {
+        display: grid;
+        justify-items: center;
+        gap: 12px;
+        color: #475569;
+        font-weight: 900;
+      }
+
+      .project-path-step span {
+        display: grid;
+        place-items: center;
+        width: 54px;
+        height: 54px;
+        border: 3px solid #d1d8e4;
+        border-radius: 50%;
+        background: #ffffff;
+        color: #64748b;
+        font-size: 21px;
+      }
+
+      .project-path-step.active span {
+        border-color: #1e3a8a;
+        color: #1e3a8a;
+      }
+
+      .solar-checklist {
+        display: grid;
+        padding: 24px 28px 28px;
+      }
+
+      .solar-check-row {
+        display: grid;
+        grid-template-columns: 48px minmax(0, 1fr) auto auto;
+        gap: 16px;
+        align-items: center;
+        min-height: 72px;
+        padding: 12px 18px;
+        border: 1px solid #dfe6ef;
+        border-bottom: 0;
+        background: #ffffff;
+      }
+
+      .solar-check-row:first-child {
+        border-radius: 8px 8px 0 0;
+      }
+
+      .solar-check-row:last-child {
+        border-bottom: 1px solid #dfe6ef;
+        border-radius: 0 0 8px 8px;
+      }
+
+      .solar-check-row .check-state {
+        display: grid;
+        place-items: center;
+        width: 34px;
+        height: 34px;
+        border: 2px solid #cbd5e1;
+        border-radius: 50%;
+        color: transparent;
+        font-weight: 950;
+      }
+
+      .solar-check-row.done .check-state {
+        border-color: #1e3a8a;
+        background: #1e3a8a;
+        color: #ffffff;
+      }
+
+      .solar-check-row strong {
+        color: #334155;
         font-size: 18px;
+      }
+
+      .solar-check-row small {
+        color: #64748b;
+        font-weight: 800;
+      }
+
+      .solar-check-row button {
+        min-height: 42px;
+        padding: 0 24px;
+        border: 0;
+        border-radius: 999px;
+        background: #eff6ff;
+        color: #1e3a8a;
+        font-weight: 950;
+      }
+
+      .project-action-panel {
+        display: none;
+        margin: 0 28px 28px;
+        padding: 22px;
+        border: 1px solid #bfdbfe;
+        border-radius: 10px;
+        background: #f8fbff;
+      }
+
+      .project-action-panel.visible {
+        display: grid;
+        gap: 16px;
+      }
+
+      .project-action-panel header {
+        padding: 0;
+        border: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        gap: 14px;
+      }
+
+      .project-action-panel h4 {
+        color: #0f172a;
+        font-size: 22px;
+      }
+
+      .project-action-panel p {
+        margin-top: 6px;
+        color: #64748b;
+        line-height: 1.45;
+      }
+
+      .project-action-close {
+        min-height: 36px;
+        border: 1px solid #d8e0ea;
+        border-radius: 999px;
+        background: #ffffff;
+        color: #475569;
+        padding: 0 14px;
+        font-weight: 900;
+      }
+
+      .project-action-form {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .project-action-form label {
+        display: grid;
+        gap: 7px;
+        color: #475569;
+        font-weight: 850;
+      }
+
+      .project-action-form input,
+      .project-action-form select,
+      .project-action-form textarea {
+        width: 100%;
+        min-height: 44px;
+        border: 1px solid #d8e0ea;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #0f172a;
+        padding: 10px 12px;
+        font: inherit;
+      }
+
+      .project-action-form textarea {
+        min-height: 96px;
+        resize: vertical;
+      }
+
+      .project-action-form .full-field {
+        grid-column: 1 / -1;
+      }
+
+      .project-action-submit {
+        width: fit-content;
+        min-height: 44px;
+        border: 0;
+        border-radius: 999px;
+        background: #1e3a8a;
+        color: #ffffff;
+        padding: 0 20px;
+        font-weight: 950;
       }
 
       .detail-grid {
@@ -2663,8 +2889,7 @@
         background: #f8fafc;
       }
 
-      .detail-ops-grid,
-      .detail-bottom-grid {
+      .detail-ops-grid {
         display: grid;
         gap: 20px;
       }
@@ -2673,18 +2898,12 @@
         grid-template-columns: 1fr;
       }
 
-      .detail-bottom-grid {
-        grid-template-columns: 1fr;
-      }
-
       .detail-timeline-card,
-      .detail-doc-card,
       .detail-commission-card {
         padding: 26px;
       }
 
       .detail-timeline-card header,
-      .detail-doc-card header,
       .detail-commission-card header {
         display: flex;
         justify-content: space-between;
@@ -2694,7 +2913,6 @@
       }
 
       .detail-timeline-card header span,
-      .detail-doc-card header span,
       .detail-commission-card header span {
         color: #047857;
         font-size: 12px;
@@ -2704,7 +2922,6 @@
       }
 
       .detail-timeline-card h3,
-      .detail-doc-card h3,
       .detail-commission-card h3 {
         margin-top: 4px;
         color: #020617;
@@ -2771,13 +2988,11 @@
         font-weight: 900;
       }
 
-      .detail-doc-list,
       .detail-commission-grid {
         display: grid;
         gap: 12px;
       }
 
-      .detail-doc-list div,
       .detail-commission-grid div {
         display: flex;
         justify-content: space-between;
@@ -2790,13 +3005,11 @@
         background: #f8fafc;
       }
 
-      .detail-doc-list strong,
       .detail-commission-grid span {
         color: #334155;
         font-weight: 900;
       }
 
-      .detail-doc-list span,
       .detail-commission-grid strong {
         color: #0f172a;
         font-weight: 950;
@@ -3493,10 +3706,6 @@
         order: 1;
       }
 
-      .portal-workspace[data-active-view="design"] .content-grid {
-        order: 2;
-      }
-
       .metric-strip {
         display: none;
       }
@@ -3758,41 +3967,57 @@
         display: flex;
         justify-content: space-between;
         gap: 18px;
-        align-items: start;
-      }
-
-      .project-board header span {
-        color: #047857;
-        font-size: 12px;
-        font-weight: 900;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+        align-items: center;
       }
 
       .project-board header h2 {
-        margin-top: 4px;
         color: #071225;
-        font-size: clamp(26px, 3vw, 36px);
+        font-size: clamp(38px, 4vw, 56px);
         line-height: 1.05;
       }
 
-      .project-board header p {
-        max-width: 720px;
-        margin-top: 8px;
-        color: #64748b;
-        font-size: 16px;
-        line-height: 1.45;
-      }
-
-      .project-board header strong {
-        flex: 0 0 auto;
-        min-height: 36px;
+      .project-new-button {
+        min-height: 48px;
         display: inline-flex;
         align-items: center;
-        border-radius: 999px;
-        background: #eef2f7;
-        color: #334155;
+        gap: 10px;
+        padding: 0 20px;
+        border: 0;
+        border-radius: 8px;
+        background: #1e3a8a;
+        color: #ffffff;
+        font-weight: 950;
+      }
+
+      .project-filter-bar {
+        display: grid;
+        grid-template-columns: minmax(260px, 520px);
+        gap: 16px;
+        align-items: end;
+        padding: 22px;
+        border: 1px solid #dfe6ef;
+        border-radius: 16px;
+        background: #ffffff;
+      }
+
+      .project-filter-field {
+        display: grid;
+        gap: 8px;
+      }
+
+      .project-filter-field span {
+        color: #64748b;
+        font-weight: 850;
+      }
+
+      .project-filter-field input {
+        min-height: 44px;
+        border: 1px solid #d8e0ea;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #0f172a;
         padding: 0 14px;
+        font: inherit;
       }
 
       .project-overview-grid {
@@ -3835,6 +4060,86 @@
       .project-list {
         display: grid;
         gap: 8px;
+      }
+
+      .project-pipeline {
+        display: grid;
+        grid-template-columns: repeat(6, minmax(230px, 1fr));
+        gap: 12px;
+        overflow-x: auto;
+        padding: 4px 2px 8px;
+      }
+
+      .project-pipeline-column {
+        min-height: 430px;
+        display: grid;
+        align-content: start;
+        gap: 10px;
+        padding: 14px;
+        border-radius: 12px;
+        background: #f8fafc;
+      }
+
+      .project-pipeline-column header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 2px;
+      }
+
+      .project-pipeline-column h3 {
+        color: #64748b;
+        font-size: 17px;
+      }
+
+      .project-pipeline-column header span {
+        color: #94a3b8;
+        font-size: 18px;
+        font-weight: 850;
+      }
+
+      .pipeline-project-card {
+        display: grid;
+        gap: 7px;
+        width: 100%;
+        padding: 14px;
+        border: 1px solid #dfe6ef;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #0f172a;
+        text-align: left;
+        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.05);
+      }
+
+      .pipeline-project-card:hover {
+        border-color: #93c5fd;
+        box-shadow: 0 10px 22px rgba(37, 99, 235, 0.09);
+      }
+
+      .pipeline-project-card span {
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      .pipeline-project-card strong {
+        color: #0f172a;
+        font-size: 17px;
+      }
+
+      .pipeline-project-card small {
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.3;
+      }
+
+      .pipeline-project-card em {
+        color: #94a3b8;
+        font-style: italic;
+        font-weight: 750;
       }
 
       .project-list-row {
@@ -4025,7 +4330,6 @@
         .business-strip,
         .design-intake-strip,
         .detail-ops-grid,
-        .detail-bottom-grid,
         .ops-scoreboard {
           grid-template-columns: 1fr;
         }
@@ -4251,9 +4555,9 @@
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
             <span>Home</span>
           </button>
-          <button type="button" aria-label="Submit Design" data-view="design" onclick="window.switchPortalView && window.switchPortalView('design', this)">
+          <button type="button" aria-label="New Project" data-view="design" onclick="window.switchPortalView && window.switchPortalView('design', this)">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
-            <span>Submit Design</span>
+            <span>New Project</span>
           </button>
           <button type="button" aria-label="Solar Projects" data-view="projects" onclick="window.switchPortalView && window.switchPortalView('projects', this)">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16"></path><path d="M4 12h16"></path><path d="M4 19h16"></path></svg>
@@ -4344,7 +4648,7 @@
           <div class="workflow-grid">
             <article class="workflow-card primary">
               <div class="workflow-card-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></div>
-              <div><h3>Submit Design</h3><p>Start a new homeowner design request with contact, roof, utility, and project notes.</p></div>
+              <div><h3>New Project</h3><p>Create the customer and project record first, then submit it for design from the project view.</p></div>
               <strong>New</strong>
             </article>
             <article class="workflow-card">
@@ -4389,7 +4693,7 @@
             <div class="command-list">
               <div><span>Stage focus</span><strong id="stage-focus">New Project</strong></div>
               <div><span>Owner view</span><strong id="owner-view">Assigned</strong></div>
-              <div><span>CRM source</span><strong id="crm-source">HighLevel</strong></div>
+              <div><span>Data source</span><strong id="crm-source">Portal CRM</strong></div>
             </div>
           </aside>
         </section>
@@ -4412,30 +4716,17 @@
         </section>
         <section class="project-board view-section projects-view" aria-label="Project board">
           <header>
-            <div>
-              <span>Project command center</span>
-              <h2>Top-level project view</h2>
-              <p id="project-board-copy">Scan every customer, see the next step, then open the full project when more detail is needed.</p>
-            </div>
-            <strong id="project-board-summary">6 active records</strong>
+            <h2>Projects</h2>
+            <button class="project-new-button" type="button" onclick="window.switchPortalView && window.switchPortalView('design', document.querySelector('[data-view=&quot;design&quot;]'))">+ New Project</button>
           </header>
-          <div class="project-overview-grid" aria-label="Project summary">
-            <article><span>Active Designs</span><strong id="projects-active-designs">2</strong><small>Designs and proposals moving</small></article>
-            <article><span>Needs Action</span><strong id="projects-needs-action">4</strong><small>Items blocking the next step</small></article>
-            <article><span>Sold / NTP</span><strong id="projects-sold-ntp">2</strong><small>Projects moving to install</small></article>
-            <article><span>Installed</span><strong id="projects-installed">1</strong><small>Ready for payout review</small></article>
+          <div class="project-filter-bar" aria-label="Project filters">
+            <label class="project-filter-field">
+              <span>Search</span>
+              <input id="project-search" type="search" placeholder="Address, Name, or Email" />
+            </label>
           </div>
-          <div class="project-list" id="project-list">
-            <button class="project-list-row" type="button">
-              <span class="project-row-main">
-                <span class="project-row-pill">Design</span>
-                <strong>Alyssa Morgan</strong>
-                <small>7824 Laureate Blvd, Lake Nona, FL</small>
-              </span>
-              <span class="project-row-status"><span>Next step</span><strong>Submit roof photos</strong></span>
-              <span class="project-row-checks"><span class="next">Design</span><span>Survey</span><span>Install</span><span>Commission</span></span>
-              <span class="project-row-money"><span>Value</span><strong>$32,400</strong></span>
-            </button>
+          <div class="project-pipeline" id="project-pipeline" aria-label="Project pipeline">
+            <section class="project-pipeline-column"><header><h3>New</h3><span>0</span></header></section>
           </div>
         </section>
         <section class="overview-grid view-section dashboard-view" aria-label="Daily overview">
@@ -4477,9 +4768,6 @@
         </section>
         <section class="customer-detail view-section projects-view" id="customer-detail" aria-label="Customer project detail">
           <header class="customer-detail-header">
-            <button class="back-button" type="button" aria-label="Back to customer list">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5"></path><path d="M12 19l-7-7 7-7"></path></svg>
-            </button>
             <div>
               <h2 id="detail-name">Alyssa Morgan</h2>
               <div class="customer-meta">
@@ -4488,8 +4776,45 @@
                 <span id="detail-address">7824 Laureate Blvd, Lake Nona, FL</span>
               </div>
             </div>
-            <span class="detail-status" id="detail-status">Design</span>
+            <div class="project-contact-summary">
+              <strong id="detail-customer-name">Alyssa Morgan</strong>
+              <span id="detail-customer-email">alyssa.morgan@example.com</span>
+              <span id="detail-customer-phone">407-555-0134</span>
+              <span class="detail-status" id="detail-status">Design</span>
+            </div>
           </header>
+          <article class="detail-card project-steps-card">
+            <header>
+              <svg class="detail-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+              <h3>Project Steps</h3>
+            </header>
+            <div class="project-path">
+              <div class="project-path-step active">
+                <span>1</span>
+                <strong>Proposal</strong>
+              </div>
+              <div class="project-path-line"></div>
+              <div class="project-path-step">
+                <span>2</span>
+                <strong>NTP</strong>
+              </div>
+            </div>
+          </article>
+          <article class="detail-card sales-steps-card">
+            <header>
+              <h3>Solar Project Steps</h3>
+            </header>
+            <div class="solar-checklist" id="solar-checklist">
+              <div class="solar-check-row done"><span class="check-state">✓</span><strong>Site Details</strong><small></small><button data-project-action="site-details" type="button">Review</button></div>
+              <div class="solar-check-row done"><span class="check-state">✓</span><strong>Utility</strong><small>Florida Power & Light</small><button data-project-action="utility" type="button">Review</button></div>
+              <div class="solar-check-row done"><span class="check-state">✓</span><strong>Consumption</strong><small></small><button data-project-action="consumption" type="button">Review</button></div>
+              <div class="solar-check-row done"><span class="check-state">✓</span><strong>Consumption Savers</strong><small></small><button data-project-action="savers" type="button">Review</button></div>
+              <div class="solar-check-row"><span class="check-state">✓</span><strong>Pre-Qualification</strong><small></small><button data-project-action="prequal" type="button">Start</button></div>
+              <div class="solar-check-row"><span class="check-state">✓</span><strong>Design Package</strong><small>Submit utility bill, roof notes, and design info</small><button data-project-action="design" type="button">Submit</button></div>
+              <div class="solar-check-row"><span class="check-state">✓</span><strong>Contact / Project Update</strong><small>Update homeowner or job details</small><button data-project-action="update" type="button">Update</button></div>
+            </div>
+            <div class="project-action-panel" id="project-action-panel" aria-live="polite"></div>
+          </article>
           <div class="detail-grid">
             <aside class="detail-card contact-card">
               <h3>Contact Info</h3>
@@ -4547,21 +4872,6 @@
                 <div><span></span><strong>Install</strong><small>Not ready</small></div>
                 <div><span></span><strong>Post-site survey</strong><small>Not ready</small></div>
                 <div><span></span><strong>Commission</strong><small>Pending</small></div>
-              </div>
-            </article>
-          </div>
-          <div class="detail-bottom-grid">
-            <article class="detail-card detail-doc-card">
-              <header>
-                <div>
-                  <span>Documents</span>
-                  <h3>Project Files</h3>
-                </div>
-              </header>
-              <div class="detail-doc-list" id="detail-doc-list">
-                <div><strong>Utility bill</strong><span>Needed</span></div>
-                <div><strong>Roof photos</strong><span>Needed</span></div>
-                <div><strong>Proposal PDF</strong><span>Pending</span></div>
               </div>
             </article>
           </div>
@@ -4736,14 +5046,14 @@
         </section>
         <form class="design-form view-section design-view" id="design-form">
           <header>
-            <span class="eyebrow">Design form</span>
-            <h2>Add a new customer lead</h2>
-            <p>This creates the contact in HighLevel first, then refreshes this portal from HighLevel.</p>
+            <span class="eyebrow">New project</span>
+            <h2>New Project</h2>
+            <p>Provide all required information below to begin project creation. Once the customer is created, you can submit the project for design.</p>
           </header>
           <div class="design-intake-strip" aria-label="Design intake steps">
             <article><span>1</span><strong>Customer</strong><small>Contact and address</small></article>
-            <article><span>2</span><strong>Home</strong><small>Roof, utility, notes</small></article>
-            <article><span>3</span><strong>Sync</strong><small>GHL contact and portal record</small></article>
+            <article><span>2</span><strong>Project Info</strong><small>Roof, utility bill, notes</small></article>
+            <article><span>3</span><strong>Create</strong><small>Customer record first</small></article>
           </div>
           <div class="form-grid">
             <label>
@@ -4765,6 +5075,7 @@
             <label class="full-field">
               <span>Street address</span>
               <input id="design-address" type="text" value="528 Solar Vista Ct" placeholder="123 Solar Way" />
+              <small class="field-hint" id="address-lookup-hint">Start typing to search for the homeowner address.</small>
             </label>
             <label>
               <span>City</span>
@@ -4793,14 +5104,19 @@
               <input id="design-utility" type="text" value="$238" placeholder="$180" />
             </label>
             <label class="full-field">
+              <span>Utility bill picture</span>
+              <input id="design-utility-file" type="file" accept="image/*,.pdf" />
+              <small class="field-hint">Attach a photo or PDF of the utility bill when available.</small>
+            </label>
+            <label class="full-field">
               <span>Project notes</span>
               <textarea id="design-notes" placeholder="Gate code, timing, roof notes, or anything the design team needs.">Homeowner wants battery option, east/west roof planes, HOA packet needed.</textarea>
             </label>
           </div>
-          <button class="primary-action" id="design-submit" type="submit">Create in HighLevel</button>
+          <button class="primary-action" id="design-submit" type="submit">Create project</button>
           <p class="form-message" id="design-message"></p>
         </form>
-        <div class="content-grid view-section design-view projects-view">
+        <div class="content-grid view-section">
           <section class="records-section">
             <div class="section-title">
               <div>
@@ -4808,7 +5124,7 @@
                 <p id="records-copy">Rep view only shows records assigned to this login.</p>
               </div>
               <div class="section-actions">
-                <button class="mini-action primary" id="toggle-design-form" type="button">New design request</button>
+                <button class="mini-action primary" id="toggle-design-form" type="button">New project</button>
               </div>
             </div>
             <div class="stage-tabs" id="stage-tabs"></div>
@@ -4879,12 +5195,12 @@
             </section>
             <section id="workflow-panel" hidden>
               <h2>Workflow Setup</h2>
-              <p class="muted">Create these in HighLevel as draft workflows first.</p>
+              <p class="muted">Create these as draft internal workflows first.</p>
               <div class="workflow-list" id="workflow-list"></div>
             </section>
             <section id="field-map-panel" hidden>
               <h2>Live Data Setup</h2>
-              <p class="muted">These HighLevel fields control login, rep privacy, profile setup, and notifications.</p>
+              <p class="muted">These fields control login, rep privacy, profile setup, and notifications.</p>
               <div class="field-map-list" id="field-map-list"></div>
             </section>
           </aside>
@@ -4898,12 +5214,12 @@
         { id: "admin", name: "Daniel Godwin", email: "godwin.inc@gmail.com", role: "Admin", territory: "All markets", status: "Owner" },
       ];
       let records = [
-        { id: "jw2NkX7pU5Svc1jaXAOc", type: "Lead", name: "Test Rep Lead", email: "test.rep.lead.20260510@example.com", phone: "407-555-0198", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "new-project", stage: "New Project", nextStep: "Confirm portal visibility", value: "$18,900", systemSize: "6.4 kW", utilityBill: "$162/mo", roofType: "Shingle", address: "1849 Harbor Sun Dr, Orlando, FL" },
-        { id: "lead-lake-nona", type: "Lead", name: "Alyssa Morgan", email: "alyssa.morgan@example.com", phone: "407-555-0134", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "design", stage: "Design", nextStep: "Submit roof photos and utility bill", value: "$32,400", systemSize: "9.8 kW", utilityBill: "$246/mo", roofType: "Tile", address: "7824 Laureate Blvd, Lake Nona, FL" },
-        { id: "lead-winter-garden", type: "Lead", name: "Marcus Ellison", email: "marcus.ellison@example.com", phone: "321-555-0182", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "proposal", stage: "Proposal", nextStep: "Review proposal with homeowner", value: "$41,750", systemSize: "11.2 kW", utilityBill: "$318/mo", roofType: "Shingle", address: "1166 Plant St, Winter Garden, FL" },
-        { id: "customer-sanford", type: "Customer", name: "Priya Shah", email: "priya.shah@example.com", phone: "407-555-0155", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "pre-qualification", stage: "Pre-Qualification", nextStep: "Verify income docs internally", value: "$27,600", systemSize: "7.6 kW", utilityBill: "$205/mo", roofType: "Metal", address: "420 Riverwalk Dr, Sanford, FL" },
-        { id: "job-clermont", type: "Job", name: "The Reynolds Home", email: "reynolds.home@example.com", phone: "352-555-0177", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "sold", stage: "Sold", nextStep: "Operations handoff started", value: "$48,200", systemSize: "12.4 kW", utilityBill: "$352/mo", roofType: "Shingle", address: "992 Citrus Tower Blvd, Clermont, FL" },
-        { id: "job-apopka", type: "Job", name: "Apopka Install - Carter", email: "carter.home@example.com", phone: "689-555-0141", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "ntp", stage: "NTP", nextStep: "NTP checklist ready", value: "$36,850", systemSize: "10.1 kW", utilityBill: "$284/mo", roofType: "Tile", address: "231 Magnolia Park Trl, Apopka, FL" },
+        { id: "jw2NkX7pU5Svc1jaXAOc", projectId: "LKT55T", type: "Lead", name: "Test Rep Lead", email: "test.rep.lead.20260510@example.com", phone: "407-555-0198", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "new-project", stage: "New Project", nextStep: "Confirm portal visibility", value: "$18,900", systemSize: "6.4 kW", utilityBill: "$162/mo", roofType: "Shingle", address: "1849 Harbor Sun Dr, Orlando, FL" },
+        { id: "lead-lake-nona", projectId: "U8XLYD", type: "Lead", name: "Alyssa Morgan", email: "alyssa.morgan@example.com", phone: "407-555-0134", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "design", stage: "Design", nextStep: "Submit roof photos and utility bill", value: "$32,400", systemSize: "9.8 kW", utilityBill: "$246/mo", roofType: "Tile", address: "7824 Laureate Blvd, Lake Nona, FL" },
+        { id: "lead-winter-garden", projectId: "SMMR9T", type: "Lead", name: "Marcus Ellison", email: "marcus.ellison@example.com", phone: "321-555-0182", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "proposal", stage: "Proposal", nextStep: "Review proposal with homeowner", value: "$41,750", systemSize: "11.2 kW", utilityBill: "$318/mo", roofType: "Shingle", address: "1166 Plant St, Winter Garden, FL" },
+        { id: "customer-sanford", projectId: "QQJ9XL", type: "Customer", name: "Priya Shah", email: "priya.shah@example.com", phone: "407-555-0155", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "pre-qualification", stage: "Pre-Qualification", nextStep: "Verify income docs internally", value: "$27,600", systemSize: "7.6 kW", utilityBill: "$205/mo", roofType: "Metal", address: "420 Riverwalk Dr, Sanford, FL" },
+        { id: "job-clermont", projectId: "4E8GLQ", type: "Job", name: "The Reynolds Home", email: "reynolds.home@example.com", phone: "352-555-0177", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "sold", stage: "Sold", nextStep: "Operations handoff started", value: "$48,200", systemSize: "12.4 kW", utilityBill: "$352/mo", roofType: "Shingle", address: "992 Citrus Tower Blvd, Clermont, FL" },
+        { id: "job-apopka", projectId: "BCCGW4", type: "Job", name: "Apopka Install - Carter", email: "carter.home@example.com", phone: "689-555-0141", ownerId: "F7kz2DXoX9xMvyIP3Duj", portalStatus: "ntp", stage: "NTP", nextStep: "NTP checklist ready", value: "$36,850", systemSize: "10.1 kW", utilityBill: "$284/mo", roofType: "Tile", address: "231 Magnolia Park Trl, Apopka, FL" },
         { id: "homeowner-001", type: "Customer", name: "Sample Homeowner", email: "sample.homeowner@example.com", ownerId: "admin", portalStatus: "proposal", stage: "Proposal sent", nextStep: "Awaiting admin assignment", value: "$18,400" },
         { id: "install-001", type: "Job", name: "Mock Solar Install", email: "operations@example.com", ownerId: "admin", portalStatus: "design", stage: "Permitting", nextStep: "Upload permit packet", value: "$24,900" },
       ];
@@ -4928,13 +5244,13 @@
       const launchItems = [
         { title: "Magic-link login", body: "Owner and rep test logins route to the correct dashboards.", status: "Ready" },
         { title: "Rep record privacy", body: "Daniel only sees records assigned to his rep ID.", status: "Ready" },
-        { title: "Join domain", body: "Point join.flourishsolar.com to the onboarding page and link the GHL training step from there.", status: "Next", tone: "next" },
+        { title: "Join domain", body: "Point join.flourishsolar.com to the onboarding page and link the training step from there.", status: "Next", tone: "next" },
         { title: "Portal domain", body: "Point portal.flourishsolar.com to the approved rep/admin portal after login checks pass.", status: "Next", tone: "next" },
         { title: "Rep notifications", body: "Turn on email or SMS alerts after the live data sync is connected.", status: "Next", tone: "next" },
         { title: "Publish", body: "Publish after join, approval, and portal login pass on the hosted URL.", status: "Hold", tone: "hold" },
       ];
       const fieldMap = [
-        { label: "Rep identity", key: "User ID / Assigned User", body: "Matches each login to the correct HighLevel rep." },
+        { label: "Rep identity", key: "User ID / Assigned User", body: "Matches each login to the correct rep." },
         { label: "Portal email", key: "User email", body: "The email address used for magic-link access." },
         { label: "Assigned records", key: "Contact owner", body: "Filters leads, customers, jobs, and notes so reps only see their own records." },
         { label: "Lead pipeline", key: "Opportunity stage", body: "Shows whether a record is a new lead, proposal, customer, or job." },
@@ -5043,6 +5359,147 @@
         return leadStatuses.find((status) => status.value === selectedStatus)?.label || "New Project";
       }
 
+      function makeProjectId() {
+        const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        return Array.from({ length: 6 }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join("");
+      }
+
+      function projectIdFor(record) {
+        const rawId = record?.projectId || record?.project_id || record?.id || "project";
+        const cleanId = String(rawId).replace(/[^a-z0-9]/gi, "").toUpperCase();
+        if (!cleanId) return "PROJECT";
+        return record?.projectId || record?.project_id ? cleanId : cleanId.slice(-8);
+      }
+
+      function currentFocusedRecord() {
+        const visibleRecords = currentSession?.role === "Admin"
+          ? records
+          : records.filter((record) => record.ownerId === currentSession?.id);
+        return visibleRecords.find((record) => record.id === focusedContactId) || null;
+      }
+
+      function projectActionCopy(action, record) {
+        const defaults = {
+          title: "Project Step",
+          body: "Review this project step before moving forward.",
+          form: `
+            <div class="project-action-form">
+              <label class="full-field"><span>Notes</span><textarea placeholder="Add an internal note for this step."></textarea></label>
+              <button class="project-action-submit" data-save-project-action type="button">Save note</button>
+            </div>
+          `,
+        };
+        const actionMap = {
+          "site-details": {
+            title: "Site Details",
+            body: "Review the homeowner address, roof type, and site notes before design work starts.",
+            form: `
+              <div class="project-action-form">
+                <label><span>Address</span><input value="${record?.address || ""}" /></label>
+                <label><span>Roof Type</span><input value="${record?.roofType || "Shingle"}" /></label>
+                <label class="full-field"><span>Site Notes</span><textarea>${record?.projectNotes || "Confirm roof access, gate codes, HOA notes, and any shade concerns."}</textarea></label>
+                <button class="project-action-submit" data-save-project-action type="button">Save site details</button>
+              </div>
+            `,
+          },
+          utility: {
+            title: "Utility",
+            body: "Confirm the utility provider and monthly bill before submitting the design package.",
+            form: `
+              <div class="project-action-form">
+                <label><span>Utility Provider</span><input value="${record?.utilityProvider || "Florida Power & Light"}" /></label>
+                <label><span>Monthly Utility Bill</span><input value="${record?.utilityBill || ""}" placeholder="$238" /></label>
+                <label class="full-field"><span>Utility Bill File</span><input type="file" accept="image/*,.pdf" /></label>
+                <button class="project-action-submit" data-save-project-action type="button">Save utility info</button>
+              </div>
+            `,
+          },
+          consumption: {
+            title: "Consumption",
+            body: "Add usage details so the design team can size the system accurately.",
+            form: `
+              <div class="project-action-form">
+                <label><span>Average kWh / Month</span><input placeholder="1,250" /></label>
+                <label><span>Highest Bill</span><input value="${record?.utilityBill || ""}" placeholder="$300" /></label>
+                <label class="full-field"><span>Usage Notes</span><textarea placeholder="Seasonality, EV charging, pool pump, or planned usage changes."></textarea></label>
+                <button class="project-action-submit" data-save-project-action type="button">Save consumption</button>
+              </div>
+            `,
+          },
+          savers: {
+            title: "Consumption Savers",
+            body: "Track energy-saving assumptions that affect the proposal or system size.",
+            form: `
+              <div class="project-action-form">
+                <label><span>Planned Saver</span><select><option>None yet</option><option>Insulation</option><option>HVAC improvement</option><option>Pool pump schedule</option></select></label>
+                <label><span>Estimated Impact</span><input placeholder="Low / Medium / High" /></label>
+                <label class="full-field"><span>Saver Notes</span><textarea placeholder="Add notes about any expected usage reduction."></textarea></label>
+                <button class="project-action-submit" data-save-project-action type="button">Save saver notes</button>
+              </div>
+            `,
+          },
+          prequal: {
+            title: "Pre-Qualification",
+            body: "Start or review the internal pre-qualification step. This does not contact the customer from the portal.",
+            form: `
+              <div class="project-action-form">
+                <label><span>Status</span><select><option>Not started</option><option>In review</option><option>Approved</option><option>Needs follow-up</option></select></label>
+                <label><span>Finance Notes</span><input placeholder="Credit check, lender, or docs status" /></label>
+                <label class="full-field"><span>Internal Notes</span><textarea placeholder="Add anything admin or operations needs to know."></textarea></label>
+                <button class="project-action-submit" data-save-project-action type="button">Save pre-qualification</button>
+              </div>
+            `,
+          },
+          design: {
+            title: "Submit Design Package",
+            body: "Submit the design package once the customer record has the details needed for design.",
+            form: `
+              <div class="project-action-form">
+                <label><span>Roof Type</span><input value="${record?.roofType || "Shingle"}" /></label>
+                <label><span>Monthly Utility Bill</span><input value="${record?.utilityBill || ""}" placeholder="$238" /></label>
+                <label class="full-field"><span>Utility Bill / Photos</span><input type="file" accept="image/*,.pdf" multiple /></label>
+                <label class="full-field"><span>Design Notes</span><textarea>${record?.projectNotes || "Roof planes, battery request, panel preference, HOA notes, or anything design needs."}</textarea></label>
+                <button class="project-action-submit" data-save-project-action type="button">Submit design package</button>
+              </div>
+            `,
+          },
+          update: {
+            title: "Update Contact / Project Info",
+            body: "Update customer and project details here. The live version will sync this back to the project record.",
+            form: `
+              <div class="project-action-form">
+                <label><span>Customer Name</span><input value="${record?.name || ""}" /></label>
+                <label><span>Phone</span><input value="${record?.phone || ""}" /></label>
+                <label><span>Email</span><input value="${record?.email || ""}" /></label>
+                <label><span>Address</span><input value="${record?.address || ""}" /></label>
+                <label class="full-field"><span>Project Notes</span><textarea>${record?.projectNotes || "Update homeowner notes, access details, or project changes."}</textarea></label>
+                <button class="project-action-submit" data-save-project-action type="button">Save updates</button>
+              </div>
+            `,
+          },
+        };
+        return actionMap[action] || defaults;
+      }
+
+      function openProjectAction(action) {
+        const panel = document.getElementById("project-action-panel");
+        const record = currentFocusedRecord();
+        const content = projectActionCopy(action, record);
+        panel.innerHTML = `
+          <header>
+            <div>
+              <h4>${content.title}</h4>
+              <p>${content.body}</p>
+            </div>
+            <button class="project-action-close" data-close-project-action type="button">Close</button>
+          </header>
+          ${content.form}
+          <p class="form-message visible project-action-status"></p>
+        `;
+        panel.classList.add("visible");
+        panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
       function portalRoute(path) {
         if (isFilePreview()) return path;
         const base = location.hostname.startsWith("portal.") ? "" : "/portal";
@@ -5096,35 +5553,53 @@
         renderDashboard(currentSession);
       });
 
+      function readDesignFile(file) {
+        if (!file) return Promise.resolve("");
+        const maxSize = 4 * 1024 * 1024;
+        if (file.size > maxSize) {
+          return Promise.reject(new Error("Utility bill file must be 4 MB or smaller for this first upload version."));
+        }
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result || "");
+          reader.onerror = () => reject(new Error("Could not read the utility bill file."));
+          reader.readAsDataURL(file);
+        });
+      }
+
       document.getElementById("design-form").addEventListener("submit", async (event) => {
         event.preventDefault();
         if (!currentSession) return;
         const button = document.getElementById("design-submit");
         const message = document.getElementById("design-message");
         button.disabled = true;
-        button.textContent = "Creating in HighLevel...";
+            button.textContent = "Creating project...";
         message.className = "form-message";
         message.textContent = "";
-
-        const payload = {
-          customerName: document.getElementById("design-name").value.trim(),
-          phone: document.getElementById("design-phone").value.trim(),
-          email: document.getElementById("design-email").value.trim(),
-          assignedRepId: document.getElementById("design-rep").value || currentSession.id,
-          address: document.getElementById("design-address").value.trim(),
-          city: document.getElementById("design-city").value.trim(),
-          state: document.getElementById("design-state").value.trim(),
-          postalCode: document.getElementById("design-postal").value.trim(),
-          roofType: document.getElementById("design-roof").value,
-          utilityBill: document.getElementById("design-utility").value.trim(),
-          projectNotes: document.getElementById("design-notes").value.trim(),
-        };
+        const utilityFile = document.getElementById("design-utility-file").files[0] || null;
 
         try {
+          const payload = {
+            customerName: document.getElementById("design-name").value.trim(),
+            phone: document.getElementById("design-phone").value.trim(),
+            email: document.getElementById("design-email").value.trim(),
+            assignedRepId: document.getElementById("design-rep").value || currentSession.id,
+            address: document.getElementById("design-address").value.trim(),
+            city: document.getElementById("design-city").value.trim(),
+            state: document.getElementById("design-state").value.trim(),
+            postalCode: document.getElementById("design-postal").value.trim(),
+            roofType: document.getElementById("design-roof").value,
+            utilityBill: document.getElementById("design-utility").value.trim(),
+            utilityBillFileName: utilityFile?.name || "",
+            utilityBillImage: await readDesignFile(utilityFile),
+            projectNotes: document.getElementById("design-notes").value.trim(),
+          };
           if (isFilePreview()) {
+            const projectId = makeProjectId();
             records = [
               {
-                id: `preview-${Date.now()}`,
+                id: `preview-${projectId}-${Date.now()}`,
+                projectId,
                 type: "Lead",
                 name: payload.customerName,
                 phone: payload.phone,
@@ -5133,12 +5608,14 @@
                 portalStatus: "new-project",
                 nextStep: "Review contact details",
                 value: "$0",
+                utilityBill: payload.utilityBill,
+                utilityBillFileName: payload.utilityBillFileName,
               },
               ...records,
             ];
             document.getElementById("design-form").reset();
             document.getElementById("design-state").value = "FL";
-            message.textContent = "Added to this local preview. Live HighLevel sync will run from the hosted portal.";
+            message.textContent = "Project added to this local preview. Next, open the project to submit design details or update customer info.";
             message.classList.add("visible");
             renderDashboard(currentSession);
             return;
@@ -5149,11 +5626,11 @@
             body: JSON.stringify(payload),
           });
           const result = await response.json();
-          if (!response.ok) throw new Error(result.error || "Could not create the contact.");
+          if (!response.ok) throw new Error(result.error || "Could not create the project.");
           await loadPortalData();
           document.getElementById("design-form").reset();
           document.getElementById("design-state").value = "FL";
-          message.textContent = "Created in HighLevel. The portal refreshed from live CRM data.";
+          message.textContent = "Project created. Next, open the project to submit design details or update customer info.";
           message.classList.add("visible");
           renderDashboard(currentSession);
         } catch (error) {
@@ -5161,7 +5638,7 @@
           message.classList.add("visible", "error");
         } finally {
           button.disabled = false;
-          button.textContent = "Create in HighLevel";
+          button.textContent = "Create project";
         }
       });
 
@@ -5169,9 +5646,59 @@
         const form = document.getElementById("design-form");
         const isOpening = !form.classList.contains("visible");
         form.classList.toggle("visible", isOpening);
-        document.getElementById("toggle-design-form").textContent = isOpening ? "Close design form" : "New design request";
+        document.getElementById("toggle-design-form").textContent = isOpening ? "Close project form" : "New project";
         if (isOpening) form.scrollIntoView({ behavior: "smooth", block: "start" });
       });
+
+      function fillAddressPart(componentMap, type, targetId, shortName = false) {
+        const component = componentMap.get(type);
+        if (!component) return;
+        document.getElementById(targetId).value = shortName ? component.short_name : component.long_name;
+      }
+
+      function setupAddressLookup() {
+        const key = window.FLOURISH_PORTAL_CONFIG?.googleMapsBrowserKey || "";
+        const addressInput = document.getElementById("design-address");
+        const hint = document.getElementById("address-lookup-hint");
+        if (!addressInput || !hint) return;
+        if (!key) {
+          hint.textContent = "Enter the homeowner address. Address lookup can be enabled before launch.";
+          return;
+        }
+        window.initFlourishAddressLookup = () => {
+          if (!window.google?.maps?.places) return;
+          const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+            componentRestrictions: { country: "us" },
+            fields: ["address_components", "formatted_address"],
+            types: ["address"],
+          });
+          autocomplete.addListener("place_changed", () => {
+            const place = autocomplete.getPlace();
+            if (!place?.address_components) return;
+            const componentMap = new Map();
+            place.address_components.forEach((component) => {
+              component.types.forEach((type) => componentMap.set(type, component));
+            });
+            const streetNumber = componentMap.get("street_number")?.long_name || "";
+            const route = componentMap.get("route")?.long_name || "";
+            const street = [streetNumber, route].filter(Boolean).join(" ");
+            if (street) addressInput.value = street;
+            fillAddressPart(componentMap, "locality", "design-city");
+            if (!document.getElementById("design-city").value) fillAddressPart(componentMap, "postal_town", "design-city");
+            fillAddressPart(componentMap, "administrative_area_level_1", "design-state", true);
+            fillAddressPart(componentMap, "postal_code", "design-postal", true);
+          });
+          hint.textContent = "Address lookup is enabled. Pick the matching address to fill city, state, and ZIP.";
+        };
+        const script = document.createElement("script");
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&libraries=places&callback=initFlourishAddressLookup`;
+        script.async = true;
+        script.defer = true;
+        script.onerror = () => {
+          hint.textContent = "Address lookup is unavailable right now. Enter the address manually.";
+        };
+        document.head.appendChild(script);
+      }
 
       function switchPortalView(view, activeButton) {
         document.getElementById("portal-workspace").dataset.activeView = view;
@@ -5180,14 +5707,14 @@
         });
         document.getElementById("headline").textContent = {
           dashboard: `Welcome, ${currentSession?.name || "Daniel Godwin"}`,
-          design: "Submit a new solar design",
+          design: "New Project",
           projects: "Solar Projects",
           commissions: "Commissions",
           profile: "Rep Profile",
         }[view] || `Welcome, ${currentSession?.name || "Daniel Godwin"}`;
         document.querySelector(".portal-subtitle").textContent = {
           dashboard: "Your design, project, job, and commission command center.",
-          design: "Submit homeowner details and design notes so the project can start cleanly.",
+          design: "Provide all required information below to begin project creation.",
           projects: "Track every customer from design request to sold work, NTP, install, and commission review.",
           commissions: "Review payout structure, commission types, estimated pay, and payout readiness.",
           profile: "Track rep goals, project progress, and sales performance.",
@@ -5221,7 +5748,7 @@
         document.getElementById("contact-focus-panel").scrollIntoView({ behavior: "smooth", block: "start" });
       });
 
-      document.getElementById("project-list").addEventListener("click", (event) => {
+      document.getElementById("project-pipeline").addEventListener("click", (event) => {
         const button = event.target.closest("[data-focus-contact]");
         if (!button) return;
         const record = records.find((item) => item.id === button.dataset.focusContact);
@@ -5229,6 +5756,30 @@
         focusedContactId = record.id;
         renderDashboard(currentSession);
         document.getElementById("customer-detail").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      document.getElementById("project-search").addEventListener("input", () => {
+        renderDashboard(currentSession);
+      });
+
+      document.getElementById("solar-checklist").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-project-action]");
+        if (!button) return;
+        openProjectAction(button.dataset.projectAction);
+      });
+
+      document.getElementById("project-action-panel").addEventListener("click", (event) => {
+        if (event.target.closest("[data-close-project-action]")) {
+          const panel = document.getElementById("project-action-panel");
+          panel.classList.remove("visible");
+          panel.innerHTML = "";
+          return;
+        }
+        if (event.target.closest("[data-save-project-action]")) {
+          event.preventDefault();
+          const panel = document.getElementById("project-action-panel");
+          panel.querySelector(".project-action-status").textContent = "Saved in this preview. The live version will sync this action to the project record.";
+        }
       });
 
       document.getElementById("record-list").addEventListener("change", async (event) => {
@@ -5434,7 +5985,7 @@
         document.getElementById("readiness-score").textContent = pendingTasks > 8 ? "Focus" : "Ready";
         document.getElementById("stage-focus").textContent = stageFocus.label;
         document.getElementById("owner-view").textContent = isAdmin ? "All reps" : "Assigned";
-        document.getElementById("crm-source").textContent = dataMode === "live" ? "HighLevel" : "Sample";
+        document.getElementById("crm-source").textContent = dataMode === "live" ? "Portal CRM" : "Sample";
         document.getElementById("pipeline-summary").textContent = `${baseVisibleRecords.length} active ${baseVisibleRecords.length === 1 ? "record" : "records"}`;
         document.getElementById("pipeline-steps").innerHTML = leadStatuses.map((status) => `
           <article>
@@ -5446,41 +5997,40 @@
           const value = Number(String(record.value || "").replace(/[^0-9.-]/g, ""));
           return total + (Number.isFinite(value) ? value : 0);
         }, 0);
-        const designMotionCount = baseVisibleRecords.filter((record) => ["new-project", "design", "proposal", "pre-qualification"].includes(record.portalStatus || "new-project")).length;
-        const soldNtpCount = baseVisibleRecords.filter((record) => ["sold", "ntp"].includes(record.portalStatus || "new-project")).length;
-        const installedProjectCount = baseVisibleRecords.filter((record) => (record.portalStatus || "new-project") === "ntp").length;
-        document.getElementById("projects-active-designs").textContent = designMotionCount;
-        document.getElementById("projects-needs-action").textContent = pendingTasks;
-        document.getElementById("projects-sold-ntp").textContent = soldNtpCount;
-        document.getElementById("projects-installed").textContent = installedProjectCount;
-        document.getElementById("project-board-copy").textContent = isAdmin
-          ? "Admin can scan every homeowner path, sold job, install handoff, and commission review from one top-level view."
-          : "Scan every customer, see the next step, then open the full project when more detail is needed.";
-        document.getElementById("project-board-summary").textContent = `${baseVisibleRecords.length} active ${baseVisibleRecords.length === 1 ? "record" : "records"}`;
-        document.getElementById("project-list").innerHTML = baseVisibleRecords.length ? baseVisibleRecords.map((record) => {
-          const status = record.portalStatus || "new-project";
-          const currentStageIndex = Math.max(0, leadStatuses.findIndex((item) => item.value === status));
-          const progressLabels = [
-            { label: "Design", stage: 1 },
-            { label: "Survey", stage: 4 },
-            { label: "Install", stage: 5 },
-            { label: "Commission", stage: 6 },
-          ];
+        const projectSearch = document.getElementById("project-search").value.trim().toLowerCase();
+        const pipelineRecords = projectSearch
+          ? baseVisibleRecords.filter((record) => [
+            record.name,
+            record.email,
+            record.phone,
+            record.address,
+            record.id,
+          ].some((value) => String(value || "").toLowerCase().includes(projectSearch)))
+          : baseVisibleRecords;
+        const projectPipelineStages = [
+          { value: "new-project", label: "New" },
+          { value: "design", label: "Design Created" },
+          { value: "proposal", label: "Proposal Selected" },
+          { value: "pre-qualification", label: "Credit Check" },
+          { value: "sold", label: "Financing Signed" },
+          { value: "ntp", label: "Submitted to Installer" },
+        ];
+        document.getElementById("project-pipeline").innerHTML = projectPipelineStages.map((stage) => {
+          const stageRecords = pipelineRecords.filter((record) => (record.portalStatus || "new-project") === stage.value);
           return `
-            <button class="project-list-row" type="button" data-focus-contact="${record.id}" aria-label="Open ${record.name}">
-              <span class="project-row-main">
-                <span class="project-row-pill">${statusLabel(status)}</span>
-                <strong>${record.name || "Unnamed contact"}</strong>
-                <small>${record.address || record.email || record.phone || "Address not added yet"}</small>
-              </span>
-              <span class="project-row-status"><span>Next step</span><strong>${record.nextStep || "Review contact details"}</strong></span>
-              <span class="project-row-checks">
-                ${progressLabels.map((item) => `<span class="${currentStageIndex >= item.stage ? "done" : currentStageIndex + 1 === item.stage ? "next" : ""}">${item.label}</span>`).join("")}
-              </span>
-              <span class="project-row-money"><span>${record.systemSize || "TBD"}</span><strong>${record.value || "$0"}</strong></span>
-            </button>
+            <section class="project-pipeline-column">
+              <header><h3>${stage.label}</h3><span>${stageRecords.length}</span></header>
+              ${stageRecords.length ? stageRecords.map((record) => `
+                <button class="pipeline-project-card" type="button" data-focus-contact="${record.id}" aria-label="Open ${record.name}">
+                  <span>${projectIdFor(record)}</span>
+                  <strong>${record.name || "Unnamed contact"}</strong>
+                  <small>${record.address || record.email || record.phone || "Address not added yet"}</small>
+                  <em>Created on ${record.createdAt || "05/13/2026"}</em>
+                </button>
+              `).join("") : `<div class="project-column-empty">No projects here yet.</div>`}
+            </section>
           `;
-        }).join("") : `<div class="project-column-empty">No projects match this view yet.</div>`;
+        }).join("");
         const soldJobs = visibleRecords.filter((record) => (
           record.type.toLowerCase() === "job" || ["sold", "ntp"].includes(record.portalStatus || "new-project")
         ));
@@ -5608,8 +6158,9 @@
             </article>
           `;
         }).join("") : `<article><div><strong>No commissions yet</strong><span>Sold jobs will appear here.</span></div><strong>$0</strong></article>`;
-        const focusedRecord = visibleRecords.find((record) => record.id === focusedContactId) || visibleRecords[0];
+        const focusedRecord = visibleRecords.find((record) => record.id === focusedContactId);
         document.getElementById("contact-focus-panel").hidden = !focusedRecord;
+        document.getElementById("customer-detail").hidden = !focusedRecord;
         if (focusedRecord) {
           const currentStageIndex = Math.max(0, leadStatuses.findIndex((status) => status.value === (focusedRecord.portalStatus || "new-project")));
           const systemSizeValue = Number(String(focusedRecord.systemSize || "").replace(/[^0-9.]/g, "")) || 8.5;
@@ -5632,10 +6183,13 @@
               <span>${status.label}</span>
             </div>
           `).join("");
-          document.getElementById("detail-name").textContent = focusedRecord.name || "Unnamed contact";
-          document.getElementById("detail-id").textContent = focusedRecord.id || "customer";
+          document.getElementById("detail-name").textContent = `Project #${projectIdFor(focusedRecord)}`;
+          document.getElementById("detail-id").textContent = `ID ${projectIdFor(focusedRecord)}`;
           document.getElementById("detail-address").textContent = focusedRecord.address || "Address not added yet";
           document.getElementById("detail-status").textContent = statusLabel(focusedRecord.portalStatus || "new-project");
+          document.getElementById("detail-customer-name").textContent = focusedRecord.name || "Unnamed contact";
+          document.getElementById("detail-customer-email").textContent = focusedRecord.email || "No email added";
+          document.getElementById("detail-customer-phone").textContent = focusedRecord.phone || "No phone added";
           document.getElementById("detail-email").textContent = focusedRecord.email || "No email added";
           document.getElementById("detail-phone").textContent = focusedRecord.phone || "No phone added";
           document.getElementById("detail-since").textContent = "2026-05-13";
@@ -5656,13 +6210,25 @@
             const status = state === "done" ? "Complete" : state === "active" ? "Next" : "Not ready";
             return `<div class="${state}"><span></span><strong>${item.label}</strong><small>${status}</small></div>`;
           }).join("");
-          document.getElementById("detail-doc-list").innerHTML = [
-            ["Utility bill", currentStageIndex >= 1 ? "Uploaded" : "Needed"],
-            ["Roof photos", currentStageIndex >= 1 ? "Uploaded" : "Needed"],
-            ["Design package", currentStageIndex >= 1 ? "In review" : "Pending"],
-            ["Proposal PDF", currentStageIndex >= 2 ? "Ready" : "Pending"],
-            ["Signed agreement", isSoldOrLater ? "Complete" : "Not ready"],
-          ].map(([label, state]) => `<div><strong>${label}</strong><span>${state}</span></div>`).join("");
+          const checklistItems = [
+            ["Site Details", "", currentStageIndex >= 0, "Review", "site-details"],
+            ["Utility", focusedRecord.utilityProvider || "Florida Power & Light", currentStageIndex >= 0, "Review", "utility"],
+            ["Consumption", focusedRecord.utilityBill ? `${focusedRecord.utilityBill} monthly bill` : "", currentStageIndex >= 1, "Review", "consumption"],
+            ["Consumption Savers", "Roof notes and savings assumptions", currentStageIndex >= 1, "Review", "savers"],
+            ["Pre-Qualification", isSoldOrLater ? "Completed" : "Needed before sold", currentStageIndex >= 3, "Start", "prequal"],
+            ["Design Package", focusedRecord.utilityBillFileName ? `Utility bill attached: ${focusedRecord.utilityBillFileName}` : "Submit utility bill, roof notes, and design info", currentStageIndex >= 1, "Submit", "design"],
+            ["Contact / Project Update", "Update homeowner or job details", true, "Update", "update"],
+          ];
+          document.getElementById("solar-checklist").innerHTML = checklistItems.map(([label, meta, complete, action, actionKey]) => `
+            <div class="solar-check-row ${complete ? "done" : ""}">
+              <span class="check-state">✓</span>
+              <strong>${label}</strong>
+              <small>${meta}</small>
+              <button data-project-action="${actionKey}" type="button">${action}</button>
+            </div>
+          `).join("");
+          document.getElementById("project-action-panel").classList.remove("visible");
+          document.getElementById("project-action-panel").innerHTML = "";
           document.getElementById("detail-commission-estimate").textContent = commissionValue.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
           document.getElementById("detail-commission-status").textContent = isSoldOrLater ? "Earned" : "Projected";
           document.getElementById("detail-payment-status").textContent = (focusedRecord.portalStatus || "") === "ntp" ? "Pending payout" : isSoldOrLater ? "Install pending" : "Not ready";
@@ -5794,7 +6360,7 @@
           <article>
             <div>
               <strong>Data connection</strong>
-              <p>${dataMode === "live" ? "Portal is reading from HighLevel." : dataWarning || "Portal is using sample data until HighLevel access is connected."}</p>
+              <p>${dataMode === "live" ? "Portal is reading live project data." : dataWarning || "Portal is using sample data until the live connection is ready."}</p>
             </div>
             <span class="status-pill ${dataMode === "live" ? "" : "pending"}">${dataMode === "live" ? "Live" : "Sample"}</span>
           </article>
@@ -5812,6 +6378,8 @@
           </article>
         `).join("");
       }
+
+      setupAddressLookup();
     </script>
   </body>
 </html>

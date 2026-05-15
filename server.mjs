@@ -21,6 +21,7 @@ const locationId = process.env.GHL_LOCATION_ID || "YfwlbtO6dLJ7ho2JKvzI";
 const token = process.env.GHL_PRIVATE_INTEGRATION_TOKEN || "";
 const mistralApiKey = process.env.MISTRAL_API_KEY || "";
 const mistralModel = process.env.MISTRAL_MODEL || "mistral-small-latest";
+const googleMapsBrowserKey = process.env.GOOGLE_MAPS_BROWSER_KEY || "";
 const dataDir = join(rootDir, "data");
 const profileStorePath = join(dataDir, "profile-completions.json");
 const createdContactsPath = join(dataDir, "portal-created-contacts.json");
@@ -162,7 +163,7 @@ const hostedMagicLinkScript = `
             title.textContent = data.delivered ? "Magic link sent to " + email : "Magic link ready for " + email;
             warning.textContent = data.delivered
               ? "Check that inbox. This secure link expires in 30 minutes."
-              : (data.deliveryError || "HighLevel could not send the email yet. Use the button below while testing.");
+              : (data.deliveryError || "The email could not be sent yet. Use the button below while testing.");
             button.textContent = "Open secure login link";
             button.disabled = false;
             button.addEventListener("click", () => {
@@ -179,6 +180,14 @@ const hostedMagicLinkScript = `
 
       signInWithToken();
     })();
+  </script>
+`;
+
+const hostedPortalConfigScript = `
+  <script>
+    window.FLOURISH_PORTAL_CONFIG = {
+      googleMapsBrowserKey: ${JSON.stringify(googleMapsBrowserKey)}
+    };
   </script>
 `;
 
@@ -535,7 +544,7 @@ async function addInternalActivity(contact, status) {
       id: `activity-${Date.now()}`,
       ownerId: normalizedOwnerId(contact),
       title: `${statusLabel} stage update`,
-      body: `${contact.name || contact.fullName || "Contact"} was moved to ${statusLabel}. Internal note added in HighLevel.`,
+      body: `${contact.name || contact.fullName || "Contact"} was moved to ${statusLabel}. Internal note added in the CRM.`,
       time: new Date().toLocaleString("en-US", {
         month: "short",
         day: "numeric",
@@ -563,6 +572,17 @@ async function saveProfileCompletions(profileCompletions) {
 
 function normalizedOwnerId(item) {
   return item.assignedTo || item.assigned_to || item.userId || item.user_id || item.ownerId || item.owner_id || "admin";
+}
+
+function projectIdFrom(item = {}) {
+  if (item.projectId || item.project_id) return item.projectId || item.project_id;
+  const fields = item.customFields || item.custom_fields || [];
+  if (!Array.isArray(fields)) return "";
+  const field = fields.find((entry) => {
+    const key = String(entry.key || entry.name || entry.id || "").toLowerCase();
+    return key.includes("project") && key.includes("id");
+  });
+  return field?.value || "";
 }
 
 function statusFromTags(tags = []) {
@@ -594,6 +614,7 @@ function normalizeContact(contact) {
   const tagStatus = statusFromTags(contact.tags || []);
   return {
     id: contact.id,
+    projectId: projectIdFrom(contact),
     type: contact.type || "Lead",
     name,
     email: contact.email || "",
@@ -615,6 +636,7 @@ function normalizeContact(contact) {
 function normalizeCreatedContact(contact, assignedTo) {
   return {
     id: contact.id,
+    projectId: projectIdFrom(contact),
     type: contact.type || "lead",
     name: contact.name || contact.fullName || [contact.firstName, contact.lastName].filter(Boolean).join(" ") || "Unnamed contact",
     email: contact.email || "",
@@ -637,6 +659,7 @@ function normalizeOpportunity(opportunity) {
   const contact = opportunity.contact || {};
   return {
     id: opportunity.id,
+    projectId: projectIdFrom(opportunity),
     type: opportunity.status === "won" ? "Customer" : "Lead",
     name: opportunity.name || opportunity.title || contact.name || "Unnamed opportunity",
     email: contact.email || opportunity.email || "",
@@ -659,7 +682,7 @@ function isInternalPortalRecord(record) {
 }
 
 async function ghlFetch(path) {
-  if (!token) throw new Error("Missing GHL_PRIVATE_INTEGRATION_TOKEN");
+  if (!token) throw new Error("Missing CRM integration token");
   const response = await fetch(`https://services.leadconnectorhq.com${path}`, {
     headers: {
       authorization: `Bearer ${token}`,
@@ -668,13 +691,13 @@ async function ghlFetch(path) {
     },
   });
   if (!response.ok) {
-    throw new Error(`HighLevel ${response.status}: ${await response.text()}`);
+    throw new Error(`CRM ${response.status}: ${await response.text()}`);
   }
   return response.json();
 }
 
 async function ghlJson(path, method, payload) {
-  if (!token) throw new Error("Missing GHL_PRIVATE_INTEGRATION_TOKEN");
+  if (!token) throw new Error("Missing CRM integration token");
   const response = await fetch(`https://services.leadconnectorhq.com${path}`, {
     method,
     headers: {
@@ -686,13 +709,13 @@ async function ghlJson(path, method, payload) {
     body: JSON.stringify(payload),
   });
   if (!response.ok) {
-    throw new Error(`HighLevel ${response.status}: ${await response.text()}`);
+    throw new Error(`CRM ${response.status}: ${await response.text()}`);
   }
   return response.json();
 }
 
 async function ghlJsonWithVersion(path, method, payload, version = "2021-07-28") {
-  if (!token) throw new Error("Missing GHL_PRIVATE_INTEGRATION_TOKEN");
+  if (!token) throw new Error("Missing CRM integration token");
   const response = await fetch(`https://services.leadconnectorhq.com${path}`, {
     method,
     headers: {
@@ -704,7 +727,7 @@ async function ghlJsonWithVersion(path, method, payload, version = "2021-07-28")
     body: JSON.stringify(payload),
   });
   if (!response.ok) {
-    throw new Error(`HighLevel ${response.status}: ${await response.text()}`);
+    throw new Error(`CRM ${response.status}: ${await response.text()}`);
   }
   return response.json();
 }
@@ -715,7 +738,7 @@ async function addInternalContactNote(contactId, status) {
   try {
     return await ghlJson(`/contacts/${encodeURIComponent(contactId)}/notes`, "POST", { body });
   } catch (error) {
-    console.warn(`Could not create internal GHL note for ${contactId}: ${error.message}`);
+    console.warn(`Could not create internal CRM note for ${contactId}: ${error.message}`);
     return null;
   }
 }
@@ -747,13 +770,21 @@ async function createDesignContact(payload) {
 
   const result = await ghlJson("/contacts/", "POST", body);
   const contact = result.contact || result;
-  await savePortalCreatedContact(normalizeCreatedContact(contact, assignedTo));
+  await savePortalCreatedContact({
+    ...normalizeCreatedContact(contact, assignedTo),
+    utilityBill: payload.utilityBill || "",
+    utilityBillFileName: payload.utilityBillFileName || "",
+    utilityBillImage: payload.utilityBillImage || "",
+    projectNotes: payload.projectNotes || "",
+    roofType: payload.roofType || "",
+  });
   return {
     contact,
     assignedTo,
     summary: {
       roofType: payload.roofType || "",
       utilityBill: payload.utilityBill || "",
+      utilityBillFileName: payload.utilityBillFileName || "",
       projectNotes: payload.projectNotes || "",
     },
   };
@@ -1019,7 +1050,7 @@ async function updateContactStatus(payload) {
 }
 
 async function getLivePortalData() {
-  if (!token) throw new Error("Missing GHL_PRIVATE_INTEGRATION_TOKEN");
+  if (!token) throw new Error("Missing CRM integration token");
 
   const [usersResult, contactsResult, opportunitiesResult] = await Promise.allSettled([
     ghlFetch(`/users/search?locationId=${encodeURIComponent(locationId)}`),
@@ -1040,7 +1071,7 @@ async function getLivePortalData() {
     contactsResult.status === "rejected" &&
     opportunitiesResult.status === "rejected"
   ) {
-    throw new Error("HighLevel connection is not returning CRM data yet.");
+    throw new Error("The live data connection is not returning project data yet.");
   }
 
   const reps = liveUsers
@@ -1462,7 +1493,7 @@ async function handleStatic(request, response) {
     }
     response.end(html
       .replace("</head>", `${repReadOnlyStageStyle}</head>`)
-      .replace("</body>", `${hostedMagicLinkScript}${hostedRepApprovalScript}${hostedAiAssistantScript}</body>`));
+      .replace("</body>", `${hostedPortalConfigScript}${hostedMagicLinkScript}${hostedRepApprovalScript}${hostedAiAssistantScript}</body>`));
     return;
   }
   createReadStream(filePath).pipe(response);
