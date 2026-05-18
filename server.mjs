@@ -787,6 +787,7 @@ async function createDesignContact(payload) {
 
   let result;
   let reusedExisting = false;
+  let existingCustomer = null;
   try {
     result = await ghlJson("/contacts/", "POST", body);
   } catch (error) {
@@ -797,6 +798,7 @@ async function createDesignContact(payload) {
     }
     const current = await ghlFetch(`/contacts/${encodeURIComponent(duplicateContactId)}`);
     const existingContact = current.contact || current;
+    existingCustomer = normalizeContact(existingContact);
     const existingTags = Array.isArray(existingContact.tags) ? existingContact.tags : [];
     const updateBody = {
       firstName,
@@ -827,6 +829,14 @@ async function createDesignContact(payload) {
     contact,
     assignedTo,
     reusedExisting,
+    existingCustomer: reusedExisting
+      ? {
+          id: existingCustomer?.id || contact.id,
+          name: existingCustomer?.name || contact.name || payload.customerName,
+          email: existingCustomer?.email || contact.email || payload.email || "",
+          phone: existingCustomer?.phone || contact.phone || payload.phone || "",
+        }
+      : null,
     summary: {
       roofType: payload.roofType || "",
       utilityBill: payload.utilityBill || "",
