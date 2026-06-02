@@ -889,6 +889,74 @@
         color: #17634d;
       }
 
+      .access-summary {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .access-summary article {
+        display: grid;
+        gap: 3px;
+        padding: 12px;
+        border: 1px solid #edf1f5;
+        border-radius: 8px;
+        background: #f8fafc;
+      }
+
+      .access-summary strong {
+        color: var(--ink);
+        font-size: 18px;
+      }
+
+      .access-summary span,
+      .access-rule {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .access-rule {
+        margin-top: 12px;
+        padding: 10px;
+        border-radius: 8px;
+        background: #eff6ff;
+        color: #1e3a8a;
+        line-height: 1.35;
+      }
+
+      .rep-meta-row,
+      .rep-metrics {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        margin-top: 8px;
+      }
+
+      .rep-meta-row small,
+      .rep-metrics small {
+        min-height: 26px;
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        background: #eef2f7;
+        color: #475569;
+        font-size: 11px;
+        font-weight: 900;
+        padding: 0 9px;
+      }
+
+      .rep-list .status-pill,
+      .rep-list .field-key {
+        width: auto;
+        min-width: 0;
+        height: auto;
+        display: inline-flex;
+        border-radius: 999px;
+        padding: 6px 9px;
+      }
+
       .launch-list {
         display: grid;
         gap: 10px;
@@ -5269,6 +5337,8 @@
             </section>
             <section id="admin-panel" hidden>
               <h2>Rep Access</h2>
+              <div class="access-summary" id="access-summary"></div>
+              <p class="access-rule">Admin can see every record. Reps only see records assigned to their rep login.</p>
               <div class="rep-list" id="rep-list"></div>
             </section>
             <section id="launch-panel" hidden>
@@ -5902,6 +5972,11 @@
       document.getElementById("record-list").addEventListener("change", async (event) => {
         const select = event.target.closest("[data-status-contact]");
         if (!select) return;
+        if (currentSession?.role !== "Admin") {
+          select.value = records.find((record) => record.id === select.dataset.statusContact)?.portalStatus || "new-project";
+          alert("Only admin can update project stages.");
+          return;
+        }
         const contactId = select.dataset.statusContact;
         const status = select.value;
         const originalValue = records.find((record) => record.id === contactId)?.portalStatus || "";
@@ -6440,16 +6515,35 @@
         document.getElementById("launch-panel").hidden = !isAdmin;
         document.getElementById("workflow-panel").hidden = !isAdmin;
         document.getElementById("field-map-panel").hidden = !isAdmin;
+        const activeRepCount = reps.filter((rep) => rep.role === "Rep" && rep.status !== "Inactive").length;
+        const pendingProfileCount = reps.filter((rep) => rep.role === "Rep" && !completedProfiles[rep.id]).length;
+        const pendingJoinCount = repApplications.filter((application) => !["Approved", "Declined"].includes(application.status)).length;
+        document.getElementById("access-summary").innerHTML = `
+          <article><strong>${activeRepCount}</strong><span>Active reps</span></article>
+          <article><strong>${baseVisibleRecords.length}</strong><span>Visible to admin</span></article>
+          <article><strong>${pendingProfileCount + pendingJoinCount}</strong><span>Needs review</span></article>
+        `;
         document.getElementById("rep-list").innerHTML = reps
           .filter((rep) => rep.role === "Rep")
           .map((rep) => {
             const isComplete = Boolean(completedProfiles[rep.id]);
+            const repRecords = records.filter((record) => record.ownerId === rep.id);
+            const activeProjects = repRecords.filter((record) => !["sold", "ntp"].includes(record.portalStatus || "new-project")).length;
+            const soldProjects = repRecords.filter((record) => ["sold", "ntp"].includes(record.portalStatus || "new-project")).length;
             return `
             <article>
               <div>
                 <strong>${rep.name}</strong>
                 <p>${rep.email}</p>
-                <p>${records.filter((record) => record.ownerId === rep.id).length} assigned record</p>
+                <div class="rep-meta-row">
+                  <small>${rep.territory || "Territory not set"}</small>
+                  <small>${rep.status || "Active"}</small>
+                </div>
+                <div class="rep-metrics">
+                  <small>${repRecords.length} assigned</small>
+                  <small>${activeProjects} active</small>
+                  <small>${soldProjects} sold/NTP</small>
+                </div>
               </div>
               <div class="rep-actions">
                 <span class="status-pill ${isComplete ? "" : "pending"}">${isComplete ? "Complete" : "Pending"}</span>
