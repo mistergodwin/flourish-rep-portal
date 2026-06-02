@@ -5630,7 +5630,7 @@
           },
           update: {
             title: "Update Contact / Project Info",
-            body: "Update customer and project details here. The live version will sync this back to the project record.",
+            body: "Update customer and project details here. These changes keep the project record clean for admin, design, and operations.",
             form: `
               <div class="project-action-form">
                 <label><span>Customer Name</span><input value="${record?.name || ""}" /></label>
@@ -5761,9 +5761,10 @@
           };
           if (isFilePreview()) {
             const projectId = makeProjectId();
+            const previewId = `preview-${projectId}-${Date.now()}`;
             records = [
               {
-                id: `preview-${projectId}-${Date.now()}`,
+                id: previewId,
                 projectId,
                 type: "Lead",
                 name: payload.customerName,
@@ -5775,12 +5776,16 @@
                 value: "$0",
                 utilityBill: payload.utilityBill,
                 utilityBillFileName: payload.utilityBillFileName,
+                roofType: payload.roofType,
+                address: [payload.address, payload.city, payload.state, payload.postalCode].filter(Boolean).join(", "),
+                projectNotes: payload.projectNotes,
               },
               ...records,
             ];
+            focusedContactId = previewId;
             document.getElementById("design-form").reset();
             document.getElementById("design-state").value = "FL";
-            message.textContent = "Project added to this local preview. Next, open the project to submit design details or update customer info.";
+            message.textContent = "Project created. Next, open the project and submit the design package.";
             message.classList.add("visible");
             renderDashboard(currentSession);
             return;
@@ -5793,15 +5798,17 @@
           const result = await response.json();
           if (!response.ok) throw new Error(result.error || "Could not create the project.");
           await loadPortalData();
+          const createdRecord = result.contact || result.existingCustomer || {};
+          if (createdRecord.id) focusedContactId = createdRecord.id;
           document.getElementById("design-form").reset();
           document.getElementById("design-state").value = "FL";
           if (result.reusedExisting) {
             const existing = result.existingCustomer || result.contact || {};
             const details = [existing.name, existing.email, existing.phone].filter(Boolean).join(" - ");
-            message.textContent = `Existing customer found and linked: ${details || "matched CRM contact"}. Next, open the project to submit design details or update customer info.`;
+            message.textContent = `Existing customer found and linked: ${details || "matched customer"}. Next, open the project and submit the design package.`;
             message.classList.add("visible", "existing");
           } else {
-            message.textContent = "Project created. Next, open the project to submit design details or update customer info.";
+            message.textContent = "Project created. Next, open the project and submit the design package.";
             message.classList.add("visible");
           }
           renderDashboard(currentSession);
@@ -5965,7 +5972,7 @@
         if (event.target.closest("[data-save-project-action]")) {
           event.preventDefault();
           const panel = document.getElementById("project-action-panel");
-          panel.querySelector(".project-action-status").textContent = "Saved in this preview. The live version will sync this action to the project record.";
+          panel.querySelector(".project-action-status").textContent = "Saved to the project workspace. Admin and design can review this next.";
         }
       });
 
