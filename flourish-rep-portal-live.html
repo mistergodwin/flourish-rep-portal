@@ -2610,28 +2610,25 @@
 
       .solar-checklist {
         display: grid;
+        gap: 12px;
         padding: 24px 28px 28px;
       }
 
       .solar-check-row {
         display: grid;
-        grid-template-columns: 48px minmax(0, 1fr) auto auto;
+        grid-template-columns: 48px minmax(0, 1fr) auto;
         gap: 16px;
         align-items: center;
-        min-height: 72px;
-        padding: 12px 18px;
+        min-height: 86px;
+        padding: 16px 18px;
         border: 1px solid #dfe6ef;
-        border-bottom: 0;
+        border-radius: 8px;
         background: #ffffff;
       }
 
-      .solar-check-row:first-child {
-        border-radius: 8px 8px 0 0;
-      }
-
-      .solar-check-row:last-child {
-        border-bottom: 1px solid #dfe6ef;
-        border-radius: 0 0 8px 8px;
+      .solar-check-row.priority {
+        border-color: #bfdbfe;
+        background: linear-gradient(180deg, #ffffff, #f8fbff);
       }
 
       .solar-check-row .check-state {
@@ -2652,13 +2649,17 @@
       }
 
       .solar-check-row strong {
+        display: block;
         color: #334155;
         font-size: 18px;
       }
 
       .solar-check-row small {
+        display: block;
+        margin-top: 4px;
         color: #64748b;
         font-weight: 800;
+        line-height: 1.35;
       }
 
       .solar-check-row button {
@@ -2759,6 +2760,19 @@
         color: #ffffff;
         padding: 0 20px;
         font-weight: 950;
+      }
+
+      .project-action-submit.secondary {
+        border: 1px solid #cbd5e1;
+        background: #ffffff;
+        color: #1e3a8a;
+      }
+
+      .project-action-button-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        grid-column: 1 / -1;
       }
 
       .detail-grid {
@@ -4828,16 +4842,12 @@
           </article>
           <article class="detail-card sales-steps-card">
             <header>
-              <h3>Solar Project Steps</h3>
+              <h3>Project Next Actions</h3>
             </header>
             <div class="solar-checklist" id="solar-checklist">
-              <div class="solar-check-row done"><span class="check-state">✓</span><strong>Site Details</strong><small></small><button data-project-action="site-details" type="button">Review</button></div>
-              <div class="solar-check-row done"><span class="check-state">✓</span><strong>Utility</strong><small>Florida Power & Light</small><button data-project-action="utility" type="button">Review</button></div>
-              <div class="solar-check-row done"><span class="check-state">✓</span><strong>Consumption</strong><small></small><button data-project-action="consumption" type="button">Review</button></div>
-              <div class="solar-check-row done"><span class="check-state">✓</span><strong>Consumption Savers</strong><small></small><button data-project-action="savers" type="button">Review</button></div>
-              <div class="solar-check-row"><span class="check-state">✓</span><strong>Pre-Qualification</strong><small></small><button data-project-action="prequal" type="button">Start</button></div>
-              <div class="solar-check-row"><span class="check-state">✓</span><strong>Design Package</strong><small>Submit utility bill, roof notes, and design info</small><button data-project-action="design" type="button">Submit</button></div>
-              <div class="solar-check-row"><span class="check-state">✓</span><strong>Contact / Project Update</strong><small>Update homeowner or job details</small><button data-project-action="update" type="button">Update</button></div>
+              <div class="solar-check-row priority"><span class="check-state">✓</span><div><strong>Submit Design Package</strong><small>Roof type, utility bill, photos, and design notes.</small></div><button data-project-action="design" type="button">Submit</button></div>
+              <div class="solar-check-row"><span class="check-state">✓</span><div><strong>Update Contact / Project Info</strong><small>Fix homeowner details, address, phone, email, or project notes.</small></div><button data-project-action="update" type="button">Update</button></div>
+              <div class="solar-check-row"><span class="check-state">✓</span><div><strong>Upload Utility Bill / Photos</strong><small>Add files the design team needs before work can move forward.</small></div><button data-project-action="upload" type="button">Upload</button></div>
             </div>
             <div class="project-action-panel" id="project-action-panel" aria-live="polite"></div>
           </article>
@@ -5486,6 +5496,19 @@
                 <label class="full-field"><span>Utility Bill / Photos</span><input type="file" accept="image/*,.pdf" multiple /></label>
                 <label class="full-field"><span>Design Notes</span><textarea>${record?.projectNotes || "Roof planes, battery request, panel preference, HOA notes, or anything design needs."}</textarea></label>
                 <button class="project-action-submit" data-save-project-action type="button">Submit design package</button>
+              </div>
+            `,
+          },
+          upload: {
+            title: "Upload Utility Bill / Photos",
+            body: "Attach the utility bill, roof photos, and supporting files the design team needs.",
+            form: `
+              <div class="project-action-form">
+                <label class="full-field"><span>Utility Bill / Project Photos</span><input type="file" accept="image/*,.pdf" multiple /></label>
+                <label><span>File Type</span><select><option>Utility bill</option><option>Roof photos</option><option>Site photos</option><option>Other project file</option></select></label>
+                <label><span>Monthly Utility Bill</span><input value="${record?.utilityBill || ""}" placeholder="$238" /></label>
+                <label class="full-field"><span>Upload Notes</span><textarea placeholder="Add notes for design or admin."></textarea></label>
+                <button class="project-action-submit" data-save-project-action type="button">Save upload</button>
               </div>
             `,
           },
@@ -6259,19 +6282,14 @@
             return `<div class="${state}"><span></span><strong>${item.label}</strong><small>${status}</small></div>`;
           }).join("");
           const checklistItems = [
-            ["Site Details", "", currentStageIndex >= 0, "Review", "site-details"],
-            ["Utility", focusedRecord.utilityProvider || "Florida Power & Light", currentStageIndex >= 0, "Review", "utility"],
-            ["Consumption", focusedRecord.utilityBill ? `${focusedRecord.utilityBill} monthly bill` : "", currentStageIndex >= 1, "Review", "consumption"],
-            ["Consumption Savers", "Roof notes and savings assumptions", currentStageIndex >= 1, "Review", "savers"],
-            ["Pre-Qualification", isSoldOrLater ? "Completed" : "Needed before sold", currentStageIndex >= 3, "Start", "prequal"],
-            ["Design Package", focusedRecord.utilityBillFileName ? `Utility bill attached: ${focusedRecord.utilityBillFileName}` : "Submit utility bill, roof notes, and design info", currentStageIndex >= 1, "Submit", "design"],
-            ["Contact / Project Update", "Update homeowner or job details", true, "Update", "update"],
+            ["Submit Design Package", focusedRecord.utilityBillFileName ? `Utility bill attached: ${focusedRecord.utilityBillFileName}` : "Roof type, utility bill, photos, and design notes.", currentStageIndex >= 1, "Submit", "design", true],
+            ["Update Contact / Project Info", "Fix homeowner details, address, phone, email, or project notes.", true, "Update", "update", false],
+            ["Upload Utility Bill / Photos", "Add files the design team needs before work can move forward.", Boolean(focusedRecord.utilityBillFileName), "Upload", "upload", false],
           ];
-          document.getElementById("solar-checklist").innerHTML = checklistItems.map(([label, meta, complete, action, actionKey]) => `
-            <div class="solar-check-row ${complete ? "done" : ""}">
+          document.getElementById("solar-checklist").innerHTML = checklistItems.map(([label, meta, complete, action, actionKey, priority]) => `
+            <div class="solar-check-row ${complete ? "done" : ""} ${priority ? "priority" : ""}">
               <span class="check-state">✓</span>
-              <strong>${label}</strong>
-              <small>${meta}</small>
+              <div><strong>${label}</strong><small>${meta}</small></div>
               <button data-project-action="${actionKey}" type="button">${action}</button>
             </div>
           `).join("");
