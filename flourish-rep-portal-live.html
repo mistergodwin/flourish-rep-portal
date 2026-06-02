@@ -4141,9 +4141,9 @@
 
       .pipeline-project-card {
         display: grid;
-        gap: 7px;
+        gap: 10px;
         width: 100%;
-        padding: 14px;
+        padding: 14px 14px 12px;
         border: 1px solid #dfe6ef;
         border-radius: 8px;
         background: #ffffff;
@@ -4180,6 +4180,52 @@
         color: #94a3b8;
         font-style: italic;
         font-weight: 750;
+      }
+
+      .pipeline-card-top,
+      .pipeline-card-bottom {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .pipeline-stage-pill {
+        min-height: 26px;
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        background: #eff6ff;
+        color: #1e3a8a;
+        padding: 0 9px;
+        font-size: 11px;
+        font-weight: 950;
+        white-space: nowrap;
+      }
+
+      .pipeline-next-action {
+        display: grid;
+        gap: 3px;
+        padding: 10px;
+        border-radius: 8px;
+        background: #f8fafc;
+      }
+
+      .pipeline-next-action b {
+        color: #0f172a;
+        font-size: 13px;
+      }
+
+      .pipeline-card-bottom {
+        padding-top: 2px;
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 900;
+      }
+
+      .pipeline-open {
+        color: #1e3a8a;
+        font-weight: 950;
       }
 
       .project-list-row {
@@ -6091,14 +6137,30 @@
           return `
             <section class="project-pipeline-column">
               <header><h3>${stage.label}</h3><span>${stageRecords.length}</span></header>
-              ${stageRecords.length ? stageRecords.map((record) => `
-                <button class="pipeline-project-card" type="button" data-focus-contact="${record.id}" aria-label="Open ${record.name}">
-                  <span>${projectIdFor(record)}</span>
-                  <strong>${record.name || "Unnamed contact"}</strong>
-                  <small>${record.address || record.email || record.phone || "Address not added yet"}</small>
-                  <em>Created on ${record.createdAt || "05/13/2026"}</em>
-                </button>
-              `).join("") : `<div class="project-column-empty">No projects here yet.</div>`}
+              ${stageRecords.length ? stageRecords.map((record) => {
+                const recordValue = Number(String(record.value || "").replace(/[^0-9.-]/g, ""));
+                const commissionHint = Number.isFinite(recordValue) && recordValue > 0
+                  ? `${(recordValue * 0.12).toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })} est.`
+                  : "Commission TBD";
+                return `
+                  <button class="pipeline-project-card" type="button" data-focus-contact="${record.id}" aria-label="Open ${record.name}">
+                    <div class="pipeline-card-top">
+                      <span>${projectIdFor(record)}</span>
+                      <b class="pipeline-stage-pill">${statusLabel(record.portalStatus || "new-project")}</b>
+                    </div>
+                    <strong>${record.name || "Unnamed contact"}</strong>
+                    <small>${record.address || record.email || record.phone || "Address not added yet"}</small>
+                    <div class="pipeline-next-action">
+                      <b>Next action</b>
+                      <small>${record.nextStep || "Open project and review next step"}</small>
+                    </div>
+                    <div class="pipeline-card-bottom">
+                      <span>${commissionHint}</span>
+                      <span class="pipeline-open">Open Project</span>
+                    </div>
+                  </button>
+                `;
+              }).join("") : `<div class="project-column-empty">No projects here yet.</div>`}
             </section>
           `;
         }).join("");
