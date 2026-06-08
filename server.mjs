@@ -622,11 +622,19 @@ function applyStoredStatus(record, contactStatuses) {
   const normalizedRecordStatus = legacyStatusMap[record.portalStatus] || record.portalStatus;
   const status = normalizedStoredStatus ? statusByValue.get(normalizedStoredStatus) : normalizedRecordStatus ? statusByValue.get(normalizedRecordStatus) : null;
   if (!status) return record;
+  const nextStepByStatus = {
+    "new-project": "Review project details",
+    design: "Design package submitted - admin/design review",
+    proposal: "Review proposal with homeowner",
+    "pre-qualification": "Review pre-qualification status",
+    sold: "Confirm handoff",
+    ntp: "NTP checklist ready",
+  };
   return {
     ...record,
     portalStatus: status.value,
     stage: status.label,
-    nextStep: status.label === "Sold" ? "Confirm handoff" : "Next follow-up",
+    nextStep: nextStepByStatus[status.value] || record.nextStep || "Next follow-up",
   };
 }
 
