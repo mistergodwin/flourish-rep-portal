@@ -1012,8 +1012,22 @@
       }
 
       .record-empty {
-        padding: 26px 20px;
+        display: grid;
+        gap: 8px;
+        justify-items: center;
+        padding: 34px 20px;
+        border: 1px dashed #cbd5e1;
+        border-radius: 14px;
+        background: #f8fafc;
         color: var(--muted);
+        font-weight: 850;
+        text-align: center;
+      }
+
+      .record-empty strong,
+      .project-column-empty strong {
+        color: var(--ink);
+        font-size: 15px;
       }
 
       html.file-preview .login-page,
@@ -4405,9 +4419,11 @@
       .project-column-empty {
         min-height: 118px;
         display: grid;
+        gap: 6px;
         place-items: center;
         border: 1px dashed #cbd5e1;
         border-radius: 14px;
+        background: #f8fafc;
         color: #94a3b8;
         font-weight: 850;
         text-align: center;
@@ -4502,6 +4518,19 @@
           align-items: stretch;
         }
 
+        .record-value-group,
+        .project-row-money {
+          align-items: start;
+          justify-items: start;
+          text-align: left;
+        }
+
+        .access-summary,
+        .commission-snapshot,
+        .rep-snapshot-grid {
+          grid-template-columns: 1fr;
+        }
+
         .pipeline-steps {
           grid-template-columns: repeat(3, minmax(0, 1fr));
         }
@@ -4555,6 +4584,17 @@
         .record-row {
           grid-template-columns: 1fr;
           gap: 10px;
+        }
+
+        .pipeline-card-top,
+        .pipeline-card-bottom,
+        .rep-actions {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .project-action-form {
+          grid-template-columns: 1fr;
         }
 
         .job-card {
@@ -4612,7 +4652,7 @@
           <span>✓</span>
           <div>
             <strong id="link-title">Magic link created</strong>
-            <p>For this test build, use the button below. In production this same link gets emailed.</p>
+            <p>Use the secure link below to open your portal session.</p>
             <button type="button" id="open-link">Open magic link</button>
             <small id="link-warning"></small>
           </div>
@@ -5263,7 +5303,7 @@
               <textarea id="design-notes" placeholder="Gate code, timing, roof notes, or anything the design team needs.">Homeowner wants battery option, east/west roof planes, HOA packet needed.</textarea>
             </label>
           </div>
-          <button class="primary-action" id="design-submit" type="submit">Create project</button>
+          <button class="primary-action" id="design-submit" type="submit">Create Project</button>
           <p class="form-message" id="design-message"></p>
         </form>
         <div class="content-grid view-section">
@@ -5659,7 +5699,7 @@
             <button class="project-action-close" data-close-project-action type="button">Close</button>
           </header>
           ${content.form}
-          <p class="form-message visible project-action-status"></p>
+          <p class="form-message project-action-status"></p>
         `;
         panel.classList.add("visible");
         panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -5738,7 +5778,7 @@
         const button = document.getElementById("design-submit");
         const message = document.getElementById("design-message");
         button.disabled = true;
-            button.textContent = "Creating project...";
+        button.textContent = "Creating Project...";
         message.className = "form-message";
         message.textContent = "";
         const utilityFile = document.getElementById("design-utility-file").files[0] || null;
@@ -5817,7 +5857,7 @@
           message.classList.add("visible", "error");
         } finally {
           button.disabled = false;
-          button.textContent = "Create project";
+          button.textContent = "Create Project";
         }
       });
 
@@ -5825,7 +5865,7 @@
         const form = document.getElementById("design-form");
         const isOpening = !form.classList.contains("visible");
         form.classList.toggle("visible", isOpening);
-        document.getElementById("toggle-design-form").textContent = isOpening ? "Close project form" : "New project";
+        document.getElementById("toggle-design-form").textContent = isOpening ? "Close Form" : "New Project";
         if (isOpening) form.scrollIntoView({ behavior: "smooth", block: "start" });
       });
 
@@ -5972,7 +6012,9 @@
         if (event.target.closest("[data-save-project-action]")) {
           event.preventDefault();
           const panel = document.getElementById("project-action-panel");
-          panel.querySelector(".project-action-status").textContent = "Saved to the project workspace. Admin and design can review this next.";
+          const status = panel.querySelector(".project-action-status");
+          status.textContent = "Saved to the project workspace. Admin and design can review this next.";
+          status.classList.add("visible");
         }
       });
 
@@ -6238,11 +6280,11 @@
                     </div>
                     <div class="pipeline-card-bottom">
                       <span>${commissionHint}</span>
-                      <span class="pipeline-open">Open Project</span>
+                      <span class="pipeline-open">View Project</span>
                     </div>
                   </button>
                 `;
-              }).join("") : `<div class="project-column-empty">No projects here yet.</div>`}
+              }).join("") : `<div class="project-column-empty"><strong>No projects here yet</strong><small>Projects will appear here as they move through this stage.</small></div>`}
             </section>
           `;
         }).join("");
@@ -6483,10 +6525,10 @@
             </div>
             <div class="record-value-group">
               <strong class="record-value">${record.value}</strong>
-              <button class="secondary-action" type="button" data-focus-contact="${record.id}">Contact</button>
+              <button class="secondary-action" type="button" data-focus-contact="${record.id}">View Project</button>
             </div>
           </article>
-        `).join("") : `<div class="record-empty">No records match this view yet.</div>`;
+        `).join("") : `<div class="record-empty"><strong>No projects match this view</strong><span>Try a different stage filter or create a new project.</span></div>`;
 
         document.getElementById("note-list").innerHTML = visibleNotes.map((note) => `
           <article>
