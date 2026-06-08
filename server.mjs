@@ -558,6 +558,29 @@ async function addInternalActivity(contact, status) {
   return next[0];
 }
 
+async function addProjectActionActivity({ contact, action, title, body }) {
+  const activity = await getInternalActivity();
+  const next = [
+    {
+      id: `activity-${Date.now()}`,
+      ownerId: normalizedOwnerId(contact),
+      title,
+      body: `${contact.name || contact.fullName || "Project"} - ${body}`,
+      action,
+      contactId: contact.id || "",
+      time: new Date().toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+      }),
+    },
+    ...activity,
+  ].slice(0, 50);
+  await saveInternalActivity(next);
+  return next[0];
+}
+
 async function savePortalCreatedContact(record) {
   await mkdir(dataDir, { recursive: true });
   const existing = await getPortalCreatedContacts();
@@ -1105,6 +1128,56 @@ async function updateContactStatus(payload) {
   return updatedContact;
 }
 
+async function saveProjectAction(payload) {
+  if (!payload.contactId) throw new Error("contactId is required");
+  const action = String(payload.action || "").trim();
+  if (!action) throw new Error("Project action is required");
+
+  if (action === "design") {
+    const updatedContact = await updateContactStatus({ contactId: payload.contactId, status: "design" });
+    const createdContacts = await getPortalCreatedContacts();
+    const cachedRecord = createdContacts.find((record) => record.id === payload.contactId);
+    if (cachedRecord) {
+      await savePortalCreatedContact({
+        ...cachedRecord,
+        portalStatus: "design",
+        stage: "Design",
+        nextStep: "Design package submitted - admin/design review",
+        utilityBill: payload.utilityBill || cachedRecord.utilityBill || "",
+        utilityBillFileName: payload.utilityBillFileName || cachedRecord.utilityBillFileName || "",
+        projectNotes: payload.notes || cachedRecord.projectNotes || "",
+        roofType: payload.roofType || cachedRecord.roofType || "",
+      });
+    }
+    const activity = await addProjectActionActivity({
+      contact: updatedContact,
+      action,
+      title: "Design package submitted",
+      body: "ready for admin/design review. Project stage moved to Design.",
+    });
+    return {
+      contact: updatedContact,
+      status: "design",
+      nextStep: "Design package submitted - admin/design review",
+      activity,
+    };
+  }
+
+  const current = await ghlFetch(`/contacts/${encodeURIComponent(payload.contactId)}`);
+  const contact = current.contact || current;
+  const activityTitles = {
+    update: "Project info updated",
+    upload: "Project files uploaded",
+  };
+  const activity = await addProjectActionActivity({
+    contact,
+    action,
+    title: activityTitles[action] || "Project action saved",
+    body: payload.notes || "saved in the project workspace.",
+  });
+  return { contact, activity };
+}
+
 async function getLivePortalData() {
   if (!token) throw new Error("Missing CRM integration token");
 
@@ -1506,6 +1579,16 @@ async function handleApi(request, response) {
     try {
       const contact = await updateContactStatus(payload);
       return sendJson(response, 200, { ok: true, contact });
+    } catch (error) {
+      return sendJson(response, 502, { error: error.message });
+    }
+  }
+
+  if (url.pathname === "/api/portal/project-action" && request.method === "POST") {
+    const payload = await readJsonBody(request);
+    try {
+      const result = await saveProjectAction(payload);
+      return sendJson(response, 200, { ok: true, ...result });
     } catch (error) {
       return sendJson(response, 502, { error: error.message });
     }

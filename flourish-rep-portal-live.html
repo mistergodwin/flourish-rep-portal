@@ -5647,10 +5647,10 @@
             body: "Submit the design package once the customer record has the details needed for design.",
             form: `
               <div class="project-action-form">
-                <label><span>Roof Type</span><input value="${record?.roofType || "Shingle"}" /></label>
-                <label><span>Monthly Utility Bill</span><input value="${record?.utilityBill || ""}" placeholder="$238" /></label>
+                <label><span>Roof Type</span><input name="roofType" value="${record?.roofType || "Shingle"}" /></label>
+                <label><span>Monthly Utility Bill</span><input name="utilityBill" value="${record?.utilityBill || ""}" placeholder="$238" /></label>
                 <label class="full-field"><span>Utility Bill / Photos</span><input type="file" accept="image/*,.pdf" multiple /></label>
-                <label class="full-field"><span>Design Notes</span><textarea>${record?.projectNotes || "Roof planes, battery request, panel preference, HOA notes, or anything design needs."}</textarea></label>
+                <label class="full-field"><span>Design Notes</span><textarea name="notes">${record?.projectNotes || "Roof planes, battery request, panel preference, HOA notes, or anything design needs."}</textarea></label>
                 <button class="project-action-submit" data-save-project-action type="button">Submit design package</button>
               </div>
             `,
@@ -5690,6 +5690,7 @@
         const panel = document.getElementById("project-action-panel");
         const record = currentFocusedRecord();
         const content = projectActionCopy(action, record);
+        panel.dataset.projectAction = action;
         panel.innerHTML = `
           <header>
             <div>
@@ -6002,19 +6003,68 @@
         openProjectAction(button.dataset.projectAction);
       });
 
-      document.getElementById("project-action-panel").addEventListener("click", (event) => {
+      document.getElementById("project-action-panel").addEventListener("click", async (event) => {
         if (event.target.closest("[data-close-project-action]")) {
           const panel = document.getElementById("project-action-panel");
           panel.classList.remove("visible");
           panel.innerHTML = "";
           return;
         }
-        if (event.target.closest("[data-save-project-action]")) {
+        const saveButton = event.target.closest("[data-save-project-action]");
+        if (saveButton) {
           event.preventDefault();
           const panel = document.getElementById("project-action-panel");
           const status = panel.querySelector(".project-action-status");
-          status.textContent = "Saved to the project workspace. Admin and design can review this next.";
+          const record = currentFocusedRecord();
+          const action = panel.dataset.projectAction || "";
+          saveButton.disabled = true;
+          status.textContent = action === "design" ? "Submitting design package..." : "Saving project update...";
           status.classList.add("visible");
+          status.classList.remove("error");
+          try {
+            if (action === "design" && record) {
+              const payload = {
+                contactId: record.id,
+                action,
+                roofType: panel.querySelector("[name='roofType']")?.value || record.roofType || "",
+                utilityBill: panel.querySelector("[name='utilityBill']")?.value || record.utilityBill || "",
+                utilityBillFileName: panel.querySelector("input[type='file']")?.files?.[0]?.name || record.utilityBillFileName || "",
+                notes: panel.querySelector("[name='notes']")?.value || "",
+              };
+              if (isFilePreview()) {
+                records = records.map((item) => item.id === record.id
+                  ? {
+                    ...item,
+                    portalStatus: "design",
+                    stage: "Design",
+                    nextStep: "Design package submitted - admin/design review",
+                    roofType: payload.roofType,
+                    utilityBill: payload.utilityBill,
+                    utilityBillFileName: payload.utilityBillFileName,
+                    projectNotes: payload.notes,
+                  }
+                  : item);
+              } else {
+                const response = await fetch("/api/portal/project-action", {
+                  method: "POST",
+                  headers: { "content-type": "application/json" },
+                  body: JSON.stringify(payload),
+                });
+                const result = await response.json();
+                if (!response.ok) throw new Error(result.error || "Could not submit design package.");
+                await loadPortalData();
+              }
+              status.textContent = "Design package submitted. Admin/design can review it now.";
+              renderDashboard(currentSession);
+              return;
+            }
+            status.textContent = "Saved to the project workspace. Admin and design can review this next.";
+          } catch (error) {
+            status.textContent = error.message;
+            status.classList.add("error");
+          } finally {
+            saveButton.disabled = false;
+          }
         }
       });
 
