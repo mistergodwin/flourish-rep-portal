@@ -1171,17 +1171,53 @@ async function saveProjectAction(payload) {
     };
   }
 
-  const current = await ghlFetch(`/contacts/${encodeURIComponent(payload.contactId)}`);
-  const contact = current.contact || current;
+  let contact;
+  if (action === "update") {
+    contact = await updateContact({
+      contactId: payload.contactId,
+      customerName: payload.customerName,
+      phone: payload.phone,
+      email: payload.email,
+      address: payload.address,
+      assignedRepId: payload.assignedRepId,
+    });
+  } else {
+    const current = await ghlFetch(`/contacts/${encodeURIComponent(payload.contactId)}`);
+    contact = current.contact || current;
+  }
+
+  const createdContacts = await getPortalCreatedContacts();
+  const cachedRecord = createdContacts.find((record) => record.id === payload.contactId);
+  if (cachedRecord) {
+    await savePortalCreatedContact({
+      ...cachedRecord,
+      name: payload.customerName || cachedRecord.name,
+      phone: payload.phone || cachedRecord.phone,
+      email: payload.email || cachedRecord.email,
+      address: payload.address || cachedRecord.address,
+      utilityBill: payload.utilityBill || cachedRecord.utilityBill || "",
+      utilityBillFileName: payload.utilityBillFileName || cachedRecord.utilityBillFileName || "",
+      projectNotes: payload.notes || cachedRecord.projectNotes || "",
+      nextStep: action === "upload"
+        ? "Project files uploaded - admin/design review"
+        : action === "update"
+          ? "Project details updated"
+          : cachedRecord.nextStep,
+    });
+  }
+
   const activityTitles = {
     update: "Project info updated",
     upload: "Project files uploaded",
   };
+  const activityBody = action === "upload"
+    ? `${payload.fileType || "Project file"} saved${payload.utilityBillFileName ? `: ${payload.utilityBillFileName}` : ""}. ${payload.notes || ""}`.trim()
+    : payload.notes || "saved in the project workspace.";
   const activity = await addProjectActionActivity({
     contact,
     action,
     title: activityTitles[action] || "Project action saved",
-    body: payload.notes || "saved in the project workspace.",
+    body: activityBody,
   });
   return { contact, activity };
 }

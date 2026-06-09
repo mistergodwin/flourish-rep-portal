@@ -5661,9 +5661,9 @@
             form: `
               <div class="project-action-form">
                 <label class="full-field"><span>Utility Bill / Project Photos</span><input type="file" accept="image/*,.pdf" multiple /></label>
-                <label><span>File Type</span><select><option>Utility bill</option><option>Roof photos</option><option>Site photos</option><option>Other project file</option></select></label>
-                <label><span>Monthly Utility Bill</span><input value="${record?.utilityBill || ""}" placeholder="$238" /></label>
-                <label class="full-field"><span>Upload Notes</span><textarea placeholder="Add notes for design or admin."></textarea></label>
+                <label><span>File Type</span><select name="fileType"><option>Utility bill</option><option>Roof photos</option><option>Site photos</option><option>Other project file</option></select></label>
+                <label><span>Monthly Utility Bill</span><input name="utilityBill" value="${record?.utilityBill || ""}" placeholder="$238" /></label>
+                <label class="full-field"><span>Upload Notes</span><textarea name="notes" placeholder="Add notes for design or admin."></textarea></label>
                 <button class="project-action-submit" data-save-project-action type="button">Save upload</button>
               </div>
             `,
@@ -5673,11 +5673,11 @@
             body: "Update customer and project details here. These changes keep the project record clean for admin, design, and operations.",
             form: `
               <div class="project-action-form">
-                <label><span>Customer Name</span><input value="${record?.name || ""}" /></label>
-                <label><span>Phone</span><input value="${record?.phone || ""}" /></label>
-                <label><span>Email</span><input value="${record?.email || ""}" /></label>
-                <label><span>Address</span><input value="${record?.address || ""}" /></label>
-                <label class="full-field"><span>Project Notes</span><textarea>${record?.projectNotes || "Update homeowner notes, access details, or project changes."}</textarea></label>
+                <label><span>Customer Name</span><input name="customerName" value="${record?.name || ""}" /></label>
+                <label><span>Phone</span><input name="phone" value="${record?.phone || ""}" /></label>
+                <label><span>Email</span><input name="email" value="${record?.email || ""}" /></label>
+                <label><span>Address</span><input name="address" value="${record?.address || ""}" /></label>
+                <label class="full-field"><span>Project Notes</span><textarea name="notes">${record?.projectNotes || "Update homeowner notes, access details, or project changes."}</textarea></label>
                 <button class="project-action-submit" data-save-project-action type="button">Save updates</button>
               </div>
             `,
@@ -6022,22 +6022,41 @@
           status.classList.add("visible");
           status.classList.remove("error");
           try {
-            if (action === "design" && record) {
-              const payload = {
-                contactId: record.id,
-                action,
-                roofType: panel.querySelector("[name='roofType']")?.value || record.roofType || "",
-                utilityBill: panel.querySelector("[name='utilityBill']")?.value || record.utilityBill || "",
-                utilityBillFileName: panel.querySelector("input[type='file']")?.files?.[0]?.name || record.utilityBillFileName || "",
-                notes: panel.querySelector("[name='notes']")?.value || "",
-              };
+            if (record && ["design", "update", "upload"].includes(action)) {
+              const fileInput = panel.querySelector("input[type='file']");
+              const payload = action === "update"
+                ? {
+                  contactId: record.id,
+                  action,
+                  customerName: panel.querySelector("[name='customerName']")?.value || record.name || "",
+                  phone: panel.querySelector("[name='phone']")?.value || record.phone || "",
+                  email: panel.querySelector("[name='email']")?.value || record.email || "",
+                  address: panel.querySelector("[name='address']")?.value || record.address || "",
+                  assignedRepId: record.ownerId || currentSession.id,
+                  notes: panel.querySelector("[name='notes']")?.value || "",
+                }
+                : {
+                  contactId: record.id,
+                  action,
+                  roofType: panel.querySelector("[name='roofType']")?.value || record.roofType || "",
+                  utilityBill: panel.querySelector("[name='utilityBill']")?.value || record.utilityBill || "",
+                  utilityBillFileName: fileInput?.files?.[0]?.name || record.utilityBillFileName || "",
+                  fileType: panel.querySelector("[name='fileType']")?.value || "",
+                  notes: panel.querySelector("[name='notes']")?.value || "",
+                };
               if (isFilePreview()) {
                 records = records.map((item) => item.id === record.id
                   ? {
                     ...item,
-                    portalStatus: "design",
-                    stage: "Design",
-                    nextStep: "Design package submitted - admin/design review",
+                    ...(action === "design" ? { portalStatus: "design", stage: "Design", nextStep: "Design package submitted - admin/design review" } : {}),
+                    ...(action === "upload" ? { nextStep: "Project files uploaded - admin/design review" } : {}),
+                    ...(action === "update" ? {
+                      name: payload.customerName,
+                      phone: payload.phone,
+                      email: payload.email,
+                      address: payload.address,
+                      nextStep: "Project details updated",
+                    } : {}),
                     roofType: payload.roofType,
                     utilityBill: payload.utilityBill,
                     utilityBillFileName: payload.utilityBillFileName,
@@ -6051,10 +6070,14 @@
                   body: JSON.stringify(payload),
                 });
                 const result = await response.json();
-                if (!response.ok) throw new Error(result.error || "Could not submit design package.");
+                if (!response.ok) throw new Error(result.error || "Could not save project action.");
                 await loadPortalData();
               }
-              status.textContent = "Design package submitted. Admin/design can review it now.";
+              status.textContent = action === "design"
+                ? "Design package submitted. Admin/design can review it now."
+                : action === "upload"
+                  ? "Project files saved. Admin/design can review them now."
+                  : "Project details updated. Admin can review the latest info.";
               renderDashboard(currentSession);
               return;
             }
