@@ -581,6 +581,27 @@ async function addProjectActionActivity({ contact, action, title, body }) {
   return next[0];
 }
 
+async function archiveQaActivity(payload = {}) {
+  const email = String(payload.email || "").trim().toLowerCase();
+  if (!adminEmails.has(email)) throw new Error("Admin email is required");
+  if (payload.confirm !== "archive-qa-activity") throw new Error("Cleanup confirmation is required");
+  const activity = await getInternalActivity();
+  const qaPatterns = [
+    /Live QA/i,
+    /QA upload workflow smoke test/i,
+    /QA update workflow smoke test/i,
+  ];
+  const kept = activity.filter((item) => {
+    const text = [item.title, item.body, item.action].filter(Boolean).join(" ");
+    return !qaPatterns.some((pattern) => pattern.test(text));
+  });
+  if (kept.length !== activity.length) await saveInternalActivity(kept);
+  return {
+    removed: activity.length - kept.length,
+    remaining: kept.length,
+  };
+}
+
 async function savePortalCreatedContact(record) {
   await mkdir(dataDir, { recursive: true });
   const existing = await getPortalCreatedContacts();
@@ -1635,6 +1656,16 @@ async function handleApi(request, response) {
       return sendJson(response, 200, { ok: true, ...result });
     } catch (error) {
       return sendJson(response, 502, { error: error.message });
+    }
+  }
+
+  if (url.pathname === "/api/portal/archive-qa-activity" && request.method === "POST") {
+    const payload = await readJsonBody(request);
+    try {
+      const result = await archiveQaActivity(payload);
+      return sendJson(response, 200, { ok: true, ...result });
+    } catch (error) {
+      return sendJson(response, 403, { error: error.message });
     }
   }
 
