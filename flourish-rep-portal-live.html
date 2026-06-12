@@ -2857,6 +2857,36 @@
         grid-column: 1 / -1;
       }
 
+      .admin-detail-action {
+        display: none;
+        width: fit-content;
+        min-height: 38px;
+        margin-top: 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 999px;
+        background: #ffffff;
+        color: #1e3a8a;
+        padding: 0 14px;
+        font-weight: 950;
+      }
+
+      .admin-detail-action.visible {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .project-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .project-card-header .admin-detail-action {
+        margin-top: 0;
+      }
+
       .detail-grid {
         display: grid;
         grid-template-columns: 330px minmax(0, 1fr);
@@ -5028,7 +5058,10 @@
               </div>
             </aside>
             <article class="detail-card project-card">
-              <h3>Project Details</h3>
+              <div class="project-card-header">
+                <h3>Project Details</h3>
+                <button class="admin-detail-action" id="edit-project-details" data-project-action="details" type="button">Edit Details</button>
+              </div>
               <div class="detail-tabs">
                 <button class="active" type="button">System Specs</button>
                 <button type="button">Timeline</button>
@@ -5682,6 +5715,31 @@
               </div>
             `,
           },
+          details: {
+            title: "Edit Project Details",
+            body: "Admin can update the project specs and commission view the rep sees on this project.",
+            form: `
+              <div class="project-action-form">
+                <label><span>System Size</span><input name="systemSize" value="${record?.systemSize || "8.5 kW"}" placeholder="8.5 kW" /></label>
+                <label><span>Est. Production</span><input name="productionEstimate" value="${record?.productionEstimate || ""}" placeholder="12,325 kWh/year" /></label>
+                <label><span>Project Value</span><input name="projectValue" value="${record?.value || "$0"}" placeholder="$32,400" /></label>
+                <label><span>Commission Status</span><select name="commissionStatus">
+                  <option ${record?.commissionStatus === "Projected" ? "selected" : ""}>Projected</option>
+                  <option ${record?.commissionStatus === "Earned" ? "selected" : ""}>Earned</option>
+                  <option ${record?.commissionStatus === "On hold" ? "selected" : ""}>On hold</option>
+                  <option ${record?.commissionStatus === "Ready" ? "selected" : ""}>Ready</option>
+                </select></label>
+                <label><span>Payment Status</span><select name="paymentStatus">
+                  <option ${record?.paymentStatus === "Not ready" ? "selected" : ""}>Not ready</option>
+                  <option ${record?.paymentStatus === "Install pending" ? "selected" : ""}>Install pending</option>
+                  <option ${record?.paymentStatus === "Pending payout" ? "selected" : ""}>Pending payout</option>
+                  <option ${record?.paymentStatus === "Paid" ? "selected" : ""}>Paid</option>
+                </select></label>
+                <label class="full-field"><span>Admin Notes</span><textarea name="notes">${record?.projectNotes || ""}</textarea></label>
+                <button class="project-action-submit" data-save-project-action type="button">Save project details</button>
+              </div>
+            `,
+          },
         };
         return actionMap[action] || defaults;
       }
@@ -6003,6 +6061,13 @@
         openProjectAction(button.dataset.projectAction);
       });
 
+      document.getElementById("edit-project-details").addEventListener("click", (event) => {
+        if (currentSession?.role !== "Admin") return;
+        const button = event.target.closest("[data-project-action]");
+        if (!button) return;
+        openProjectAction(button.dataset.projectAction);
+      });
+
       document.getElementById("project-action-panel").addEventListener("click", async (event) => {
         if (event.target.closest("[data-close-project-action]")) {
           const panel = document.getElementById("project-action-panel");
@@ -6022,9 +6087,20 @@
           status.classList.add("visible");
           status.classList.remove("error");
           try {
-            if (record && ["design", "update", "upload"].includes(action)) {
+            if (record && ["design", "update", "upload", "details"].includes(action)) {
               const fileInput = panel.querySelector("input[type='file']");
-              const payload = action === "update"
+              const payload = action === "details"
+                ? {
+                  contactId: record.id,
+                  action,
+                  systemSize: panel.querySelector("[name='systemSize']")?.value || record.systemSize || "",
+                  productionEstimate: panel.querySelector("[name='productionEstimate']")?.value || record.productionEstimate || "",
+                  projectValue: panel.querySelector("[name='projectValue']")?.value || record.value || "$0",
+                  commissionStatus: panel.querySelector("[name='commissionStatus']")?.value || record.commissionStatus || "",
+                  paymentStatus: panel.querySelector("[name='paymentStatus']")?.value || record.paymentStatus || "",
+                  notes: panel.querySelector("[name='notes']")?.value || "",
+                }
+                : action === "update"
                 ? {
                   contactId: record.id,
                   action,
@@ -6057,6 +6133,14 @@
                       address: payload.address,
                       nextStep: "Project details updated",
                     } : {}),
+                    ...(action === "details" ? {
+                      systemSize: payload.systemSize,
+                      productionEstimate: payload.productionEstimate,
+                      value: payload.projectValue,
+                      commissionStatus: payload.commissionStatus,
+                      paymentStatus: payload.paymentStatus,
+                      nextStep: "Project details updated",
+                    } : {}),
                     roofType: payload.roofType,
                     utilityBill: payload.utilityBill,
                     utilityBillFileName: payload.utilityBillFileName,
@@ -6077,6 +6161,8 @@
                 ? "Design package submitted. Admin/design can review it now."
                 : action === "upload"
                   ? "Project files saved. Admin/design can review them now."
+                  : action === "details"
+                    ? "Project details saved. Reps will see the updated system and commission details."
                   : "Project details updated. Admin can review the latest info.";
               renderDashboard(currentSession);
               return;
@@ -6494,10 +6580,13 @@
         if (focusedRecord) {
           const currentStageIndex = Math.max(0, leadStatuses.findIndex((status) => status.value === (focusedRecord.portalStatus || "new-project")));
           const systemSizeValue = Number(String(focusedRecord.systemSize || "").replace(/[^0-9.]/g, "")) || 8.5;
-          const productionEstimate = Math.round(systemSizeValue * 1450);
+          const savedProductionValue = String(focusedRecord.productionEstimate || "").trim();
+          const productionEstimate = savedProductionValue || Math.round(systemSizeValue * 1450).toLocaleString("en-US");
           const soldValue = Number(String(focusedRecord.value || "").replace(/[^0-9.-]/g, "")) || 0;
           const commissionValue = soldValue * 0.12;
           const isSoldOrLater = ["sold", "ntp"].includes(focusedRecord.portalStatus || "new-project");
+          const commissionStatus = focusedRecord.commissionStatus || (isSoldOrLater ? "Earned" : "Projected");
+          const paymentStatus = focusedRecord.paymentStatus || ((focusedRecord.portalStatus || "") === "ntp" ? "Pending payout" : isSoldOrLater ? "Install pending" : "Not ready");
           document.getElementById("focus-name").textContent = focusedRecord.name || "Unnamed contact";
           document.getElementById("focus-stage").textContent = statusLabel(focusedRecord.portalStatus || "new-project");
           document.getElementById("focus-next").textContent = focusedRecord.nextStep || "Review contact";
@@ -6525,7 +6614,9 @@
           document.getElementById("detail-since").textContent = "2026-05-13";
           document.getElementById("detail-rep").textContent = session.name;
           document.getElementById("detail-system").textContent = focusedRecord.systemSize || "8.5 kW";
-          document.getElementById("detail-production").innerHTML = `${productionEstimate.toLocaleString("en-US")}<br />kWh/year`;
+          document.getElementById("detail-production").innerHTML = productionEstimate.toLowerCase().includes("kwh")
+            ? productionEstimate
+            : `${productionEstimate}<br />kWh/year`;
           document.getElementById("detail-next-step").textContent = focusedRecord.nextStep || statusLabel(focusedRecord.portalStatus || "new-project");
           const timelineItems = [
             { label: "Design submitted", completeAt: 1 },
@@ -6554,9 +6645,10 @@
           `).join("");
           document.getElementById("project-action-panel").classList.remove("visible");
           document.getElementById("project-action-panel").innerHTML = "";
+          document.getElementById("edit-project-details").classList.toggle("visible", isAdmin);
           document.getElementById("detail-commission-estimate").textContent = commissionValue.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
-          document.getElementById("detail-commission-status").textContent = isSoldOrLater ? "Earned" : "Projected";
-          document.getElementById("detail-payment-status").textContent = (focusedRecord.portalStatus || "") === "ntp" ? "Pending payout" : isSoldOrLater ? "Install pending" : "Not ready";
+          document.getElementById("detail-commission-status").textContent = commissionStatus;
+          document.getElementById("detail-payment-status").textContent = paymentStatus;
         }
         document.getElementById("design-rep").innerHTML = reps
           .filter((rep) => rep.role === "Rep")

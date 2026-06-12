@@ -1218,31 +1218,42 @@ async function saveProjectAction(payload) {
 
   const createdContacts = await getPortalCreatedContacts();
   const cachedRecord = createdContacts.find((record) => record.id === payload.contactId);
-  if (cachedRecord) {
+  const storedRecord = cachedRecord || (action === "details" ? normalizeContact(contact) : null);
+  if (storedRecord) {
     await savePortalCreatedContact({
-      ...cachedRecord,
-      name: payload.customerName || cachedRecord.name,
-      phone: payload.phone || cachedRecord.phone,
-      email: payload.email || cachedRecord.email,
-      address: payload.address || cachedRecord.address,
-      utilityBill: payload.utilityBill || cachedRecord.utilityBill || "",
-      utilityBillFileName: payload.utilityBillFileName || cachedRecord.utilityBillFileName || "",
-      projectNotes: payload.notes || cachedRecord.projectNotes || "",
+      ...storedRecord,
+      name: payload.customerName || storedRecord.name,
+      phone: payload.phone || storedRecord.phone,
+      email: payload.email || storedRecord.email,
+      address: payload.address || storedRecord.address,
+      systemSize: payload.systemSize || storedRecord.systemSize || "",
+      productionEstimate: payload.productionEstimate || storedRecord.productionEstimate || "",
+      value: payload.projectValue || storedRecord.value || "",
+      commissionStatus: payload.commissionStatus || storedRecord.commissionStatus || "",
+      paymentStatus: payload.paymentStatus || storedRecord.paymentStatus || "",
+      utilityBill: payload.utilityBill || storedRecord.utilityBill || "",
+      utilityBillFileName: payload.utilityBillFileName || storedRecord.utilityBillFileName || "",
+      projectNotes: payload.notes || storedRecord.projectNotes || "",
       nextStep: action === "upload"
         ? "Project files uploaded - admin/design review"
         : action === "update"
           ? "Project details updated"
-          : cachedRecord.nextStep,
+          : action === "details"
+            ? "Project details updated"
+          : storedRecord.nextStep,
     });
   }
 
   const activityTitles = {
     update: "Project info updated",
     upload: "Project files uploaded",
+    details: "Project details updated",
   };
   const activityBody = action === "upload"
     ? `${payload.fileType || "Project file"} saved${payload.utilityBillFileName ? `: ${payload.utilityBillFileName}` : ""}. ${payload.notes || ""}`.trim()
-    : payload.notes || "saved in the project workspace.";
+    : action === "details"
+      ? `System ${payload.systemSize || "not set"}, production ${payload.productionEstimate || "not set"}, commission ${payload.commissionStatus || "not set"}, payment ${payload.paymentStatus || "not set"}. ${payload.notes || ""}`.trim()
+      : payload.notes || "saved in the project workspace.";
   const activity = await addProjectActionActivity({
     contact,
     action,
