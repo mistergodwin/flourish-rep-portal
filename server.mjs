@@ -618,6 +618,12 @@ function normalizedOwnerId(item) {
   return item.assignedTo || item.assigned_to || item.userId || item.user_id || item.ownerId || item.owner_id || "admin";
 }
 
+function crmAssignableUserId(repId) {
+  const value = String(repId || "").trim();
+  if (!value || value.startsWith("rep-")) return "";
+  return value;
+}
+
 function projectIdFrom(item = {}) {
   if (item.projectId || item.project_id) return item.projectId || item.project_id;
   const fields = item.customFields || item.custom_fields || [];
@@ -819,7 +825,8 @@ function splitName(fullName) {
 
 async function createDesignContact(payload) {
   const { firstName, lastName } = splitName(payload.customerName);
-  const assignedTo = payload.assignedRepId || "F7kz2DXoX9xMvyIP3Duj";
+  const portalOwnerId = payload.assignedRepId || "F7kz2DXoX9xMvyIP3Duj";
+  const assignedTo = crmAssignableUserId(portalOwnerId);
   const portalTags = ["portal-design-form", "rep-portal-lead"];
   const body = {
     locationId,
@@ -832,7 +839,7 @@ async function createDesignContact(payload) {
     city: payload.city || undefined,
     state: payload.state || undefined,
     postalCode: payload.postalCode || undefined,
-    assignedTo,
+    assignedTo: assignedTo || undefined,
     source: "Flourish Rep Portal Design Form",
     tags: portalTags,
   };
@@ -862,7 +869,7 @@ async function createDesignContact(payload) {
       city: payload.city || existingContact.city || undefined,
       state: payload.state || existingContact.state || undefined,
       postalCode: payload.postalCode || existingContact.postalCode || existingContact.postal_code || undefined,
-      assignedTo,
+      assignedTo: assignedTo || existingContact.assignedTo || undefined,
       tags: Array.from(new Set([...existingTags, ...portalTags])),
     };
     result = await ghlJson(`/contacts/${encodeURIComponent(duplicateContactId)}`, "PUT", updateBody);
@@ -870,7 +877,7 @@ async function createDesignContact(payload) {
   }
   const contact = result.contact || result;
   await savePortalCreatedContact({
-    ...normalizeCreatedContact(contact, assignedTo),
+    ...normalizeCreatedContact(contact, portalOwnerId),
     utilityBill: payload.utilityBill || "",
     utilityBillFileName: payload.utilityBillFileName || "",
     utilityBillImage: payload.utilityBillImage || "",
@@ -879,7 +886,7 @@ async function createDesignContact(payload) {
   });
   return {
     contact,
-    assignedTo,
+    assignedTo: portalOwnerId,
     reusedExisting,
     existingCustomer: reusedExisting
       ? {
@@ -1109,6 +1116,8 @@ async function sendMagicLoginEmail(user, magicUrl, expiresAt) {
 async function updateContact(payload) {
   if (!payload.contactId) throw new Error("contactId is required");
   const { firstName, lastName } = splitName(payload.customerName);
+  const portalOwnerId = payload.assignedRepId || "";
+  const assignedTo = crmAssignableUserId(portalOwnerId);
   const body = {
     firstName,
     lastName,
@@ -1119,12 +1128,12 @@ async function updateContact(payload) {
     city: payload.city || undefined,
     state: payload.state || undefined,
     postalCode: payload.postalCode || undefined,
-    assignedTo: payload.assignedRepId || undefined,
+    assignedTo: assignedTo || undefined,
   };
 
   const result = await ghlJson(`/contacts/${encodeURIComponent(payload.contactId)}`, "PUT", body);
   const contact = result.contact || result;
-  await savePortalCreatedContact(normalizeCreatedContact(contact, payload.assignedRepId));
+  await savePortalCreatedContact(normalizeCreatedContact(contact, portalOwnerId || normalizedOwnerId(contact)));
   return contact;
 }
 
