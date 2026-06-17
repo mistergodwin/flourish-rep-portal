@@ -1231,6 +1231,7 @@ async function saveProjectAction(payload) {
       value: payload.projectValue || storedRecord.value || "",
       commissionStatus: payload.commissionStatus || storedRecord.commissionStatus || "",
       paymentStatus: payload.paymentStatus || storedRecord.paymentStatus || "",
+      projectAdders: Array.isArray(payload.projectAdders) ? payload.projectAdders : storedRecord.projectAdders || [],
       utilityBill: payload.utilityBill || storedRecord.utilityBill || "",
       utilityBillFileName: payload.utilityBillFileName || storedRecord.utilityBillFileName || "",
       projectNotes: payload.notes || storedRecord.projectNotes || "",
@@ -1252,7 +1253,7 @@ async function saveProjectAction(payload) {
   const activityBody = action === "upload"
     ? `${payload.fileType || "Project file"} saved${payload.utilityBillFileName ? `: ${payload.utilityBillFileName}` : ""}. ${payload.notes || ""}`.trim()
     : action === "details"
-      ? `System ${payload.systemSize || "not set"}, production ${payload.productionEstimate || "not set"}, commission ${payload.commissionStatus || "not set"}, payment ${payload.paymentStatus || "not set"}. ${payload.notes || ""}`.trim()
+      ? `System ${payload.systemSize || "not set"}, production ${payload.productionEstimate || "not set"}, adders ${Array.isArray(payload.projectAdders) ? payload.projectAdders.length : 0}, commission ${payload.commissionStatus || "not set"}, payment ${payload.paymentStatus || "not set"}. ${payload.notes || ""}`.trim()
       : payload.notes || "saved in the project workspace.";
   const activity = await addProjectActionActivity({
     contact,

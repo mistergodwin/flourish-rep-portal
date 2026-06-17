@@ -3028,7 +3028,7 @@
       }
 
       .detail-commission-grid.compact {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 12px;
         margin-top: 16px;
       }
@@ -3039,6 +3039,29 @@
         min-height: 86px;
         border-radius: 8px;
         background: #f8fafc;
+      }
+
+      .project-adder-list {
+        display: grid;
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .project-adder-list article {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 12px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #334155;
+        font-weight: 850;
+      }
+
+      .project-adder-list article strong {
+        color: #020617;
       }
 
       .detail-ops-grid {
@@ -5074,9 +5097,11 @@
               <div class="detail-commission-title">Commission</div>
               <div class="detail-commission-grid compact">
                 <div><span>Estimated</span><strong id="detail-commission-estimate">$3,888</strong></div>
+                <div><span>Adders</span><strong id="detail-adder-total">$0</strong></div>
                 <div><span>Status</span><strong id="detail-commission-status">Pending sale</strong></div>
                 <div><span>Payment</span><strong id="detail-payment-status">Not ready</strong></div>
               </div>
+              <div class="project-adder-list" id="detail-adder-list"></div>
             </article>
           </div>
           <div class="detail-ops-grid">
@@ -5603,6 +5628,29 @@
         return visibleRecords.find((record) => record.id === focusedContactId) || null;
       }
 
+      function moneyNumber(value) {
+        const number = Number(String(value || "").replace(/[^0-9.-]/g, ""));
+        return Number.isFinite(number) ? number : 0;
+      }
+
+      function moneyLabel(value) {
+        return moneyNumber(value).toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+      }
+
+      function projectAdders(record) {
+        return Array.isArray(record?.projectAdders)
+          ? record.projectAdders.filter((adder) => adder && (adder.name || moneyNumber(adder.amount)))
+          : [];
+      }
+
+      function adderFormRow(record, index) {
+        const adder = projectAdders(record)[index] || {};
+        return `
+          <label><span>Adder ${index + 1}</span><input data-adder-name value="${adder.name || ""}" placeholder="Tree removal, MPU, trenching" /></label>
+          <label><span>Adder ${index + 1} Amount</span><input data-adder-amount value="${adder.amount || ""}" placeholder="$1,250" /></label>
+        `;
+      }
+
       function projectActionCopy(action, record) {
         const defaults = {
           title: "Project Step",
@@ -5735,6 +5783,10 @@
                   <option ${record?.paymentStatus === "Pending payout" ? "selected" : ""}>Pending payout</option>
                   <option ${record?.paymentStatus === "Paid" ? "selected" : ""}>Paid</option>
                 </select></label>
+                <div class="full-field detail-commission-title">Project Adders</div>
+                ${adderFormRow(record, 0)}
+                ${adderFormRow(record, 1)}
+                ${adderFormRow(record, 2)}
                 <label class="full-field"><span>Admin Notes</span><textarea name="notes">${record?.projectNotes || ""}</textarea></label>
                 <button class="project-action-submit" data-save-project-action type="button">Save project details</button>
               </div>
@@ -6089,6 +6141,12 @@
           try {
             if (record && ["design", "update", "upload", "details"].includes(action)) {
               const fileInput = panel.querySelector("input[type='file']");
+              const adderNames = [...panel.querySelectorAll("[data-adder-name]")];
+              const adderAmounts = [...panel.querySelectorAll("[data-adder-amount]")];
+              const projectAddersPayload = adderNames.map((input, index) => ({
+                name: input.value.trim(),
+                amount: adderAmounts[index]?.value.trim() || "",
+              })).filter((adder) => adder.name || moneyNumber(adder.amount));
               const payload = action === "details"
                 ? {
                   contactId: record.id,
@@ -6098,6 +6156,7 @@
                   projectValue: panel.querySelector("[name='projectValue']")?.value || record.value || "$0",
                   commissionStatus: panel.querySelector("[name='commissionStatus']")?.value || record.commissionStatus || "",
                   paymentStatus: panel.querySelector("[name='paymentStatus']")?.value || record.paymentStatus || "",
+                  projectAdders: projectAddersPayload,
                   notes: panel.querySelector("[name='notes']")?.value || "",
                 }
                 : action === "update"
@@ -6139,6 +6198,7 @@
                       value: payload.projectValue,
                       commissionStatus: payload.commissionStatus,
                       paymentStatus: payload.paymentStatus,
+                      projectAdders: payload.projectAdders,
                       nextStep: "Project details updated",
                     } : {}),
                     roofType: payload.roofType,
@@ -6583,7 +6643,9 @@
           const savedProductionValue = String(focusedRecord.productionEstimate || "").trim();
           const productionEstimate = savedProductionValue || Math.round(systemSizeValue * 1450).toLocaleString("en-US");
           const soldValue = Number(String(focusedRecord.value || "").replace(/[^0-9.-]/g, "")) || 0;
-          const commissionValue = soldValue * 0.12;
+          const focusedAdders = projectAdders(focusedRecord);
+          const adderTotal = focusedAdders.reduce((total, adder) => total + moneyNumber(adder.amount), 0);
+          const commissionValue = (soldValue + adderTotal) * 0.12;
           const isSoldOrLater = ["sold", "ntp"].includes(focusedRecord.portalStatus || "new-project");
           const commissionStatus = focusedRecord.commissionStatus || (isSoldOrLater ? "Earned" : "Projected");
           const paymentStatus = focusedRecord.paymentStatus || ((focusedRecord.portalStatus || "") === "ntp" ? "Pending payout" : isSoldOrLater ? "Install pending" : "Not ready");
@@ -6647,6 +6709,10 @@
           document.getElementById("project-action-panel").innerHTML = "";
           document.getElementById("edit-project-details").classList.toggle("visible", isAdmin);
           document.getElementById("detail-commission-estimate").textContent = commissionValue.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+          document.getElementById("detail-adder-total").textContent = moneyLabel(adderTotal);
+          document.getElementById("detail-adder-list").innerHTML = focusedAdders.length
+            ? focusedAdders.map((adder) => `<article><span>${adder.name || "Project adder"}</span><strong>${moneyLabel(adder.amount)}</strong></article>`).join("")
+            : `<article><span>No adders added</span><strong>$0</strong></article>`;
           document.getElementById("detail-commission-status").textContent = commissionStatus;
           document.getElementById("detail-payment-status").textContent = paymentStatus;
         }
