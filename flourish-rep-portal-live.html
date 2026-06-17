@@ -2857,6 +2857,40 @@
         grid-column: 1 / -1;
       }
 
+      .project-adder-editor {
+        display: grid;
+        gap: 12px;
+        grid-column: 1 / -1;
+      }
+
+      .project-adder-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(150px, 0.4fr) auto;
+        gap: 10px;
+        align-items: end;
+      }
+
+      .project-adder-row button {
+        min-height: 44px;
+        border: 1px solid #d8e0ea;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #475569;
+        padding: 0 14px;
+        font-weight: 950;
+      }
+
+      .add-adder-button {
+        width: fit-content;
+        min-height: 42px;
+        border: 1px solid #bfdbfe;
+        border-radius: 999px;
+        background: #eff6ff;
+        color: #1e3a8a;
+        padding: 0 16px;
+        font-weight: 950;
+      }
+
       .admin-detail-action {
         display: none;
         width: fit-content;
@@ -5646,9 +5680,18 @@
       function adderFormRow(record, index) {
         const adder = projectAdders(record)[index] || {};
         return `
-          <label><span>Adder ${index + 1}</span><input data-adder-name value="${adder.name || ""}" placeholder="Tree removal, MPU, trenching" /></label>
-          <label><span>Adder ${index + 1} Amount</span><input data-adder-amount value="${adder.amount || ""}" placeholder="$1,250" /></label>
+          <div class="project-adder-row">
+            <label><span>Adder Name</span><input data-adder-name value="${adder.name || ""}" placeholder="Tree removal, MPU, trenching" /></label>
+            <label><span>Amount</span><input data-adder-amount value="${adder.amount || ""}" placeholder="$1,250" /></label>
+            <button data-remove-adder type="button">Remove</button>
+          </div>
         `;
+      }
+
+      function adderFormRows(record) {
+        const adders = projectAdders(record);
+        const rowCount = Math.max(1, adders.length);
+        return Array.from({ length: rowCount }, (_, index) => adderFormRow(record, index)).join("");
       }
 
       function projectActionCopy(action, record) {
@@ -5784,9 +5827,10 @@
                   <option ${record?.paymentStatus === "Paid" ? "selected" : ""}>Paid</option>
                 </select></label>
                 <div class="full-field detail-commission-title">Project Adders</div>
-                ${adderFormRow(record, 0)}
-                ${adderFormRow(record, 1)}
-                ${adderFormRow(record, 2)}
+                <div class="project-adder-editor" data-adder-editor>
+                  <div data-adder-rows>${adderFormRows(record)}</div>
+                  <button class="add-adder-button" data-add-adder type="button">Add adder</button>
+                </div>
                 <label class="full-field"><span>Admin Notes</span><textarea name="notes">${record?.projectNotes || ""}</textarea></label>
                 <button class="project-action-submit" data-save-project-action type="button">Save project details</button>
               </div>
@@ -5814,6 +5858,16 @@
         `;
         panel.classList.add("visible");
         panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+
+      function createEmptyAdderRow() {
+        return `
+          <div class="project-adder-row">
+            <label><span>Adder Name</span><input data-adder-name placeholder="Tree removal, MPU, trenching" /></label>
+            <label><span>Amount</span><input data-adder-amount placeholder="$1,250" /></label>
+            <button data-remove-adder type="button">Remove</button>
+          </div>
+        `;
       }
 
       function portalRoute(path) {
@@ -6125,6 +6179,23 @@
           const panel = document.getElementById("project-action-panel");
           panel.classList.remove("visible");
           panel.innerHTML = "";
+          return;
+        }
+        const addAdderButton = event.target.closest("[data-add-adder]");
+        if (addAdderButton) {
+          const rows = addAdderButton.closest("[data-adder-editor]")?.querySelector("[data-adder-rows]");
+          if (rows) rows.insertAdjacentHTML("beforeend", createEmptyAdderRow());
+          return;
+        }
+        const removeAdderButton = event.target.closest("[data-remove-adder]");
+        if (removeAdderButton) {
+          const rows = removeAdderButton.closest("[data-adder-rows]");
+          const row = removeAdderButton.closest(".project-adder-row");
+          if (rows && row && rows.querySelectorAll(".project-adder-row").length > 1) {
+            row.remove();
+          } else if (row) {
+            row.querySelectorAll("input").forEach((input) => { input.value = ""; });
+          }
           return;
         }
         const saveButton = event.target.closest("[data-save-project-action]");
