@@ -5582,7 +5582,13 @@
       }
 
       async function loadPortalData() {
-        if (isFilePreview()) return;
+        if (isFilePreview()) {
+          try {
+            const savedRecords = JSON.parse(localStorage.getItem("flourishPreviewRecords") || "[]");
+            if (Array.isArray(savedRecords) && savedRecords.length) records = savedRecords;
+          } catch {}
+          return;
+        }
         try {
           const response = await fetch("/api/portal/bootstrap", { cache: "no-store" });
           if (!response.ok) return;
@@ -5675,6 +5681,23 @@
         return Array.isArray(record?.projectAdders)
           ? record.projectAdders.filter((adder) => adder && (adder.name || moneyNumber(adder.amount)))
           : [];
+      }
+
+      function commissionRate(record) {
+        const rate = Number(String(record?.commissionRate || "").replace(/[^0-9.]/g, ""));
+        return Number.isFinite(rate) && rate > 0 ? rate / 100 : 0.12;
+      }
+
+      function commissionBase(record) {
+        const value = moneyNumber(record?.value);
+        const adders = projectAdders(record).reduce((total, adder) => total + moneyNumber(adder.amount), 0);
+        return value + adders;
+      }
+
+      function commissionEstimate(record) {
+        const override = moneyNumber(record?.commissionOverride);
+        if (override > 0) return override;
+        return commissionBase(record) * commissionRate(record);
       }
 
       function adderFormRow(record, index) {
@@ -5814,6 +5837,8 @@
                 <label><span>System Size</span><input name="systemSize" value="${record?.systemSize || "8.5 kW"}" placeholder="8.5 kW" /></label>
                 <label><span>Est. Production</span><input name="productionEstimate" value="${record?.productionEstimate || ""}" placeholder="12,325 kWh/year" /></label>
                 <label><span>Project Value</span><input name="projectValue" value="${record?.value || "$0"}" placeholder="$32,400" /></label>
+                <label><span>Commission Rate</span><input name="commissionRate" value="${record?.commissionRate || "12%"}" placeholder="12%" /></label>
+                <label><span>Commission Override</span><input name="commissionOverride" value="${record?.commissionOverride || ""}" placeholder="$5,034" /></label>
                 <label><span>Commission Status</span><select name="commissionStatus">
                   <option ${record?.commissionStatus === "Projected" ? "selected" : ""}>Projected</option>
                   <option ${record?.commissionStatus === "Earned" ? "selected" : ""}>Earned</option>
@@ -6225,6 +6250,8 @@
                   systemSize: panel.querySelector("[name='systemSize']")?.value || record.systemSize || "",
                   productionEstimate: panel.querySelector("[name='productionEstimate']")?.value || record.productionEstimate || "",
                   projectValue: panel.querySelector("[name='projectValue']")?.value || record.value || "$0",
+                  commissionRate: panel.querySelector("[name='commissionRate']")?.value || record.commissionRate || "12%",
+                  commissionOverride: panel.querySelector("[name='commissionOverride']")?.value || record.commissionOverride || "",
                   commissionStatus: panel.querySelector("[name='commissionStatus']")?.value || record.commissionStatus || "",
                   paymentStatus: panel.querySelector("[name='paymentStatus']")?.value || record.paymentStatus || "",
                   projectAdders: projectAddersPayload,
@@ -6267,6 +6294,8 @@
                       systemSize: payload.systemSize,
                       productionEstimate: payload.productionEstimate,
                       value: payload.projectValue,
+                      commissionRate: payload.commissionRate,
+                      commissionOverride: payload.commissionOverride,
                       commissionStatus: payload.commissionStatus,
                       paymentStatus: payload.paymentStatus,
                       projectAdders: payload.projectAdders,
@@ -6278,6 +6307,7 @@
                     projectNotes: payload.notes,
                   }
                   : item);
+                localStorage.setItem("flourishPreviewRecords", JSON.stringify(records));
               } else {
                 const response = await fetch("/api/portal/project-action", {
                   method: "POST",
@@ -6489,10 +6519,7 @@
           visibleNotes.length,
           visibleRecords.filter((record) => !["sold", "ntp"].includes(record.portalStatus || "new-project")).length
         );
-        const estimatedCommission = visibleRecords.reduce((total, record) => {
-          const value = Number(String(record.value || "").replace(/[^0-9.-]/g, ""));
-          return total + (Number.isFinite(value) ? value * 0.06 : 0);
-        }, 0);
+        const estimatedCommission = visibleRecords.reduce((total, record) => total + commissionEstimate(record), 0);
         document.getElementById("top-note-count").textContent = visibleNotes.length;
         document.getElementById("lead-menu-count").textContent = baseVisibleRecords.length;
         document.getElementById("commission-menu-count").textContent = estimatedCommission ? 1 : 0;
@@ -6552,9 +6579,9 @@
             <section class="project-pipeline-column">
               <header><h3>${stage.label}</h3><span>${stageRecords.length}</span></header>
               ${stageRecords.length ? stageRecords.map((record) => {
-                const recordValue = Number(String(record.value || "").replace(/[^0-9.-]/g, ""));
-                const commissionHint = Number.isFinite(recordValue) && recordValue > 0
-                  ? `${(recordValue * 0.12).toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })} est.`
+                const recordCommission = commissionEstimate(record);
+                const commissionHint = recordCommission > 0
+                  ? `${recordCommission.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })} est.`
                   : "Commission TBD";
                 return `
                   <button class="pipeline-project-card" type="button" data-focus-contact="${record.id}" aria-label="Open ${record.name}">
@@ -6597,7 +6624,7 @@
         document.getElementById("job-command-list").innerHTML = soldJobs.length ? soldJobs.slice(0, 4).map((record) => {
           const progress = (record.portalStatus || "new-project") === "ntp" ? 92 : (record.portalStatus || "new-project") === "sold" ? 78 : 52;
           const soldValue = Number(String(record.value || "").replace(/[^0-9.-]/g, "")) || 0;
-          const commissionValue = soldValue * 0.12;
+          const commissionValue = commissionEstimate(record);
           const systemSize = record.systemSize || "8.6 kW";
           const baseSolar = Math.round(soldValue * 0.86);
           const roofAdder = Math.round(soldValue * 0.055);
@@ -6665,10 +6692,7 @@
         document.getElementById("profile-display-address").textContent = session.territory || "Orlando, FL";
         const readyCommission = soldJobs
           .filter((record) => (record.portalStatus || "") === "ntp")
-          .reduce((total, record) => {
-            const value = Number(String(record.value || "").replace(/[^0-9.-]/g, ""));
-            return total + (Number.isFinite(value) ? value * 0.12 : 0);
-          }, 0);
+          .reduce((total, record) => total + commissionEstimate(record), 0);
         const pendingCommission = Math.max(0, estimatedCommission - readyCommission);
         const installedProjects = soldJobs.filter((record) => (record.portalStatus || "") === "ntp").length;
         const monthlySoldGoal = 5;
@@ -6695,8 +6719,7 @@
           ? pendingCommission.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 })
           : "$0";
         document.getElementById("commission-history-list").innerHTML = soldJobs.length ? soldJobs.map((record) => {
-          const value = Number(String(record.value || "").replace(/[^0-9.-]/g, ""));
-          const commission = Number.isFinite(value) ? value * 0.12 : 0;
+          const commission = commissionEstimate(record);
           const status = (record.portalStatus || "") === "ntp" ? "NTP - payout review" : "Sold - install pending";
           return `
             <article>
@@ -6716,7 +6739,7 @@
           const soldValue = Number(String(focusedRecord.value || "").replace(/[^0-9.-]/g, "")) || 0;
           const focusedAdders = projectAdders(focusedRecord);
           const adderTotal = focusedAdders.reduce((total, adder) => total + moneyNumber(adder.amount), 0);
-          const commissionValue = (soldValue + adderTotal) * 0.12;
+          const commissionValue = commissionEstimate(focusedRecord);
           const isSoldOrLater = ["sold", "ntp"].includes(focusedRecord.portalStatus || "new-project");
           const commissionStatus = focusedRecord.commissionStatus || (isSoldOrLater ? "Earned" : "Projected");
           const paymentStatus = focusedRecord.paymentStatus || ((focusedRecord.portalStatus || "") === "ntp" ? "Pending payout" : isSoldOrLater ? "Install pending" : "Not ready");
