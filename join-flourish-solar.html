@@ -328,7 +328,7 @@
         </div>
         <div class="training-path">
           <article><span class="step-number">1</span><div><strong>Profile</strong><p>Submit your contact info, territory, experience, and preferred notifications.</p></div></article>
-          <article><span class="step-number">2</span><div><strong>Training</strong><p>Complete the short GHL training module for process, design requests, and handoffs.</p></div></article>
+          <article><span class="step-number">2</span><div><strong>Training</strong><p>Complete the short training path for process, design requests, and handoffs.</p></div></article>
           <article><span class="step-number">3</span><div><strong>Approval</strong><p>Admin reviews the request, activates portal access, and sends the login link.</p></div></article>
         </div>
       </section>
@@ -343,7 +343,7 @@
 
           <div class="training-box">
             <strong>Training checkpoint</strong>
-            <p class="small-note">After this application is submitted, complete the short GHL training path. Admin will mark training complete before approving portal access.</p>
+            <p class="small-note">After this application is submitted, complete the short training path. Admin will mark training complete before approving portal access.</p>
             <ul class="training-checklist">
               <li>Welcome to Flourish Solar</li>
               <li>Design request and customer handoff rules</li>
@@ -398,7 +398,7 @@
 
           <div class="actions">
             <button id="join-submit" type="submit">Submit onboarding request</button>
-            <a class="portal-link" href="/">Approved rep login</a>
+            <a class="portal-link" href="/portal">Approved rep login</a>
           </div>
           <p class="form-message" id="join-message"></p>
         </form>
@@ -437,7 +437,7 @@
             });
             const result = await response.json();
             if (!response.ok) throw new Error(result.error || "Could not submit the onboarding request.");
-            message.textContent = "Request submitted. Next step: complete the GHL training path. Admin will mark training complete before approval.";
+            message.textContent = "Request submitted. Next step: complete the training path. Admin will mark training complete before approval.";
           }
           document.getElementById("join-form").reset();
           message.classList.add("visible");
