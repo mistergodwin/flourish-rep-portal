@@ -5823,6 +5823,7 @@
                 <label><span>Customer Name</span><input name="customerName" value="${record?.name || ""}" /></label>
                 <label><span>Phone</span><input name="phone" value="${record?.phone || ""}" /></label>
                 <label><span>Email</span><input name="email" value="${record?.email || ""}" /></label>
+                ${currentSession?.role === "Admin" ? `<label><span>Assigned Rep</span><select name="assignedRepId">${repOptions(record?.ownerId)}</select></label>` : ""}
                 <label><span>Address</span><input name="address" value="${record?.address || ""}" /></label>
                 <label class="full-field"><span>Project Notes</span><textarea name="notes">${record?.projectNotes || "Update homeowner notes, access details, or project changes."}</textarea></label>
                 <button class="project-action-submit" data-save-project-action type="button">Save updates</button>
@@ -6012,6 +6013,7 @@
               },
               ...records,
             ];
+            localStorage.setItem("flourishPreviewRecords", JSON.stringify(records));
             focusedContactId = previewId;
             document.getElementById("design-form").reset();
             document.getElementById("design-state").value = "FL";
@@ -6265,7 +6267,7 @@
                   phone: panel.querySelector("[name='phone']")?.value || record.phone || "",
                   email: panel.querySelector("[name='email']")?.value || record.email || "",
                   address: panel.querySelector("[name='address']")?.value || record.address || "",
-                  assignedRepId: record.ownerId || currentSession.id,
+                  assignedRepId: panel.querySelector("[name='assignedRepId']")?.value || record.ownerId || currentSession.id,
                   notes: panel.querySelector("[name='notes']")?.value || "",
                 }
                 : {
@@ -6288,6 +6290,7 @@
                       phone: payload.phone,
                       email: payload.email,
                       address: payload.address,
+                      ownerId: payload.assignedRepId,
                       nextStep: "Project details updated",
                     } : {}),
                     ...(action === "details" ? {

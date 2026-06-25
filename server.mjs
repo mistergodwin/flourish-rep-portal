@@ -1118,6 +1118,8 @@ async function updateContact(payload) {
   const { firstName, lastName } = splitName(payload.customerName);
   const portalOwnerId = payload.assignedRepId || "";
   const assignedTo = crmAssignableUserId(portalOwnerId);
+  const createdContacts = await getPortalCreatedContacts();
+  const existingRecord = createdContacts.find((record) => record.id === payload.contactId);
   const body = {
     firstName,
     lastName,
@@ -1133,7 +1135,25 @@ async function updateContact(payload) {
 
   const result = await ghlJson(`/contacts/${encodeURIComponent(payload.contactId)}`, "PUT", body);
   const contact = result.contact || result;
-  await savePortalCreatedContact(normalizeCreatedContact(contact, portalOwnerId || normalizedOwnerId(contact)));
+  const normalized = normalizeCreatedContact(contact, portalOwnerId || existingRecord?.ownerId || normalizedOwnerId(contact));
+  await savePortalCreatedContact({
+    ...normalized,
+    ...existingRecord,
+    name: normalized.name,
+    email: normalized.email,
+    phone: normalized.phone,
+    address: normalized.address,
+    city: normalized.city,
+    state: normalized.state,
+    postalCode: normalized.postalCode,
+    ownerId: portalOwnerId || existingRecord?.ownerId || normalized.ownerId,
+    projectId: existingRecord?.projectId || normalized.projectId,
+    type: existingRecord?.type || normalized.type,
+    stage: existingRecord?.stage || normalized.stage,
+    nextStep: existingRecord?.nextStep || normalized.nextStep,
+    value: existingRecord?.value || normalized.value,
+    portalStatus: existingRecord?.portalStatus || normalized.portalStatus,
+  });
   return contact;
 }
 
